@@ -9,7 +9,7 @@ public class User {
     private String password;
     private int age;
     private char gender;
-    private  double weight;
+    private double weight;
     private double height;
     private String activityLevel;
     private boolean isEmployed;
