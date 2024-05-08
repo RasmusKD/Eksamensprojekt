@@ -1,4 +1,4 @@
-package Model;
+package com.minkostplan.eksamensprojekt.Model;
 
 import java.util.Date;
 
