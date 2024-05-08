@@ -9,23 +9,28 @@ public class User {
     private String password;
     private int age;
     private char gender;
-    private  double weight;
+    private double weight;
     private double height;
     private String activityLevel;
-    private boolean isEmployed;
+    private boolean employed;
+    private boolean subscriber;
 
-    public User(int userid, int firstName, int lastName, String email, int age, String password, char gender, double weight, double height, String activityLevel, boolean isEmployed) {
+    public User() {
+    }
+
+    public User(int userid, int firstName, int lastName, String email, String password, int age, char gender, double weight, double height, String activityLevel, boolean employed, boolean subscriber) {
         this.userid = userid;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.age = age;
         this.password = password;
+        this.age = age;
         this.gender = gender;
         this.weight = weight;
         this.height = height;
         this.activityLevel = activityLevel;
-        this.isEmployed = isEmployed;
+        this.employed = employed;
+        this.subscriber = subscriber;
     }
 
     public int getUserid() {
@@ -44,20 +49,20 @@ public class User {
         this.firstName = firstName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public int getLastName() {
         return lastName;
     }
 
     public void setLastName(int lastName) {
         this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -84,7 +89,7 @@ public class User {
         this.gender = gender;
     }
 
-    public Double getWeight() {
+    public double getWeight() {
         return weight;
     }
 
@@ -92,7 +97,7 @@ public class User {
         this.weight = weight;
     }
 
-    public Double getHeight() {
+    public double getHeight() {
         return height;
     }
 
@@ -109,12 +114,21 @@ public class User {
     }
 
     public boolean isEmployed() {
-        return isEmployed;
+        return employed;
     }
 
     public void setEmployed(boolean employed) {
-        isEmployed = employed;
+        this.employed = employed;
     }
+
+    public boolean isSubscriber() {
+        return subscriber;
+    }
+
+    public void setSubscriber(boolean subscriber) {
+        this.subscriber = subscriber;
+    }
+
 
     @Override
     public String toString() {
@@ -125,13 +139,12 @@ public class User {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", age=" + age +
-                ", gender='" + gender + '\'' +
+                ", gender=" + gender +
                 ", weight=" + weight +
                 ", height=" + height +
                 ", activityLevel='" + activityLevel + '\'' +
-                ", isEmployed=" + isEmployed +
+                ", employed=" + employed +
+                ", subscriber=" + subscriber +
                 '}';
     }
-
-
 }
