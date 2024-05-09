@@ -54,6 +54,20 @@ public class EksamensprojektApplication {
 			}
 		};
 	}
+/*
+	@Bean
+	public CommandLineRunner userUpdate() {
+		return args -> {
+			// Update user with ID 1
+			System.out.println("Attempting to update user with ID 1...");
+			User userToUpdate = new User(
+					1, "NewFirstName", "NewLastName", "NewEmail@gmail.com", "newpassword", 25, 'M', 80.0, 180.0, "Active", true, true
+			);
 
+			userService.updateUser(userToUpdate);
+			System.out.println("User with ID 1 updated successfully.");
+		};
+	}
+*/
 
 }

@@ -117,5 +117,42 @@ public class DBRepository {
         return user;
     }
 
+    public void updateUser(User user) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
 
+        try {
+            conn = dataSource.getConnection();
+            String sql = "UPDATE User SET firstName=?, lastName=?, age=?, gender=?, weight=?, height=?, activityLevel=?, isEmployed=?, subscriber=? WHERE userId=?";
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, user.getFirstName());
+            pstmt.setString(2, user.getLastName());
+            pstmt.setInt(3, user.getAge());
+            pstmt.setString(4, String.valueOf(user.getGender()));
+            pstmt.setDouble(5, user.getWeight());
+            pstmt.setDouble(6, user.getHeight());
+            pstmt.setString(7, user.getActivityLevel());
+            pstmt.setBoolean(8, user.isEmployed());
+            pstmt.setBoolean(9, user.isSubscriber());
+            pstmt.setInt(10, user.getUserId());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error connecting to the database or executing the query.");
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing the connection.");
+                e.printStackTrace();
+            }
+        }
+    }
 }
