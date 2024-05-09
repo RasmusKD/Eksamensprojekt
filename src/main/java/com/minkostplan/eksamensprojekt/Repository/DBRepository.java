@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @Repository
@@ -60,5 +61,61 @@ public class DBRepository {
             }
         }
     }
+
+    // Method to verify user login
+    public User login(String email, String password) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        User user = null;
+
+        try {
+            conn = dataSource.getConnection();
+            String sql = "SELECT * FROM User WHERE email = ? AND password = ?";
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, email);
+            pstmt.setString(2, password);
+
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                user = new User(
+                        rs.getInt("userId"),
+                        rs.getString("firstName"),
+                        rs.getString("lastName"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getInt("age"),
+                        rs.getString("gender").charAt(0),
+                        rs.getDouble("weight"),
+                        rs.getDouble("height"),
+                        rs.getString("activityLevel"),
+                        rs.getBoolean("isEmployed"),
+                        rs.getBoolean("subscriber")
+                );
+            }
+        } catch (SQLException e) {
+            System.out.println("Error during database operation: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing database resources: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        return user;
+    }
+
 
 }

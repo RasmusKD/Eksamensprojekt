@@ -21,14 +21,25 @@ public class EksamensprojektApplication {
 	@Bean
 	public CommandLineRunner demo() {
 		return args -> {
-			// Opret bruger data
-			User newUser = new User(
+			// Create user data
+			/*User newUser = new User(
 					2, "Peter", "Mortensen", "Peter.Mortensen@gmail.com", "123", 22, 'M', 76.0, 188.0, "Active", true, false
 			);
 
-			// Kalder createUser metode for at indsætte brugeren i databasen
-			userService.createUser(newUser);  // Use the autowired service instance
-			System.out.println("New user created successfully!");
+			// Call createUser method to insert the user into the database
+			userService.createUser(newUser);
+			System.out.println("New user created successfully!");*/
+
+			// Attempt to log in with the same credentials
+			User loggedInUser = userService.login("Peter.Mortensen@gmail.com", "123");
+			if (loggedInUser != null) {
+				System.out.println("Login successful for: " + loggedInUser.getFirstName() + " " + loggedInUser.getLastName());
+			} else {
+				System.out.println("Login failed.");
+			}
 		};
 	}
+
+
+
 }

@@ -13,4 +13,9 @@ public class UserService {
     public void createUser(User user) {
         dBRepository.createUser(user);
     }
+
+    public User login(String email, String password) {
+        return dBRepository.login(email, password);
+    }
+
 }
