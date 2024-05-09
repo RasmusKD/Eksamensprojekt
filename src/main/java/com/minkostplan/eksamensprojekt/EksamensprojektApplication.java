@@ -23,7 +23,7 @@ public class EksamensprojektApplication {
 		return args -> {
 			// Opret bruger data
 			User newUser = new User(
-					1, "John", "Doe", "john.doe@example.com", "password123", 30, 'M', 70.0, 180.0, "Active", true, false
+					2, "Peter", "Mortensen", "Peter.Mortensen@gmail.com", "123", 22, 'M', 76.0, 188.0, "Active", true, false
 			);
 
 			// Kalder createUser metode for at indsætte brugeren i databasen
