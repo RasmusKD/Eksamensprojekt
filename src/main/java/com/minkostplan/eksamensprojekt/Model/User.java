@@ -2,9 +2,9 @@ package com.minkostplan.eksamensprojekt.Model;
 
 public class User {
 
-    private int userid;
-    private int firstName;
-    private int lastName;
+    private int userId;
+    private String firstName;
+    private String lastName;
     private String email;
     private String password;
     private int age;
@@ -18,8 +18,9 @@ public class User {
     public User() {
     }
 
-    public User(int userid, int firstName, int lastName, String email, String password, int age, char gender, double weight, double height, String activityLevel, boolean employed, boolean subscriber) {
-        this.userid = userid;
+
+    public User(int userId, String firstName, String lastName, String email, String password, int age, char gender, double weight, double height, String activityLevel, boolean employed, boolean subscriber) {
+        this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -33,27 +34,27 @@ public class User {
         this.subscriber = subscriber;
     }
 
-    public int getUserid() {
-        return userid;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserid(int userid) {
-        this.userid = userid;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public int getFirstName() {
+    public String getFirstName() {
         return firstName;
     }
 
-    public void setFirstName(int firstName) {
+    public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
 
-    public int getLastName() {
+    public String getLastName() {
         return lastName;
     }
 
-    public void setLastName(int lastName) {
+    public void setLastName(String lastName) {
         this.lastName = lastName;
     }
 
@@ -129,13 +130,12 @@ public class User {
         this.subscriber = subscriber;
     }
 
-
     @Override
     public String toString() {
         return "User{" +
-                "userid=" + userid +
-                ", firstName=" + firstName +
-                ", lastName=" + lastName +
+                "userId=" + userId +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", age=" + age +
