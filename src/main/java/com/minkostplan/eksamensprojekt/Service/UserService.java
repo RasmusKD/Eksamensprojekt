@@ -29,7 +29,20 @@ public class UserService {
         System.out.println("User has been logged out.");
     }
 
+    public void updateUser(User user) {
+        if (currentUser != null) {
+            // Make sure the user is logged in
+            user.setUserId(currentUser.getUserId()); // Ensure the ID remains the same
+            dBRepository.updateUser(user);
+            System.out.println("User information updated successfully.");
+        } else {
+            System.out.println("No user currently logged in. Unable to update user information.");
+        }
+    }
+
     public boolean isUserLoggedIn() {
         return this.currentUser != null;
     }
 }
+
+
