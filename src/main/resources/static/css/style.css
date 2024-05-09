@@ -1,0 +1,43 @@
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('/fonts/4iCs6KVjbNBYlgoKfw72.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+body {
+    font-family: Ubuntu,trebuchet ms,lucida grande,lucida sans unicode,lucida sans,Tahoma,sans-serif!important;
+    margin: 0;
+    padding: 0;
+    background-color: #edf7ee;
+}
+
+.top-bar {
+    background-color: #fdfdfd;
+    color: #3c3f40;
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.top-bar h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.btn-primary {
+    text-decoration: none;
+    color: white;
+    background-color: #78d578;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.09)!important;
+    cursor: pointer;
+}
+
+.btn-primary:hover {
+    background-color: #4eb74e;
+}

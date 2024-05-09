@@ -12,6 +12,7 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**").permitAll()  // Tillad brugere at se resources
                         .requestMatchers("/").permitAll()  // Tillader alle at tilgå forsiden
                         .requestMatchers("/login", "/register").permitAll()  // Tillader alle at tilgå login og registrer
                         .anyRequest().authenticated()  // kræver authentication for alle andre requests
