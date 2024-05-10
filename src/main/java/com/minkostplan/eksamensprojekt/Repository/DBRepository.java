@@ -61,46 +61,6 @@ public class DBRepository {
             }
         }
     }
-    public void deleteUser(int userId) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-
-        try {
-            // Få forbindelse fra DataSource
-            conn = dataSource.getConnection();
-
-            // Opret SQL-query til at slette en bruger baseret på brugerId
-            String sql = "DELETE FROM User WHERE userId = ?";
-
-            // Forbered PreparedStatement
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, userId); // Sæt userId for at specificere, hvilken bruger der skal slettes
-
-            // Udfør opdateringen
-            int affectedRows = pstmt.executeUpdate();
-            if (affectedRows > 0) {
-                System.out.println("Bruger blev slettet succesfuldt.");
-            } else {
-                System.out.println("Ingen bruger blev fundet med det angivne ID.");
-            }
-        } catch (SQLException e) {
-            System.out.println("Fejl ved tilslutning til databasen eller under udførelsen af forespørgslen.");
-            e.printStackTrace();
-        } finally {
-            // Ryd op og luk forbindelser
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Fejl ved lukning af forbindelsen.");
-                e.printStackTrace();
-            }
-        }
-    }
 
 
 
@@ -197,4 +157,65 @@ public class DBRepository {
             }
         }
     }
+
+    public boolean deleteUser(int userId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = dataSource.getConnection();
+            String sql = "DELETE FROM User WHERE userId = ?";
+
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+
+            int affectedRows = pstmt.executeUpdate();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            System.out.println("Error connecting to the database or executing the query: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing the connection: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public User getUserById(int userId) {
+        User user = null;
+        try (Connection conn = dataSource.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM User WHERE userId = ?")) {
+            pstmt.setInt(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                user = new User(
+                        rs.getInt("userId"),
+                        rs.getString("firstName"),
+                        rs.getString("lastName"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getInt("age"),
+                        rs.getString("gender").charAt(0),
+                        rs.getDouble("weight"),
+                        rs.getDouble("height"),
+                        rs.getString("status"),
+                        rs.getBoolean("isActive"),
+                        rs.getBoolean("isAdmin")
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
+
 }
