@@ -61,6 +61,48 @@ public class DBRepository {
             }
         }
     }
+    public void deleteUser(int userId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            // Få forbindelse fra DataSource
+            conn = dataSource.getConnection();
+
+            // Opret SQL-query til at slette en bruger baseret på brugerId
+            String sql = "DELETE FROM User WHERE userId = ?";
+
+            // Forbered PreparedStatement
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId); // Sæt userId for at specificere, hvilken bruger der skal slettes
+
+            // Udfør opdateringen
+            int affectedRows = pstmt.executeUpdate();
+            if (affectedRows > 0) {
+                System.out.println("Bruger blev slettet succesfuldt.");
+            } else {
+                System.out.println("Ingen bruger blev fundet med det angivne ID.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Fejl ved tilslutning til databasen eller under udførelsen af forespørgslen.");
+            e.printStackTrace();
+        } finally {
+            // Ryd op og luk forbindelser
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Fejl ved lukning af forbindelsen.");
+                e.printStackTrace();
+            }
+        }
+    }
+
+
 
     // Method to verify user login
     public User login(String email, String password) {
