@@ -1,0 +1,5 @@
+# src/main/resources/messages.yml
+title:
+  k1: "Velkommen til Min Kostplan"
+description:
+  k1: "Her finder du information om sund kost og ernæring."

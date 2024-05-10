@@ -1,14 +1,28 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Forside</title>
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
 <div class="top-bar">
-    <h1>Min Kostplan</h1>
-    <a href="/login">
-        <button class="btn-primary">Login/Register</button></a>
+    <div class="container">
+        <h1>Min Kostplan</h1>
+        <a href="/login">
+            <button class="btn-primary">Login/Register</button>
+        </a>
+    </div>
+</div>
+<div class="content">
+    <img src="/images/food-pyramid-1.png" alt="Descriptive Image Text">
+    <div class="text-box">
+        <h2 th:text="#{title.k1}"></h2>
+        <p th:text="#{description.k1}"></p>
+    </div>
+</div>
+<div class="footer">
+    <p>Copyright © 2024 Min Kostplan</p>
 </div>
 </body>
 </html>
