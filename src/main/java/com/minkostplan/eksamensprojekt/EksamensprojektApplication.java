@@ -33,7 +33,7 @@ public class EksamensprojektApplication {
 		};
 	}
 */
-
+/*
 	@Bean
 	public CommandLineRunner demo() {
 		return args -> {
@@ -53,7 +53,7 @@ public class EksamensprojektApplication {
 				System.out.println("Login failed.");
 			}
 		};
-	}
+	}*/
 /*
 	@Bean
 	public CommandLineRunner userUpdate() {
@@ -70,4 +70,25 @@ public class EksamensprojektApplication {
 	}
 */
 
+
+	@Bean
+	public CommandLineRunner demo() {
+		return args -> {
+			// Simulate user login
+			System.out.println("Logging in...");
+			User loggedInUser = userService.login("temp.user@gmail.com", "password");
+
+			if (loggedInUser != null) {
+				System.out.println("Login successful for: " + loggedInUser.getFirstName() + " " + loggedInUser.getLastName());
+
+				// Delete the logged-in user
+				System.out.println("Deleting the logged-in user...");
+				userService.deleteUser();
+			} else {
+				System.out.println("Login failed.");
+			}
+		};
+	}
+
 }
+
