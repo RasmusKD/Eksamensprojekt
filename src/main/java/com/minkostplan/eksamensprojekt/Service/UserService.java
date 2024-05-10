@@ -40,9 +40,26 @@ public class UserService {
         }
     }
 
+    public User getUserById(int userId) {
+        return dBRepository.getUserById(userId);
+    }
     public boolean isUserLoggedIn() {
         return this.currentUser != null;
     }
+
+    public void deleteUser() {
+        if (currentUser != null) {
+            if (dBRepository.deleteUser(currentUser.getUserId())) {
+                System.out.println("User deleted successfully.");
+                currentUser = null; // Clear the current user since the account is deleted
+            } else {
+                System.out.println("Failed to delete user.");
+            }
+        } else {
+            System.out.println("No user currently logged in.");
+        }
+    }
+
 }
 
 
