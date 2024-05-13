@@ -6,12 +6,21 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1>Login</h1>
-<form th:action="@{/login}" method="post">
-    <div><label>User Name: <input type="text" name="username"/></label></div>
-    <div><label>Password: <input type="password" name="password"/></label></div>
-    <div><input type="submit" value="Sign In"/></div>
-</form>
-<p>New user? <a th:href="@{/register}">Register here</a></p>
+<div class="top-bar">
+    <div class="container">
+        <h1>Min Kostplan</h1>
+    </div>
+</div>
+<div class="content center">
+    <div class="content-box">
+        <div class="text-box">
+            <div class="headline">Login</div>
+            <input class="input-field" type="text" name="username" placeholder="Indtast Email Addresse" th:action="@{/login}" method="post"/>
+            <input class="input-field" type="password" name="password" placeholder="Kodeord"/>
+            <input class="btn-primary" type="submit" value="Log ind"/>
+            <a class="btn-secondary" th:href="@{/register}">Registerer</a>
+        </div>
+    </div>
+</div>
 </body>
 </html>

@@ -20,7 +20,11 @@ body {
     min-height: 100vh;
     margin: 0;
     padding: 0;
-    background-color: #edf7ee;
+    background-color: #ebf5ed;
+    font-family: Ubuntu, sans-serif!important;
+}
+
+input {
     font-family: Ubuntu, sans-serif!important;
 }
 
@@ -79,6 +83,35 @@ body {
 .btn-primary-large:hover {
     background-color: #4eb74e;
 }
+.btn-primary {
+    text-decoration: none;
+    color: white;
+    background-color: #78d578;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.09)!important;
+    cursor: pointer;
+    font-size: 13px;
+}
+.btn-secondary {
+    display: inline-block;
+    background-color: #89cdf0;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    width: 100%;
+}
+
+.btn-secondary:hover {
+    background-color: #227dc7;
+}
+
 
 .content {
     flex: 1;
@@ -102,7 +135,7 @@ body {
 }
 
 .text-box {
-    padding: 20px;
+    padding: 35px;
     box-sizing: border-box;
     background-color: white;
     border-radius: 10px;
@@ -147,4 +180,13 @@ body {
 
 .spacing {
     margin-top: 50px;
+}
+.input-field {
+    border-radius: 2em;
+    padding: 10px;
+    border-color: limegreen;
+    border-style: solid;
+}
+.center {
+    justify-content: center;
 }
