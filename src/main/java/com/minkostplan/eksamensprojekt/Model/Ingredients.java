@@ -2,50 +2,29 @@ package com.minkostplan.eksamensprojekt.Model;
 
 public class Ingredients {
 
-    private int ingredientId;
+    private int ingredientsId;
     private String name;
     private double fat;
-    private double proteins;
-    private double carbohydrates;
+    private double protein;
+    private double carbohydrate;
 
-    public Ingredients(String name, int ingredientId, double fat, double proteins, double carbohydrates) {
+    public Ingredients() {
+    }
+
+    public Ingredients(int ingredientsId, String name, double fat, double protein, double carbohydrate) {
+        this.ingredientsId = ingredientsId;
         this.name = name;
-        this.ingredientId = ingredientId;
         this.fat = fat;
-        this.proteins = proteins;
-        this.carbohydrates = carbohydrates;
+        this.protein = protein;
+        this.carbohydrate = carbohydrate;
     }
 
-    public int getIngredientId() {
-        return ingredientId;
+    public int getIngredientsId() {
+        return ingredientsId;
     }
 
-    public void setIngredientId(int ingredientId) {
-        this.ingredientId = ingredientId;
-    }
-
-    public double getCarbohydrates() {
-        return carbohydrates;
-    }
-
-    public void setCarbohydrates(double carbohydrates) {
-        this.carbohydrates = carbohydrates;
-    }
-
-    public double getProteins() {
-        return proteins;
-    }
-
-    public void setProteins(double proteins) {
-        this.proteins = proteins;
-    }
-
-    public double getFat() {
-        return fat;
-    }
-
-    public void setFat(double fat) {
-        this.fat = fat;
+    public void setIngredientsId(int ingredientsId) {
+        this.ingredientsId = ingredientsId;
     }
 
     public String getName() {
@@ -56,14 +35,38 @@ public class Ingredients {
         this.name = name;
     }
 
+    public double getFat() {
+        return fat;
+    }
+
+    public void setFat(double fat) {
+        this.fat = fat;
+    }
+
+    public double getProtein() {
+        return protein;
+    }
+
+    public void setProtein(double protein) {
+        this.protein = protein;
+    }
+
+    public double getCarbohydrate() {
+        return carbohydrate;
+    }
+
+    public void setCarbohydrate(double carbohydrate) {
+        this.carbohydrate = carbohydrate;
+    }
+
     @Override
     public String toString() {
         return "Ingredients{" +
-                "ingredientId=" + ingredientId +
+                "ingredientsId=" + ingredientsId +
                 ", name='" + name + '\'' +
                 ", fat=" + fat +
-                ", proteins=" + proteins +
-                ", carbohydrates=" + carbohydrates +
+                ", protein=" + protein +
+                ", carbohydrate=" + carbohydrate +
                 '}';
     }
 }

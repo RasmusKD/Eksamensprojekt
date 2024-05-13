@@ -1,14 +1,20 @@
 package com.minkostplan.eksamensprojekt.Service;
 
+import com.minkostplan.eksamensprojekt.Model.Ingredients;
 import com.minkostplan.eksamensprojekt.Repository.DBRepository;
 import com.minkostplan.eksamensprojekt.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
+public class UseCase {
+    private static DBRepository dBRepository; // Make it static
+
     @Autowired
-    private DBRepository dBRepository;
+    public UseCase(DBRepository dBRepository) {
+        UseCase.dBRepository = dBRepository; // Assign it in constructor
+    }
+
     private User currentUser; // Holds the reference to the logged-in user
 
     public void createUser(User user) {
@@ -19,6 +25,7 @@ public class UserService {
         currentUser = dBRepository.login(email, password);  // Set currentUser
         return currentUser;
     }
+
     public void logout() {
         if (currentUser != null) {
             System.out.println("Logging out user: " + currentUser.getEmail());
@@ -43,6 +50,7 @@ public class UserService {
     public User getUserById(int userId) {
         return dBRepository.getUserById(userId);
     }
+
     public boolean isUserLoggedIn() {
         return this.currentUser != null;
     }
@@ -60,6 +68,9 @@ public class UserService {
         }
     }
 
+    public void createIngredients(Ingredients ingredients) {
+        // Delegate to DBRepository to create ingredients
+        dBRepository.createIngredients(ingredients);
+        System.out.println("New ingredient created successfully!");
+    }
 }
-
-
