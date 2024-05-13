@@ -145,6 +145,7 @@ input {
     gap: 1em;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .text-box2 {
@@ -152,15 +153,14 @@ input {
     box-sizing: border-box;
     border-radius: 10px;
     height: fit-content;
-    width: 100%;
     gap: 1em;
     display: flex;
     flex-direction: column;
 }
 
 .footer {
-    background-color: #3c3f40;
-    color: white;
+    background-color: #ffffff;
+    color: black;
     text-align: center;
     padding: 20px;
 }
@@ -181,12 +181,37 @@ input {
 .spacing {
     margin-top: 50px;
 }
-.input-field {
-    border-radius: 2em;
-    padding: 10px;
+
+.center {
+    justify-content: center;
+}
+
+.w-100 {
+    width: 100%;
+}
+
+.login-headline {
+    margin-bottom: 15px;
+}
+.input-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 0.5em;
     border-color: limegreen;
     border-style: solid;
 }
-.center {
-    justify-content: center;
+
+.input-icon .material-icons {
+    color: #e3e3e3;
+    padding: 10px;
+}
+
+.input-field {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 10px;
+    font-size: 16px;
 }

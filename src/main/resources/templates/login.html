@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <div class="top-bar">
@@ -14,13 +15,22 @@
 <div class="content center">
     <div class="content-box">
         <div class="text-box">
-            <div class="headline">Login</div>
-            <input class="input-field" type="text" name="username" placeholder="Indtast Email Addresse" th:action="@{/login}" method="post"/>
-            <input class="input-field" type="password" name="password" placeholder="Kodeord"/>
-            <input class="btn-primary" type="submit" value="Log ind"/>
-            <a class="btn-secondary" th:href="@{/register}">Registerer</a>
+            <div class="headline login-headline">Login</div>
+            <div class="input-icon">
+                <i class="material-icons">email</i>
+                <input class="input-field" type="text" name="username" placeholder="Indtast Email Addresse"/>
+            </div>
+            <div class="input-icon">
+                <i class="material-icons">lock</i>
+                <input class="input-field" type="password" name="password" placeholder="Kodeord"/>
+            </div>
+            <input class="btn-primary w-100" type="submit" value="Log ind"/>
+            <a class="btn-secondary w-100" th:href="@{/register}">Registerer</a>
         </div>
     </div>
+</div>
+<div class="footer">
+    <p>Copyright © 2024 Min Kostplan</p>
 </div>
 </body>
 </html>
