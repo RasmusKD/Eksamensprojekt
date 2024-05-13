@@ -1,5 +1,6 @@
 package com.minkostplan.eksamensprojekt.Repository;
 
+import com.minkostplan.eksamensprojekt.Model.Ingredients;
 import com.minkostplan.eksamensprojekt.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -217,5 +218,40 @@ public class DBRepository {
         }
         return user;
     }
+
+    public void createIngredients(Ingredients ingredients) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = dataSource.getConnection();
+            String sql = "INSERT INTO Ingredients (ingredientsId, name, fat, carbohydrate, protein) VALUES (?, ?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, ingredients.getIngredientsId());
+            pstmt.setString(2, ingredients.getName());
+            pstmt.setDouble(3, ingredients.getFat());
+            pstmt.setDouble(4, ingredients.getCarbohydrate());
+            pstmt.setDouble(5, ingredients.getProtein());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error connecting to the database or executing the query.");
+            e.printStackTrace();
+        } finally {
+            try {
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing the connection or statement.");
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
 
 }
