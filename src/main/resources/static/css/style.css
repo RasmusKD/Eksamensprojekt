@@ -37,6 +37,7 @@ input {
     align-items: center;
     box-shadow: 0 .125rem .25rem rgba(0,0,0,.09)!important;
     place-content: center;
+    z-index: 1;
 }
 
 .container {
@@ -146,6 +147,7 @@ input {
     display: flex;
     flex-direction: column;
     align-items: center;
+    z-index: 1;
 }
 
 .text-box2 {
@@ -163,6 +165,7 @@ input {
     color: black;
     text-align: center;
     padding: 20px;
+    z-index: 1;
 }
 
 .headline {
@@ -191,7 +194,7 @@ input {
 }
 
 .login-headline {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 .input-icon {
     position: relative;
@@ -214,4 +217,10 @@ input {
     outline: none;
     padding: 10px;
     font-size: 16px;
+}
+
+.image1 {
+    position: absolute;
+    height: 700px;
+    left: -331px;
 }
