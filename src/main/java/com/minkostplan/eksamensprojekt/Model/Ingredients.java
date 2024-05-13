@@ -11,13 +11,13 @@ public class Ingredients {
     public Ingredients() {
     }
 
-    public Ingredients(int ingredientsId, String name, double fat, double protein, double carbohydrate) {
-        this.ingredientsId = ingredientsId;
+    public Ingredients(String name, double fat, double protein, double carbohydrate) {
         this.name = name;
         this.fat = fat;
         this.protein = protein;
         this.carbohydrate = carbohydrate;
     }
+
 
     public int getIngredientsId() {
         return ingredientsId;

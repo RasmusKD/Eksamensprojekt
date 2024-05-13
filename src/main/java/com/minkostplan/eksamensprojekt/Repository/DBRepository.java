@@ -1,15 +1,15 @@
 package com.minkostplan.eksamensprojekt.Repository;
 
 import com.minkostplan.eksamensprojekt.Model.Ingredients;
+import com.minkostplan.eksamensprojekt.Model.Recipe;
 import com.minkostplan.eksamensprojekt.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class DBRepository {
@@ -250,6 +250,115 @@ public class DBRepository {
             }
         }
 
+    }
+
+    public void createRecipeWithIngredients(Recipe recipe, List<Ingredients> ingredientsList) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+            conn.setAutoCommit(false); // Start a transaction
+
+            // Insert data into Recipe table
+            String recipeSql = "INSERT INTO Recipe (title, description, method, cookingTime, imageUrl) VALUES (?, ?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(recipeSql, Statement.RETURN_GENERATED_KEYS);
+            pstmt.setString(1, recipe.getTitle());
+            pstmt.setString(2, recipe.getDescription());
+            pstmt.setString(3, recipe.getMethod());
+            pstmt.setString(4, recipe.getCookingTime());
+            pstmt.setString(5, recipe.getImageUrl());
+            pstmt.executeUpdate();
+
+            // Get the generated recipe ID
+            rs = pstmt.getGeneratedKeys();
+            int recipeId = 0;
+            if (rs.next()) {
+                recipeId = rs.getInt(1);
+            }
+
+            // Insert data into Recipe_Ingredients table
+            String recipeIngredientsSql = "INSERT INTO Recipe_Ingredients (recipe_id, ingredient_id) VALUES (?, ?)";
+            pstmt = conn.prepareStatement(recipeIngredientsSql);
+            for (Ingredients ingredient : ingredientsList) {
+                pstmt.setInt(1, recipeId);
+                pstmt.setInt(2, ingredient.getIngredientsId());
+                pstmt.executeUpdate();
+            }
+
+            conn.commit(); // Commit the transaction
+        } catch (SQLException e) {
+            try {
+                if (conn != null) {
+                    conn.rollback(); // Rollback the transaction in case of failure
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            System.out.println("Error connecting to the database or executing the query.");
+            e.printStackTrace();
+        } finally {
+            // Close connections
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing the connection or statement.");
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    public List<Ingredients> getAllIngredients() {
+        List<Ingredients> ingredientsList = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = dataSource.getConnection();
+            String sql = "SELECT * FROM Ingredients";
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Ingredients ingredient = new Ingredients();
+                ingredient.setIngredientsId(rs.getInt("ingredientsId"));
+                ingredient.setName(rs.getString("name"));
+                ingredient.setFat(rs.getDouble("fat"));
+                ingredient.setCarbohydrate(rs.getDouble("carbohydrate"));
+                ingredient.setProtein(rs.getDouble("protein"));
+                ingredientsList.add(ingredient);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error connecting to the database or executing the query.");
+            e.printStackTrace();
+        } finally {
+            // Close connections
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (pstmt != null) {
+                    pstmt.close();
+                }
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (SQLException e) {
+                System.out.println("Error closing the connection or statement.");
+                e.printStackTrace();
+            }
+        }
+        return ingredientsList;
     }
 
 

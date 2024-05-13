@@ -1,10 +1,14 @@
 package com.minkostplan.eksamensprojekt.Service;
 
 import com.minkostplan.eksamensprojekt.Model.Ingredients;
+import com.minkostplan.eksamensprojekt.Model.Recipe;
 import com.minkostplan.eksamensprojekt.Repository.DBRepository;
 import com.minkostplan.eksamensprojekt.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class UseCase {
@@ -73,4 +77,19 @@ public class UseCase {
         dBRepository.createIngredients(ingredients);
         System.out.println("New ingredient created successfully!");
     }
+
+    public void createRecipeWithIngredients(Recipe recipe) {
+        // Now, you can save the recipe to the database
+        // You need to implement the method in DBRepository to handle this
+        // Call the repository method to create the recipe with ingredients
+        dBRepository.createRecipeWithIngredients(recipe, recipe.getIngredients());
+    }
+
+
+    public List<Ingredients> getAllIngredients() {
+        // Delegate to DBRepository to fetch all ingredients from the database
+        return dBRepository.getAllIngredients();
+    }
+
+
 }

@@ -1,14 +1,30 @@
 package com.minkostplan.eksamensprojekt.Model;
 
+import java.util.List;
+
 public class Recipe {
 
-    private int recipeId;
     private String title;
     private String description;
-    private String ingredients;
+    private List<Ingredients> ingredients;
     private String method;
     private String cookingTime;
     private String imageUrl;
+
+
+
+
+    public Recipe() {
+    }
+
+    public Recipe(String title, String description, List<Ingredients> ingredients, String method, String cookingTime, String imageUrl) {
+        this.title = title;
+        this.description = description;
+        this.ingredients = ingredients;
+        this.method = method;
+        this.cookingTime = cookingTime;
+        this.imageUrl = imageUrl;
+    }
 
     public String getTitle() {
         return title;
@@ -16,14 +32,6 @@ public class Recipe {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public int getRecipeId() {
-        return recipeId;
-    }
-
-    public void setRecipeId(int recipeId) {
-        this.recipeId = recipeId;
     }
 
     public String getDescription() {
@@ -34,20 +42,12 @@ public class Recipe {
         this.description = description;
     }
 
-    public String getIngredients() {
+    public List<Ingredients> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(String ingredients) {
+    public void setIngredients(List<Ingredients> ingredients) {
         this.ingredients = ingredients;
-    }
-
-    public String getCookingTime() {
-        return cookingTime;
-    }
-
-    public void setCookingTime(String cookingTime) {
-        this.cookingTime = cookingTime;
     }
 
     public String getMethod() {
@@ -56,6 +56,14 @@ public class Recipe {
 
     public void setMethod(String method) {
         this.method = method;
+    }
+
+    public String getCookingTime() {
+        return cookingTime;
+    }
+
+    public void setCookingTime(String cookingTime) {
+        this.cookingTime = cookingTime;
     }
 
     public String getImageUrl() {
@@ -69,25 +77,12 @@ public class Recipe {
     @Override
     public String toString() {
         return "Recipe{" +
-                "recipeId=" + recipeId +
-                ", title='" + title + '\'' +
+                "title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", ingredients='" + ingredients + '\'' +
+                ", ingredients=" + ingredients +
                 ", method='" + method + '\'' +
                 ", cookingTime='" + cookingTime + '\'' +
                 ", imageUrl='" + imageUrl + '\'' +
                 '}';
-    }
-
-    public Recipe(int recipeId, String title, String description, String ingredients, String method, String cookingTime, String imageUrl) {
-        this.recipeId = recipeId;
-        this.title = title;
-        this.description = description;
-        this.ingredients = ingredients;
-        this.method = method;
-        this.cookingTime = cookingTime;
-        this.imageUrl = imageUrl;
-
-
     }
 }
