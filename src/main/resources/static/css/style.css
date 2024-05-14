@@ -37,6 +37,7 @@ input {
     align-items: center;
     box-shadow: 0 .125rem .25rem rgba(0,0,0,.09)!important;
     place-content: center;
+    height: 75px;
     z-index: 1;
 }
 
@@ -223,4 +224,14 @@ input {
     position: absolute;
     height: 700px;
     left: -331px;
+}
+.logo-link {
+    text-decoration: none; /* Removes underline */
+    color: inherit; /* Inherits the color from parent elements, useful if your h1 has a specific color set */
+    display: inline; /* or 'inline-block' if you need to apply padding or margins */
+}
+
+.logo-link:hover, .logo-link:focus {
+    text-decoration: none; /* Ensures no underline appears on hover/focus */
+    color: inherit; /* Optional: Change color on hover if desired */
 }
