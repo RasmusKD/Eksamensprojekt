@@ -24,7 +24,7 @@ body {
     font-family: Ubuntu, sans-serif!important;
 }
 
-input {
+input, label {
     font-family: Ubuntu, sans-serif!important;
 }
 
@@ -85,6 +85,7 @@ input {
 .btn-primary-large:hover {
     background-color: #4eb74e;
 }
+
 .btn-primary {
     text-decoration: none;
     color: white;
@@ -96,6 +97,7 @@ input {
     cursor: pointer;
     font-size: 13px;
 }
+
 .btn-secondary {
     display: inline-block;
     background-color: #89cdf0;
@@ -108,12 +110,12 @@ input {
     cursor: pointer;
     font-size: 13px;
     width: 100%;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.09)!important;
 }
 
 .btn-secondary:hover {
     background-color: #227dc7;
 }
-
 
 .content {
     flex: 1;
@@ -149,6 +151,74 @@ input {
     flex-direction: column;
     align-items: center;
     z-index: 1;
+}
+
+.text-box form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2em;
+    width: 100%;
+}
+
+.left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.full-width {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.radio-group, .goal-options, .activity-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+.radio-group-inline {
+    display: flex;
+    gap: 1em;
+}
+
+.radio-group label, .radio-group-inline label, .goal-options label, .activity-options label {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    cursor: pointer;
+}
+
+.radio-group input[type="radio"], .radio-group-inline input[type="radio"], .goal-options input[type="radio"], .activity-options input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: 2px solid #78d578;
+    border-radius: 50%;
+    width: 1.5em;
+    height: 1.5em;
+    cursor: pointer;
+    background: transparent;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.radio-group input[type="radio"]:checked::before, .radio-group-inline input[type="radio"]:checked::before, .goal-options input[type="radio"]:checked::before, .activity-options input[type="radio"]:checked::before {
+    content: '';
+    display: block;
+    width: .75em;
+    height: .75em;
+    border-radius: 50%;
+    background: #78d578;
+    margin: 3px;
 }
 
 .text-box2 {
@@ -195,20 +265,32 @@ input {
 }
 
 .login-headline {
-    margin-bottom: 20px;
+    background: #ededed;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.09)!important;
+    clear: both;
+    color: #868686;
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    padding: 10px 15px;
+    text-shadow: #fff 0 1px;
+    width: 100%;
 }
+
 .input-icon {
     position: relative;
     display: flex;
     align-items: center;
     background-color: white;
     border-radius: 0.5em;
-    border-color: limegreen;
+    border-color: #78d578;
     border-style: solid;
 }
 
 .input-icon .material-icons {
-    color: #e3e3e3;
+    color: #89cdf0;
     padding: 10px;
 }
 
@@ -225,13 +307,25 @@ input {
     height: 700px;
     left: -331px;
 }
+
 .logo-link {
-    text-decoration: none; /* Removes underline */
-    color: inherit; /* Inherits the color from parent elements, useful if your h1 has a specific color set */
-    display: inline; /* or 'inline-block' if you need to apply padding or margins */
+    text-decoration: none;
+    color: inherit;
+    display: inline;
 }
 
 .logo-link:hover, .logo-link:focus {
-    text-decoration: none; /* Ensures no underline appears on hover/focus */
-    color: inherit; /* Optional: Change color on hover if desired */
+    text-decoration: none;
+    color: inherit;
+}
+
+.goal-activity-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2em;
+    width: 100%;
+}
+
+.goal-options, .activity-options {
+    flex-direction: column;
 }
