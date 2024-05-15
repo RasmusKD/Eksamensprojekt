@@ -18,68 +18,64 @@
     <div class="content-box">
         <div class="text-box">
             <div class="login-headline">Registrer</div>
-            <form th:action="@{/register}" method="post">
+            <form th:action="@{/register}" method="post" th:object="${user}">
                 <div class="form-grid">
                     <div class="left-column">
                         <div class="input-icon">
                             <i class="material-icons">person</i>
-                            <input class="input-field" type="text" name="firstName" placeholder="Fornavn" required/>
+                            <input class="input-field" type="text" th:field="*{firstName}" placeholder="Fornavn" required/>
                         </div>
                         <div class="input-icon">
                             <i class="material-icons">person</i>
-                            <input class="input-field" type="text" name="lastName" placeholder="Efternavn" required/>
+                            <input class="input-field" type="text" th:field="*{lastName}" placeholder="Efternavn" required/>
                         </div>
                         <div class="input-icon">
                             <i class="material-icons">email</i>
-                            <input class="input-field" type="email" name="email" placeholder="E-mailadresse" required/>
+                            <input class="input-field" type="email" th:field="*{email}" placeholder="E-mailadresse" required/>
                         </div>
                         <div class="input-icon">
                             <i class="material-icons">lock</i>
-                            <input class="input-field" type="password" name="password" placeholder="Adgangskode" required/>
-                        </div>
-                        <div class="input-icon">
-                            <i class="material-icons">lock</i>
-                            <input class="input-field" type="password" name="confirmPassword" placeholder="Bekræft adgangskode" required/>
+                            <input class="input-field" type="password" th:field="*{password}" placeholder="Adgangskode" required/>
                         </div>
                     </div>
                     <div class="right-column">
                         <div class="input-icon">
                             <i class="material-icons">calendar_today</i>
-                            <input class="input-field" type="number" name="age" placeholder="Alder" required/>
+                            <input class="input-field" type="number" th:field="*{age}" placeholder="Alder" required/>
                         </div>
                         <div class="input-icon">
                             <i class="material-icons">wc</i>
                             <div class="radio-group-inline">
-                                <label><input type="radio" name="gender" value="male" required checked> Mand</label>
-                                <label><input type="radio" name="gender" value="female" required> Kvinde</label>
+                                <label><input type="radio" th:field="*{gender}" value="M" required> Mand</label>
+                                <label><input type="radio" th:field="*{gender}" value="F" required> Kvinde</label>
                             </div>
                         </div>
                         <div class="input-icon">
                             <i class="material-icons">fitness_center</i>
-                            <input class="input-field" type="number" step="0.1" name="weight" placeholder="Vægt (kg)" required/>
+                            <input class="input-field" type="number" step="0.1" th:field="*{weight}" placeholder="Vægt (kg)" required/>
                         </div>
                         <div class="input-icon">
                             <i class="material-icons">height</i>
-                            <input class="input-field" type="number" step="0.1" name="height" placeholder="Højde (cm)" required/>
+                            <input class="input-field" type="number" step="0.1" th:field="*{height}" placeholder="Højde (cm)" required/>
                         </div>
                     </div>
                     <div class="full-width">
                         <label>Hvad er dit mål?</label>
                         <div class="goal-options">
-                            <label><input type="radio" name="goal" value="weight_loss" required checked> Vægttab</label>
-                            <label><input type="radio" name="goal" value="weight_gain" required> Vægtøgning</label>
-                            <label><input type="radio" name="goal" value="gain_muscle" required> Muskelopbygning</label>
-                            <label><input type="radio" name="goal" value="maintain_weight" required> Vedligehold vægt</label>
+                            <label><input type="radio" th:field="*{goal}" value="0" required> Vægttab</label>
+                            <label><input type="radio" th:field="*{goal}" value="1" required> Vægtøgning</label>
+                            <label><input type="radio" th:field="*{goal}" value="2" required> Muskelopbygning</label>
+                            <label><input type="radio" th:field="*{goal}" value="3" required> Vedligehold vægt</label>
                         </div>
                     </div>
                     <div class="full-width">
                         <label>Aktivitetsniveau:</label>
                         <div class="activity-options">
-                            <label><input type="radio" name="activityLevel" value="none" required checked> Ingen eller meget lidt aktiv</label>
-                            <label><input type="radio" name="activityLevel" value="1-2" required> 1-2 gange om ugen</label>
-                            <label><input type="radio" name="activityLevel" value="3-5" required> 3-5 gange om ugen</label>
-                            <label><input type="radio" name="activityLevel" value="6-7" required> 6-7 gange om ugen</label>
-                            <label><input type="radio" name="activityLevel" value="twice_day" required> To gange om dagen</label>
+                            <label><input type="radio" th:field="*{activityLevel}" value="0" required> Ingen eller meget lidt aktiv</label>
+                            <label><input type="radio" th:field="*{activityLevel}" value="1" required> 1-2 gange om ugen</label>
+                            <label><input type="radio" th:field="*{activityLevel}" value="2" required> 3-5 gange om ugen</label>
+                            <label><input type="radio" th:field="*{activityLevel}" value="3" required> 6-7 gange om ugen</label>
+                            <label><input type="radio" th:field="*{activityLevel}" value="4" required> To gange om dagen</label>
                         </div>
                     </div>
                 </div>

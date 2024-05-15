@@ -48,23 +48,23 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "INSERT INTO User (userId, firstName, lastName, email, password, age, gender, weight, height, activityLevel, isEmployed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO User (firstName, lastName, email, password, age, gender, weight, height, activityLevel, goal, isEmployed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, user.getUserId());
-            pstmt.setString(2, user.getFirstName());
-            pstmt.setString(3, user.getLastName());
-            pstmt.setString(4, user.getEmail());
-            pstmt.setString(5, user.getPassword());
-            pstmt.setInt(6, user.getAge());
-            pstmt.setString(7, String.valueOf(user.getGender()));
-            pstmt.setDouble(8, user.getWeight());
-            pstmt.setDouble(9, user.getHeight());
-            pstmt.setString(10, user.getActivityLevel());
+            pstmt.setString(1, user.getFirstName());
+            pstmt.setString(2, user.getLastName());
+            pstmt.setString(3, user.getEmail());
+            pstmt.setString(4, user.getPassword());
+            pstmt.setInt(5, user.getAge());
+            pstmt.setString(6, String.valueOf(user.getGender()));
+            pstmt.setDouble(7, user.getWeight());
+            pstmt.setDouble(8, user.getHeight());
+            pstmt.setInt(9, user.getActivityLevel());
+            pstmt.setInt(10, user.getGoal());
             pstmt.setBoolean(11, user.isEmployed());
+            pstmt.setBoolean(12, user.isSubscriber());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error connecting to the database or executing the query.");
             e.printStackTrace();
         } finally {
             closeResources(conn, pstmt);
@@ -96,7 +96,8 @@ public class DBRepository {
                         rs.getString("gender").charAt(0),
                         rs.getDouble("weight"),
                         rs.getDouble("height"),
-                        rs.getString("activityLevel"),
+                        rs.getInt("activityLevel"),
+                        rs.getInt("goal"),
                         rs.getBoolean("isEmployed"),
                         rs.getBoolean("subscriber")
                 );
@@ -116,7 +117,7 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "UPDATE User SET firstName=?, lastName=?, age=?, gender=?, weight=?, height=?, activityLevel=?, isEmployed=?, subscriber=? WHERE userId=?";
+            String sql = "UPDATE User SET firstName=?, lastName=?, age=?, gender=?, weight=?, height=?, activityLevel=?, goal=?, isEmployed=?, subscriber=? WHERE userId=?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
@@ -124,10 +125,11 @@ public class DBRepository {
             pstmt.setString(4, String.valueOf(user.getGender()));
             pstmt.setDouble(5, user.getWeight());
             pstmt.setDouble(6, user.getHeight());
-            pstmt.setString(7, user.getActivityLevel());
-            pstmt.setBoolean(8, user.isEmployed());
-            pstmt.setBoolean(9, user.isSubscriber());
-            pstmt.setInt(10, user.getUserId());
+            pstmt.setInt(7, user.getActivityLevel());
+            pstmt.setInt(8, user.getGoal());
+            pstmt.setBoolean(9, user.isEmployed());
+            pstmt.setBoolean(10, user.isSubscriber());
+            pstmt.setInt(11, user.getUserId());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -175,9 +177,10 @@ public class DBRepository {
                             rs.getString("gender").charAt(0),
                             rs.getDouble("weight"),
                             rs.getDouble("height"),
-                            rs.getString("status"),
-                            rs.getBoolean("isActive"),
-                            rs.getBoolean("isAdmin")
+                            rs.getInt("activityLevel"),
+                            rs.getInt("goal"),
+                            rs.getBoolean("isEmployed"),
+                            rs.getBoolean("subscriber")
                     );
                 }
             }
