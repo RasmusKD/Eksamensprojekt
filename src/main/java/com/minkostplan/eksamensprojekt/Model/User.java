@@ -11,15 +11,15 @@ public class User {
     private char gender;
     private double weight;
     private double height;
-    private String activityLevel;
+    private int activityLevel;
+    private int goal;
     private boolean employed;
     private boolean subscriber;
 
     public User() {
     }
 
-
-    public User(int userId, String firstName, String lastName, String email, String password, int age, char gender, double weight, double height, String activityLevel, boolean employed, boolean subscriber) {
+    public User(int userId, String firstName, String lastName, String email, String password, int age, char gender, double weight, double height, int activityLevel, int goal, boolean employed, boolean subscriber) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -30,6 +30,7 @@ public class User {
         this.weight = weight;
         this.height = height;
         this.activityLevel = activityLevel;
+        this.goal = goal;
         this.employed = employed;
         this.subscriber = subscriber;
     }
@@ -106,11 +107,19 @@ public class User {
         this.height = height;
     }
 
-    public String getActivityLevel() {
+    public int getGoal() {
+        return goal;
+    }
+
+    public void setGoal(int goal) {
+        this.goal = goal;
+    }
+
+    public int getActivityLevel() {
         return activityLevel;
     }
 
-    public void setActivityLevel(String activityLevel) {
+    public void setActivityLevel(int activityLevel) {
         this.activityLevel = activityLevel;
     }
 
