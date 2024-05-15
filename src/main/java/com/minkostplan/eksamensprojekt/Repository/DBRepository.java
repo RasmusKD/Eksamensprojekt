@@ -17,18 +17,38 @@ public class DBRepository {
     @Autowired
     private DataSource dataSource;
 
+    private Connection getConnection() throws SQLException {
+        return dataSource.getConnection();
+    }
+
+    private void closeResources(Connection conn, PreparedStatement pstmt, ResultSet rs) {
+        try {
+            if (rs != null) {
+                rs.close();
+            }
+            if (pstmt != null) {
+                pstmt.close();
+            }
+            if (conn != null) {
+                conn.close();
+            }
+        } catch (SQLException e) {
+            System.out.println("Error closing the connection or statement.");
+            e.printStackTrace();
+        }
+    }
+
+    private void closeResources(Connection conn, PreparedStatement pstmt) {
+        closeResources(conn, pstmt, null);
+    }
+
     public void createUser(User user) {
         Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {
-            // Get connection from DataSource
-            conn = dataSource.getConnection();
-
-            // Create SQL query without the subscriber field
+            conn = getConnection();
             String sql = "INSERT INTO User (userId, firstName, lastName, email, password, age, gender, weight, height, activityLevel, isEmployed) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-
-            // Create PreparedStatement
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, user.getUserId());
             pstmt.setString(2, user.getFirstName());
@@ -42,30 +62,15 @@ public class DBRepository {
             pstmt.setString(10, user.getActivityLevel());
             pstmt.setBoolean(11, user.isEmployed());
 
-            // Execute update
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error connecting to the database or executing the query.");
             e.printStackTrace();
         } finally {
-            // Clean up and close connections
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Error closing the connection.");
-                e.printStackTrace();
-            }
+            closeResources(conn, pstmt);
         }
     }
 
-
-
-    // Method to verify user login
     public User login(String email, String password) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -73,13 +78,11 @@ public class DBRepository {
         User user = null;
 
         try {
-            conn = dataSource.getConnection();
+            conn = getConnection();
             String sql = "SELECT * FROM User WHERE email = ? AND password = ?";
-
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, email);
             pstmt.setString(2, password);
-
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -102,20 +105,7 @@ public class DBRepository {
             System.out.println("Error during database operation: " + e.getMessage());
             e.printStackTrace();
         } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Error closing database resources: " + e.getMessage());
-                e.printStackTrace();
-            }
+            closeResources(conn, pstmt, rs);
         }
         return user;
     }
@@ -125,9 +115,8 @@ public class DBRepository {
         PreparedStatement pstmt = null;
 
         try {
-            conn = dataSource.getConnection();
+            conn = getConnection();
             String sql = "UPDATE User SET firstName=?, lastName=?, age=?, gender=?, weight=?, height=?, activityLevel=?, isEmployed=?, subscriber=? WHERE userId=?";
-
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
@@ -145,17 +134,7 @@ public class DBRepository {
             System.out.println("Error connecting to the database or executing the query.");
             e.printStackTrace();
         } finally {
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Error closing the connection.");
-                e.printStackTrace();
-            }
+            closeResources(conn, pstmt);
         }
     }
 
@@ -164,12 +143,10 @@ public class DBRepository {
         PreparedStatement pstmt = null;
 
         try {
-            conn = dataSource.getConnection();
+            conn = getConnection();
             String sql = "DELETE FROM User WHERE userId = ?";
-
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, userId);
-
             int affectedRows = pstmt.executeUpdate();
             return affectedRows > 0;
         } catch (SQLException e) {
@@ -177,41 +154,32 @@ public class DBRepository {
             e.printStackTrace();
             return false;
         } finally {
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Error closing the connection: " + e.getMessage());
-                e.printStackTrace();
-            }
+            closeResources(conn, pstmt);
         }
     }
 
     public User getUserById(int userId) {
         User user = null;
-        try (Connection conn = dataSource.getConnection();
+        try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM User WHERE userId = ?")) {
             pstmt.setInt(1, userId);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                user = new User(
-                        rs.getInt("userId"),
-                        rs.getString("firstName"),
-                        rs.getString("lastName"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getInt("age"),
-                        rs.getString("gender").charAt(0),
-                        rs.getDouble("weight"),
-                        rs.getDouble("height"),
-                        rs.getString("status"),
-                        rs.getBoolean("isActive"),
-                        rs.getBoolean("isAdmin")
-                );
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    user = new User(
+                            rs.getInt("userId"),
+                            rs.getString("firstName"),
+                            rs.getString("lastName"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getInt("age"),
+                            rs.getString("gender").charAt(0),
+                            rs.getDouble("weight"),
+                            rs.getDouble("height"),
+                            rs.getString("status"),
+                            rs.getBoolean("isActive"),
+                            rs.getBoolean("isAdmin")
+                    );
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -224,7 +192,7 @@ public class DBRepository {
         PreparedStatement pstmt = null;
 
         try {
-            conn = dataSource.getConnection();
+            conn = getConnection();
             String sql = "INSERT INTO Ingredients (ingredientsId, name, fat, carbohydrate, protein) VALUES (?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, ingredients.getIngredientsId());
@@ -237,19 +205,8 @@ public class DBRepository {
             System.out.println("Error connecting to the database or executing the query.");
             e.printStackTrace();
         } finally {
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Error closing the connection or statement.");
-                e.printStackTrace();
-            }
+            closeResources(conn, pstmt);
         }
-
     }
 
     public void createRecipeWithIngredients(Recipe recipe, List<Ingredients> ingredientsList) {
@@ -258,7 +215,7 @@ public class DBRepository {
         ResultSet rs = null;
 
         try {
-            conn = dataSource.getConnection();
+            conn = getConnection();
             conn.setAutoCommit(false); // Start a transaction
 
             // Insert data into Recipe table
@@ -299,24 +256,9 @@ public class DBRepository {
             System.out.println("Error connecting to the database or executing the query.");
             e.printStackTrace();
         } finally {
-            // Close connections
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Error closing the connection or statement.");
-                e.printStackTrace();
-            }
+            closeResources(conn, pstmt, rs);
         }
     }
-
 
     public List<Ingredients> getAllIngredients() {
         List<Ingredients> ingredientsList = new ArrayList<>();
@@ -325,7 +267,7 @@ public class DBRepository {
         ResultSet rs = null;
 
         try {
-            conn = dataSource.getConnection();
+            conn = getConnection();
             String sql = "SELECT * FROM Ingredients";
             pstmt = conn.prepareStatement(sql);
             rs = pstmt.executeQuery();
@@ -342,25 +284,8 @@ public class DBRepository {
             System.out.println("Error connecting to the database or executing the query.");
             e.printStackTrace();
         } finally {
-            // Close connections
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException e) {
-                System.out.println("Error closing the connection or statement.");
-                e.printStackTrace();
-            }
+            closeResources(conn, pstmt, rs);
         }
         return ingredientsList;
     }
-
-
-
 }
