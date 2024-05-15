@@ -4,6 +4,7 @@ import com.minkostplan.eksamensprojekt.Model.Ingredients;
 import com.minkostplan.eksamensprojekt.Model.Recipe;
 import com.minkostplan.eksamensprojekt.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -16,6 +17,9 @@ public class DBRepository {
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     private Connection getConnection() throws SQLException {
         return dataSource.getConnection();
@@ -79,28 +83,30 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "SELECT * FROM User WHERE email = ? AND password = ?";
+            String sql = "SELECT * FROM User WHERE email = ?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, email);
-            pstmt.setString(2, password);
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                user = new User(
-                        rs.getInt("userId"),
-                        rs.getString("firstName"),
-                        rs.getString("lastName"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getInt("age"),
-                        rs.getString("gender").charAt(0),
-                        rs.getDouble("weight"),
-                        rs.getDouble("height"),
-                        rs.getInt("activityLevel"),
-                        rs.getInt("goal"),
-                        rs.getBoolean("isEmployed"),
-                        rs.getBoolean("subscriber")
-                );
+                String hashedPassword = rs.getString("password");
+                if (passwordEncoder.matches(password, hashedPassword)) {
+                    user = new User(
+                            rs.getInt("userId"),
+                            rs.getString("firstName"),
+                            rs.getString("lastName"),
+                            rs.getString("email"),
+                            rs.getString("password"),
+                            rs.getInt("age"),
+                            rs.getString("gender").charAt(0),
+                            rs.getDouble("weight"),
+                            rs.getDouble("height"),
+                            rs.getInt("activityLevel"),
+                            rs.getInt("goal"),
+                            rs.getBoolean("isEmployed"),
+                            rs.getBoolean("subscriber")
+                    );
+                }
             }
         } catch (SQLException e) {
             System.out.println("Error during database operation: " + e.getMessage());
