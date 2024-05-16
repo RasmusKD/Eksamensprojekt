@@ -75,7 +75,7 @@ public class DBRepository {
         }
     }
 
-    public User login(String email, String password) {
+    public User findByEmail(String email) {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -89,27 +89,23 @@ public class DBRepository {
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                String hashedPassword = rs.getString("password");
-                if (passwordEncoder.matches(password, hashedPassword)) {
-                    user = new User(
-                            rs.getInt("userId"),
-                            rs.getString("firstName"),
-                            rs.getString("lastName"),
-                            rs.getString("email"),
-                            rs.getString("password"),
-                            rs.getInt("age"),
-                            rs.getString("gender").charAt(0),
-                            rs.getDouble("weight"),
-                            rs.getDouble("height"),
-                            rs.getInt("activityLevel"),
-                            rs.getInt("goal"),
-                            rs.getBoolean("isEmployed"),
-                            rs.getBoolean("subscriber")
-                    );
-                }
+                user = new User(
+                        rs.getInt("userId"),
+                        rs.getString("firstName"),
+                        rs.getString("lastName"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getInt("age"),
+                        rs.getString("gender").charAt(0),
+                        rs.getDouble("weight"),
+                        rs.getDouble("height"),
+                        rs.getInt("activityLevel"),
+                        rs.getInt("goal"),
+                        rs.getBoolean("isEmployed"),
+                        rs.getBoolean("subscriber")
+                );
             }
         } catch (SQLException e) {
-            System.out.println("Error during database operation: " + e.getMessage());
             e.printStackTrace();
         } finally {
             closeResources(conn, pstmt, rs);

@@ -25,21 +25,6 @@ public class UseCase {
         dBRepository.createUser(user);
     }
 
-    public User login(String email, String password) {
-        currentUser = dBRepository.login(email, password);  // Set currentUser
-        return currentUser;
-    }
-
-    public void logout() {
-        if (currentUser != null) {
-            System.out.println("Logging out user: " + currentUser.getEmail());
-            currentUser = null;
-        } else {
-            System.out.println("No user currently logged in.");
-        }
-        System.out.println("User has been logged out.");
-    }
-
     public void updateUser(User user) {
         if (currentUser != null) {
             // Make sure the user is logged in
