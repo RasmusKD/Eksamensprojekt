@@ -8,6 +8,6 @@ public class OmOsController {
 
     @GetMapping("/omOs")
     public String showOmOsPage() {
-        return "omOs"; // Assuming "omOs" is the name of your Thymeleaf template
+        return "omOs";
     }
 }
