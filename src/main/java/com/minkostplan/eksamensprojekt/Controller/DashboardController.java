@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -36,12 +38,24 @@ public class DashboardController {
         goalMap.put(2, "Muskelopbygning");
         goalMap.put(3, "Vedligehold vægt");
 
+        // Calculate calories
+        double calorieNeeds = useCase.calculateCalories(user);
+
         model.addAttribute("user", user);
         model.addAttribute("activityLevelMap", activityLevelMap);
         model.addAttribute("goalMap", goalMap);
+        model.addAttribute("calorieNeeds", calorieNeeds); // Add calorie needs to the model
 
         return "dashboard";
     }
 
+    @PostMapping("/update-goal")
+    public String updateGoal(@RequestParam("goal") int goal, Authentication authentication) {
+        String email = authentication.getName(); // Get the logged-in user's email
+        User user = useCase.getUserByEmail(email); // Retrieve user info from the database
+        user.setGoal(goal); // Update the user's goal
+        useCase.updateUser(user); // Save the updated user to the database
 
+        return "redirect:/dashboard"; // Redirect back to the dashboard
+    }
 }

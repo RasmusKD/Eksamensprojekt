@@ -31,7 +31,23 @@
                 <p><i class="material-icons">directions_run</i> <strong>Aktivitetsniveau:</strong> <span th:text="${activityLevelMap[user.activityLevel]}"></span></p>
                 <p><i class="material-icons">flag</i> <strong>Mål:</strong> <span th:text="${goalMap[user.goal]}"></span></p>
                 <p><i class="material-icons">check_circle</i> <strong>Abonnent:</strong> <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span></p>
+                <p><i class="material-icons">local_dining</i> <strong>Kaloriebehov:</strong> <span th:text="${calorieNeeds} + ' kcal'"></span></p>
             </div>
+        </div>
+    </div>
+    <!-- Tilføj form for at vælge mål -->
+    <div class="content-box">
+        <div class="text-box">
+            <form th:action="@{/update-goal}" method="post">
+                <label for="goal">Vælg dit mål:</label>
+                <select name="goal" id="goal">
+                    <option value="0" th:selected="${user.goal == 0}">Vægttab</option>
+                    <option value="1" th:selected="${user.goal == 1}">Vægtøgning</option>
+                    <option value="2" th:selected="${user.goal == 2}">Muskelopbygning</option>
+                    <option value="3" th:selected="${user.goal == 3}">Vedligehold vægt</option>
+                </select>
+                <button type="submit" class="btn-primary">Opdater Mål</button>
+            </form>
         </div>
     </div>
     <!-- Tilføj knappen her -->
