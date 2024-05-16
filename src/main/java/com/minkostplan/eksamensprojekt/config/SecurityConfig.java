@@ -20,7 +20,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico").permitAll()  // Tillad brugere at se resources
-                        .requestMatchers("/").permitAll()  // Tillader alle at tilgå forsiden
+                        .requestMatchers("/", "/omOs").permitAll()  // Allow access to home page and omOs page without authentication
                         .requestMatchers("/login", "/register").permitAll()  // Tillader alle at tilgå login og registrer
                         .anyRequest().authenticated()  // kræver authentication for alle andre requests
                 )
