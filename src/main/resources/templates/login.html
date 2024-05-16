@@ -18,16 +18,21 @@
     <div class="content-box">
         <div class="text-box">
             <div class="login-headline">Login</div>
-            <div class="input-icon">
-                <i class="material-icons">email</i>
-                <input class="input-field" type="text" name="username" placeholder="Indtast Email Addresse"/>
-            </div>
-            <div class="input-icon">
-                <i class="material-icons">lock</i>
-                <input class="input-field" type="password" name="password" placeholder="Kodeord"/>
-            </div>
-            <input class="btn-primary w-100" type="submit" value="Log ind"/>
-            <a class="btn-secondary w-100" th:href="@{/register}">Registerer</a>
+            <form th:action="@{/login}" method="post">
+                <div class="input-icon">
+                    <i class="material-icons">email</i>
+                    <input class="input-field" type="text" name="username" placeholder="Indtast Email Addresse" required/>
+                </div>
+                <div class="input-icon">
+                    <i class="material-icons">lock</i>
+                    <input class="input-field" type="password" name="password" placeholder="Adgangskode" required/>
+                </div>
+                <input class="btn-primary w-100" type="submit" value="Log ind"/>
+                <a class="btn-secondary w-100" th:href="@{/register}">Registerer</a>
+                <div th:if="${param.error}">
+                    Ugyldig Email eller Adgangskode.
+                </div>
+            </form>
         </div>
     </div>
 </div>

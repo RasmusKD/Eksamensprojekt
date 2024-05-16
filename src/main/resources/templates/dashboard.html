@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="top-bar">
+    <div class="container">
+        <a href="/dashboard" class="logo-link">
+            <h1>Min Kostplan</h1>
+        </a>
+        <form th:action="@{/perform_logout}" method="post" style="display: inline;">
+            <button class="btn-primary" type="submit">Logout</button>
+        </form>
+    </div>
+</div>
+<div class="content center">
+    <div class="content-box">
+        <div class="text-box">
+            <div class="headline">Velkommen til forsiden</div>
+            <div class="sub-headline">Denne side er kun tilgængelig for brugere der er logget ind.</div>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <p>Copyright © 2024 Min Kostplan</p>
+</div>
+</body>
+</html>
