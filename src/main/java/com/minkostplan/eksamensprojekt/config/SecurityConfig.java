@@ -18,7 +18,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/", "/login", "/register", "/omOs").permitAll()
+                        .requestMatchers("/", "/login", "/register", "/omOs", "/success", "/cancel").permitAll()
                         .requestMatchers("/dashboard", "/stripe-payment").authenticated()
                         .anyRequest().authenticated()
                 )
@@ -43,6 +43,7 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

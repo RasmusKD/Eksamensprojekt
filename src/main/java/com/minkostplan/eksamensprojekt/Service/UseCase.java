@@ -2,6 +2,7 @@ package com.minkostplan.eksamensprojekt.Service;
 
 import com.minkostplan.eksamensprojekt.Model.Ingredients;
 import com.minkostplan.eksamensprojekt.Model.Recipe;
+import com.minkostplan.eksamensprojekt.Model.Subscription;
 import com.minkostplan.eksamensprojekt.Model.User;
 import com.minkostplan.eksamensprojekt.Repository.DBRepository;
 import com.stripe.exception.StripeException;
@@ -21,10 +22,6 @@ public class UseCase {
 
     @Value("${stripe.cancel.url}")
     private String cancelUrl;
-
-    @Value("${stripe.webhook.secret}")
-    private String endpointSecret;
-
     private DBRepository dBRepository;
 
     @Autowired
@@ -89,31 +86,22 @@ public class UseCase {
     public User getCurrentUser() {
         return currentUser;
     }
-    public Session createCheckoutSession(int userId, String priceId) throws StripeException {
-        SessionCreateParams params =
-                SessionCreateParams.builder()
-                        .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
-                        .setSuccessUrl(successUrl + "?session_id={CHECKOUT_SESSION_ID}")
-                        .setCancelUrl(cancelUrl)
-                        .addLineItem(
-                                SessionCreateParams.LineItem.builder()
-                                        .setPrice(priceId)
-                                        .setQuantity(1L)
-                                        .build()
-                        )
-                        .putMetadata("userId", String.valueOf(userId))
-                        .build();
 
-        return Session.create(params);
+
+    public void createSubscription(Subscription subscription) {
+        dBRepository.createSubscription(subscription);
     }
 
-    public void updateSubscriptionStatus(int userId, String status) {
-        dBRepository.updateSubscriptionStatus(userId, status);
+    public void updateUserSubscriptionStatus(int userId, boolean subscriberStatus) {
+        dBRepository.updateUserSubscriptionStatus(userId, subscriberStatus);
     }
 
-    public void handleCheckoutSessionCompleted(Session session) {
-        String userId = session.getMetadata().get("userId");
-        updateSubscriptionStatus(Integer.parseInt(userId), "active");
+
+    public String getSuccessUrl() {
+        return successUrl;
     }
 
+    public String getCancelUrl() {
+        return cancelUrl;
+    }
 }
