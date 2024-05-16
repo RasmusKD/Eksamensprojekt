@@ -323,36 +323,32 @@ input, label {
 .user-info {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Flyt til venstre */
-    gap: 1em;
-    width: 100%; /* Sikrer at indholdet tager hele bredden */
+    align-items: flex-start;
+    width: 100%;
 }
 
 .user-info p {
     display: flex;
     align-items: center;
     gap: 0.5em;
-    font-size: 1.1em; /* Gør teksten lidt større for bedre læsbarhed */
+    font-size: 1.1em;
 }
 
 .user-info i.material-icons {
-    color: #89cdf0; /* Gør ikonerne blå som i input felter */
-}
-
-.content.center {
-    justify-content: flex-start; /* Flyt indholdet til toppen */
-    align-items: flex-start; /* Juster til venstre */
-    padding-top: 20px;
-}
-
-.headline {
-    font-size: 2.5em;
-    color: forestgreen;
-    text-align: left; /* Juster tekst til venstre */
-    margin-bottom: 0.5em; /* Tilføj lidt afstand under overskriften */
+    color: #89cdf0;
 }
 
 .sub-headline {
     font-size: 1.5em;
-    text-align: left; /* Juster tekst til venstre */
+    text-align: left;
+}
+
+.login-content {
+    justify-content: center;
+}
+
+.dashboard-content {
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 20px;
 }

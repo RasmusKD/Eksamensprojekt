@@ -17,10 +17,11 @@
         </form>
     </div>
 </div>
-<div class="content center">
+<div class="content dashboard-content center">
     <div class="content-box">
         <div class="text-box">
-            <div class="headline">Velkommen tilbage, <span th:text="${user.firstName} + ' ' + ${user.lastName}"></span>!</div>
+            <div class="headline">Velkommen tilbage,</div>
+            <div class="sub-headline" th:text="${user.firstName} + ' ' + ${user.lastName}"></div>
             <div class="user-info">
                 <p><i class="material-icons">email</i> <strong>Email:</strong> <span th:text="${user.email}"></span></p>
                 <p><i class="material-icons">cake</i> <strong>Alder:</strong> <span th:text="${user.age}"></span></p>
