@@ -41,7 +41,6 @@ public class UseCase {
     public void createUser(User user) {
         dBRepository.createUser(user);
     }
-
     public void updateUser(User user) {
         if (currentUser != null) {
             user.setUserId(currentUser.getUserId());
@@ -52,30 +51,12 @@ public class UseCase {
         }
     }
 
-    public User getUserById(int userId) {
-        return dBRepository.getUserById(userId);
-    }
-
-    public boolean isUserLoggedIn() {
-        return this.currentUser != null;
-    }
-
-    public void deleteUser() {
-        if (currentUser != null) {
-            if (dBRepository.deleteUser(currentUser.getUserId())) {
-                System.out.println("User deleted successfully.");
-                currentUser = null;
-            } else {
-                System.out.println("Failed to delete user.");
-            }
-        } else {
-            System.out.println("No user currently logged in.");
-        }
+    public User getUserByEmail(String email) {
+        return dBRepository.findByEmail(email);
     }
 
     public void createIngredients(Ingredients ingredients) {
         dBRepository.createIngredients(ingredients);
-        System.out.println("New ingredient created successfully!");
     }
 
     public void createRecipeWithIngredients(Recipe recipe) {
@@ -115,5 +96,4 @@ public class UseCase {
         String userId = session.getMetadata().get("userId");
         updateSubscriptionStatus(Integer.parseInt(userId), "active");
     }
-
 }
