@@ -1,100 +1,68 @@
 package com.minkostplan.eksamensprojekt.Controller;
 
-import com.minkostplan.eksamensprojekt.Model.User;
+import com.minkostplan.eksamensprojekt.Model.Subscription;
 import com.minkostplan.eksamensprojekt.Service.UseCase;
-import com.stripe.exception.SignatureVerificationException;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Event;
 import com.stripe.model.checkout.Session;
-import com.stripe.net.Webhook;
+import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
-@Controller
+@RestController
 @RequestMapping("/stripe")
 public class StripeController {
 
     @Autowired
     private UseCase useCase;
 
-    @Value("${stripe.webhook.secret}")
-    private String endpointSecret;
-
-    @GetMapping("/stripe-payment")
-    public String getStripePaymentPage(Model model) {
-        User currentUser = useCase.getCurrentUser(); // Assuming you have a method to get the current user
-        if (currentUser != null) {
-            model.addAttribute("userId", currentUser.getUserId());
-        }
-        return "stripe-payment";
-    }
-
     @PostMapping("/create-checkout-session")
-    public @ResponseBody
-    Session createCheckoutSession(@RequestBody CheckoutSessionRequest request) throws StripeException {
-        return useCase.createCheckoutSession(request.getUserId(), request.getPriceId());
+    public Map<String, String> createCheckoutSession(@RequestBody Map<String, Object> payload) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            String priceId = (String) payload.get("priceId");
+            int userId = Integer.parseInt((String) payload.get("userId"));
+            String name = (String) payload.get("name");
+            String email = (String) payload.get("email");
+
+            SessionCreateParams params = SessionCreateParams.builder()
+                    .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
+                    .setSuccessUrl("http://localhost:8080/stripe/payment-success?userId=" + userId) // Include userId in the success URL
+                    .setCancelUrl("http://localhost:8080/cancel")
+                    .addLineItem(
+                            SessionCreateParams.LineItem.builder()
+                                    .setPrice(priceId)
+                                    .setQuantity(1L)
+                                    .build()
+                    )
+                    .setCustomerEmail(email)
+                    .build();
+
+            Session session = Session.create(params);
+            response.put("id", session.getId());
+        } catch (StripeException e) {
+            response.put("error", e.getMessage());
+        }
+        return response;
     }
 
-    @PostMapping("/webhook")
-    public String handleStripeEvent(HttpServletRequest request) {
-        String payload;
-        try {
-            payload = request.getReader().lines()
-                    .reduce("", (accumulator, actual) -> accumulator + actual);
-        } catch (IOException e) {
-            return "";
-        }
+    @GetMapping("/payment-success")
+    public String handlePaymentSuccess(@RequestParam("userId") int userId) {
+        Subscription subscription = new Subscription();
+        subscription.setUserId(userId);
+        subscription.setStartDate(java.sql.Date.valueOf(LocalDate.now()));
+        subscription.setEndDate(java.sql.Date.valueOf(LocalDate.now().plusMonths(1)));
+        subscription.setPrice(9.99); // Example price
+        subscription.setStatus("active");
 
-        String sigHeader = request.getHeader("Stripe-Signature");
-        Event event;
+        useCase.createSubscription(subscription);
 
-        try {
-            event = Webhook.constructEvent(payload, sigHeader, endpointSecret);
-        } catch (SignatureVerificationException e) {
-            return "";
-        }
+        // Update the user's subscription status
+        useCase.updateUserSubscriptionStatus(userId, true);
 
-        // Handle the event
-        switch (event.getType()) {
-            case "checkout.session.completed":
-                Session session = (Session) event.getDataObjectDeserializer().getObject().orElse(null);
-                if (session != null) {
-                    useCase.handleCheckoutSessionCompleted(session);
-                }
-                break;
-            // ... handle other event types
-            default:
-                System.out.println("Unhandled event type: " + event.getType());
-        }
-
-        return "";
-    }
-
-    // DTO for request body
-    public static class CheckoutSessionRequest {
-        private int userId;
-        private String priceId;
-
-        public int getUserId() {
-            return userId;
-        }
-
-        public void setUserId(int userId) {
-            this.userId = userId;
-        }
-
-        public String getPriceId() {
-            return priceId;
-        }
-
-        public void setPriceId(String priceId) {
-            this.priceId = priceId;
-        }
+        return "redirect:/payment-success";
     }
 }

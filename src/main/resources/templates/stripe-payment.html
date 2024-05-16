@@ -11,7 +11,6 @@
 <div class="container">
     <h1>Betal med Stripe</h1>
     <button id="checkout-button" class="btn-primary">Start Stripe Payment</button>
-    <!-- Embedding user ID in a hidden element -->
     <input type="hidden" id="user-id" th:value="${userId}">
 </div>
 
@@ -20,7 +19,6 @@
     const stripe = Stripe(stripePublicKey);
 
     document.getElementById('checkout-button').addEventListener('click', function () {
-        // Retrieve userId from the hidden input element
         const userId = document.getElementById('user-id').value;
 
         fetch('/stripe/create-checkout-session', {
@@ -29,8 +27,8 @@
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                priceId: 'price_1PGznYBcOCSFJlaSBsL8PYf2', // Replace with your actual price ID
-                userId: userId // Pass user ID to backend
+                priceId: 'price_1PGznYBcOCSFJlaSBsL8PYf2',
+                userId: userId
             }),
         })
             .then(response => response.json())
@@ -38,13 +36,7 @@
                 if (session.error) {
                     alert(session.error);
                 } else {
-                    // Redirect to Stripe checkout
                     return stripe.redirectToCheckout({ sessionId: session.id });
-                }
-            })
-            .then(result => {
-                if (result.error) {
-                    alert(result.error.message);
                 }
             })
             .catch(error => {
@@ -52,6 +44,5 @@
             });
     });
 </script>
-
 </body>
 </html>

@@ -1,6 +1,11 @@
 package com.minkostplan.eksamensprojekt.Model;
 
-public class User {
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+
+public class User implements UserDetails {
 
     private int userId;
     private String firstName;
@@ -35,6 +40,42 @@ public class User {
         this.subscriber = subscriber;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Implement this method based on your roles/authorities logic
+        return null;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     public int getUserId() {
         return userId;
     }
@@ -65,10 +106,6 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {
@@ -151,7 +188,7 @@ public class User {
                 ", gender=" + gender +
                 ", weight=" + weight +
                 ", height=" + height +
-                ", activityLevel='" + activityLevel + '\'' +
+                ", activityLevel=" + activityLevel +
                 ", employed=" + employed +
                 ", subscriber=" + subscriber +
                 '}';

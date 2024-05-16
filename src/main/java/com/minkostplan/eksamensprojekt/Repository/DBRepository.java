@@ -143,6 +143,7 @@ public class DBRepository {
         }
     }
 
+
     public boolean deleteUser(int userId) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -192,6 +193,7 @@ public class DBRepository {
         }
         return user;
     }
+
 
     public void createIngredients(Ingredients ingredients) {
         Connection conn = null;
@@ -294,7 +296,6 @@ public class DBRepository {
         }
         return ingredientsList;
     }
-
     public void createSubscription(Subscription subscription) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -308,7 +309,6 @@ public class DBRepository {
             pstmt.setDate(3, new java.sql.Date(subscription.getEndDate().getTime()));
             pstmt.setDouble(4, subscription.getPrice());
             pstmt.setString(5, subscription.getStatus());
-
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -317,7 +317,7 @@ public class DBRepository {
         }
     }
 
-    public void updateSubscriptionStatus(int userId, String status) {
+    public void updateUserSubscriptionStatus(int userId, boolean isSubscriber) {
         Connection conn = null;
         PreparedStatement pstmt = null;
 
@@ -325,13 +325,16 @@ public class DBRepository {
             conn = getConnection();
             String sql = "UPDATE User SET subscriber = ? WHERE userId = ?";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setBoolean(1, status.equals("active"));
+            pstmt.setBoolean(1, isSubscriber);
             pstmt.setInt(2, userId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
+            System.out.println("Error connecting to the database or executing the query.");
             e.printStackTrace();
         } finally {
             closeResources(conn, pstmt);
         }
     }
+
+
 }
