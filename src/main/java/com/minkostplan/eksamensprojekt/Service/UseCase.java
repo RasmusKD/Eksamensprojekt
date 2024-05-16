@@ -2,24 +2,41 @@ package com.minkostplan.eksamensprojekt.Service;
 
 import com.minkostplan.eksamensprojekt.Model.Ingredients;
 import com.minkostplan.eksamensprojekt.Model.Recipe;
-import com.minkostplan.eksamensprojekt.Repository.DBRepository;
 import com.minkostplan.eksamensprojekt.Model.User;
+import com.minkostplan.eksamensprojekt.Repository.DBRepository;
+import com.stripe.exception.StripeException;
+import com.stripe.model.checkout.Session;
+import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class UseCase {
-    private static DBRepository dBRepository; // Make it static
+
+    @Value("${stripe.success.url}")
+    private String successUrl;
+
+    @Value("${stripe.cancel.url}")
+    private String cancelUrl;
+
+    @Value("${stripe.webhook.secret}")
+    private String endpointSecret;
+
+    private DBRepository dBRepository;
 
     @Autowired
     public UseCase(DBRepository dBRepository) {
-        UseCase.dBRepository = dBRepository; // Assign it in constructor
+        this.dBRepository = dBRepository;
     }
 
-    private User currentUser; // Holds the reference to the logged-in user
+    private User currentUser;
+
+    public void setCurrentUser(User user) {
+        this.currentUser = user;
+    }
 
     public void createUser(User user) {
         dBRepository.createUser(user);
@@ -27,8 +44,7 @@ public class UseCase {
 
     public void updateUser(User user) {
         if (currentUser != null) {
-            // Make sure the user is logged in
-            user.setUserId(currentUser.getUserId()); // Ensure the ID remains the same
+            user.setUserId(currentUser.getUserId());
             dBRepository.updateUser(user);
             System.out.println("User information updated successfully.");
         } else {
@@ -48,7 +64,7 @@ public class UseCase {
         if (currentUser != null) {
             if (dBRepository.deleteUser(currentUser.getUserId())) {
                 System.out.println("User deleted successfully.");
-                currentUser = null; // Clear the current user since the account is deleted
+                currentUser = null;
             } else {
                 System.out.println("Failed to delete user.");
             }
@@ -58,23 +74,46 @@ public class UseCase {
     }
 
     public void createIngredients(Ingredients ingredients) {
-        // Delegate to DBRepository to create ingredients
         dBRepository.createIngredients(ingredients);
         System.out.println("New ingredient created successfully!");
     }
 
     public void createRecipeWithIngredients(Recipe recipe) {
-        // Now, you can save the recipe to the database
-        // You need to implement the method in DBRepository to handle this
-        // Call the repository method to create the recipe with ingredients
         dBRepository.createRecipeWithIngredients(recipe, recipe.getIngredients());
     }
 
-
     public List<Ingredients> getAllIngredients() {
-        // Delegate to DBRepository to fetch all ingredients from the database
         return dBRepository.getAllIngredients();
     }
 
+    public User getCurrentUser() {
+        return currentUser;
+    }
+    public Session createCheckoutSession(int userId, String priceId) throws StripeException {
+        SessionCreateParams params =
+                SessionCreateParams.builder()
+                        .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
+                        .setSuccessUrl(successUrl + "?session_id={CHECKOUT_SESSION_ID}")
+                        .setCancelUrl(cancelUrl)
+                        .addLineItem(
+                                SessionCreateParams.LineItem.builder()
+                                        .setPrice(priceId)
+                                        .setQuantity(1L)
+                                        .build()
+                        )
+                        .putMetadata("userId", String.valueOf(userId))
+                        .build();
+
+        return Session.create(params);
+    }
+
+    public void updateSubscriptionStatus(int userId, String status) {
+        dBRepository.updateSubscriptionStatus(userId, status);
+    }
+
+    public void handleCheckoutSessionCompleted(Session session) {
+        String userId = session.getMetadata().get("userId");
+        updateSubscriptionStatus(Integer.parseInt(userId), "active");
+    }
 
 }

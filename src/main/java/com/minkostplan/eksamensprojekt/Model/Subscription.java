@@ -7,13 +7,19 @@ public class Subscription {
     private int userId;
     private Date startDate;
     private Date endDate;
+    private double price;
     private String status;
 
-    public Subscription(int subscriptionId, int userId, Date startDate, Date endDate, String status) {
+
+    public Subscription() {
+    }
+
+    public Subscription(int subscriptionId, int userId, Date startDate, Date endDate, double price, String status) {
         this.subscriptionId = subscriptionId;
         this.userId = userId;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.price = price;
         this.status = status;
     }
 
@@ -25,12 +31,12 @@ public class Subscription {
         this.subscriptionId = subscriptionId;
     }
 
-    public String getStatus() {
-        return status;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public Date getStartDate() {
@@ -41,20 +47,28 @@ public class Subscription {
         this.startDate = startDate;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public Date getEndDate() {
         return endDate;
     }
 
     public void setEndDate(Date endDate) {
         this.endDate = endDate;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override
@@ -64,6 +78,7 @@ public class Subscription {
                 ", userId=" + userId +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +
+                ", price=" + price +
                 ", status='" + status + '\'' +
                 '}';
     }

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stripe Payment</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+<body>
+<div class="container">
+    <h1>Betal med Stripe</h1>
+    <button id="checkout-button" class="btn-primary">Start Stripe Payment</button>
+    <!-- Embedding user ID in a hidden element -->
+    <input type="hidden" id="user-id" th:value="${userId}">
+</div>
+
+<script>
+    const stripePublicKey = 'pk_test_51PGz21BcOCSFJlaS9GnQrmz3wFcSw82xsDryxcqWPVb0orDtOWKFiB0clb18lk2CC67VdTnJ7cfjWFCBbudi1Gms00x9Tgqpzd';
+    const stripe = Stripe(stripePublicKey);
+
+    document.getElementById('checkout-button').addEventListener('click', function () {
+        // Retrieve userId from the hidden input element
+        const userId = document.getElementById('user-id').value;
+
+        fetch('/stripe/create-checkout-session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                priceId: 'price_1PGznYBcOCSFJlaSBsL8PYf2', // Replace with your actual price ID
+                userId: userId // Pass user ID to backend
+            }),
+        })
+            .then(response => response.json())
+            .then(session => {
+                if (session.error) {
+                    alert(session.error);
+                } else {
+                    // Redirect to Stripe checkout
+                    return stripe.redirectToCheckout({ sessionId: session.id });
+                }
+            })
+            .then(result => {
+                if (result.error) {
+                    alert(result.error.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+
+</body>
+</html>
