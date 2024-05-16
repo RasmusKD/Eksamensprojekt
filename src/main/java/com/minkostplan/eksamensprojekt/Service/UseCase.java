@@ -86,6 +86,7 @@ public class UseCase {
     public void updateUserSubscriptionStatus(int userId, boolean subscriberStatus) {
         dBRepository.updateUserSubscriptionStatus(userId, subscriberStatus);
     }
+
     public User getUserByEmail(String email) {
         return dBRepository.findByEmail(email);
     }

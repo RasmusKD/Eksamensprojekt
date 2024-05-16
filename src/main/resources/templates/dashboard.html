@@ -23,31 +23,49 @@
             <div class="headline">Velkommen tilbage,</div>
             <div class="sub-headline" th:text="${user.firstName} + ' ' + ${user.lastName}"></div>
             <div class="user-info">
-                <p><i class="material-icons">email</i> <strong>Email:</strong> <span th:text="${user.email}"></span></p>
-                <p><i class="material-icons">cake</i> <strong>Alder:</strong> <span th:text="${user.age}"></span></p>
-                <p><i class="material-icons">wc</i> <strong>Køn:</strong> <span th:text="${user.gender == 'M' ? 'Mand' : 'Kvinde'}"></span></p>
-                <p><i class="material-icons">fitness_center</i> <strong>Vægt:</strong> <span th:text="${user.weight}"></span> kg</p>
-                <p><i class="material-icons">height</i> <strong>Højde:</strong> <span th:text="${user.height}"></span> cm</p>
-                <p><i class="material-icons">directions_run</i> <strong>Aktivitetsniveau:</strong> <span th:text="${activityLevelMap[user.activityLevel]}"></span></p>
-                <p><i class="material-icons">flag</i> <strong>Mål:</strong> <span th:text="${goalMap[user.goal]}"></span></p>
-                <p><i class="material-icons">check_circle</i> <strong>Abonnent:</strong> <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span></p>
-                <p><i class="material-icons">local_dining</i> <strong>Kaloriebehov:</strong> <span th:text="${calorieNeeds} + ' kcal'"></span></p>
+                <form th:action="@{/update-user}" method="post">
+                    <p><i class="material-icons">email</i> <strong>Email:</strong> <span th:text="${user.email}"></span></p>
+                    <p><i class="material-icons">cake</i> <strong>Alder:</strong>
+                        <input type="number" name="age" th:value="${user.age}" required/>
+                    </p>
+                    <p><i class="material-icons">wc</i> <strong>Køn:</strong>
+                        <select name="gender">
+                            <option value="M" th:selected="${user.gender == 'M'}">Mand</option>
+                            <option value="F" th:selected="${user.gender == 'F'}">Kvinde</option>
+                        </select>
+                    </p>
+                    <p><i class="material-icons">fitness_center</i> <strong>Vægt:</strong>
+                        <input type="number" step="0.1" name="weight" th:value="${user.weight}" required/> kg
+                    </p>
+                    <p><i class="material-icons">height</i> <strong>Højde:</strong>
+                        <input type="number" step="0.1" name="height" th:value="${user.height}" required/> cm
+                    </p>
+                    <p><i class="material-icons">directions_run</i> <strong>Aktivitetsniveau:</strong>
+                        <select name="activityLevel">
+                            <option value="0" th:selected="${user.activityLevel == 0}">Ingen eller meget lidt aktiv</option>
+                            <option value="1" th:selected="${user.activityLevel == 1}">1-2 gange om ugen</option>
+                            <option value="2" th:selected="${user.activityLevel == 2}">3-5 gange om ugen</option>
+                            <option value="3" th:selected="${user.activityLevel == 3}">6-7 gange om ugen</option>
+                            <option value="4" th:selected="${user.activityLevel == 4}">To gange om dagen</option>
+                        </select>
+                    </p>
+                    <p><i class="material-icons">flag</i> <strong>Mål:</strong>
+                        <select name="goal">
+                            <option value="0" th:selected="${user.goal == 0}">Vægttab</option>
+                            <option value="1" th:selected="${user.goal == 1}">Vægtøgning</option>
+                            <option value="2" th:selected="${user.goal == 2}">Muskelopbygning</option>
+                            <option value="3" th:selected="${user.goal == 3}">Vedligehold vægt</option>
+                        </select>
+                    </p>
+                    <p><i class="material-icons">check_circle</i> <strong>Abonnent:</strong>
+                        <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span>
+                    </p>
+                    <p><i class="material-icons">local_dining</i> <strong>Kaloriebehov:</strong>
+                        <span th:text="${calorieNeeds} + ' kcal'"></span>
+                    </p>
+                    <button type="submit" class="btn-primary">Opdater Information</button>
+                </form>
             </div>
-        </div>
-    </div>
-    <!-- Tilføj form for at vælge mål -->
-    <div class="content-box">
-        <div class="text-box">
-            <form th:action="@{/update-goal}" method="post">
-                <label for="goal">Vælg dit mål:</label>
-                <select name="goal" id="goal">
-                    <option value="0" th:selected="${user.goal == 0}">Vægttab</option>
-                    <option value="1" th:selected="${user.goal == 1}">Vægtøgning</option>
-                    <option value="2" th:selected="${user.goal == 2}">Muskelopbygning</option>
-                    <option value="3" th:selected="${user.goal == 3}">Vedligehold vægt</option>
-                </select>
-                <button type="submit" class="btn-primary">Opdater Mål</button>
-            </form>
         </div>
     </div>
     <!-- Tilføj knappen her -->
