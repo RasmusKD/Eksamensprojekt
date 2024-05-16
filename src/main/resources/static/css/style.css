@@ -320,3 +320,35 @@ input, label {
 .goal-options, .activity-options {
     flex-direction: column;
 }
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.user-info p {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 1.1em;
+}
+
+.user-info i.material-icons {
+    color: #89cdf0;
+}
+
+.sub-headline {
+    font-size: 1.5em;
+    text-align: left;
+}
+
+.login-content {
+    justify-content: center;
+}
+
+.dashboard-content {
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding-top: 20px;
+}
