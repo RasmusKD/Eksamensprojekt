@@ -17,7 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private DBRepository dbRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private UseCase useCase;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -26,9 +26,12 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("Brugeren blev ikke fundet");
         }
 
+        // Sæt currentUser i UseCase
+        useCase.setCurrentUser(user);
+
         UserBuilder builder = org.springframework.security.core.userdetails.User.withUsername(username);
         builder.password(user.getPassword());
-        builder.roles("USER"); // TODO: Bruger rolle skift til at kende forskel på subscriber/employee
+        builder.roles("USER");
 
         return builder.build();
     }

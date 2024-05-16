@@ -16,9 +16,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico").permitAll()
                         .requestMatchers("/", "/login", "/register", "/omOs").permitAll()
-                        .requestMatchers("/dashboard").authenticated()
+                        .requestMatchers("/dashboard", "/stripe-payment").authenticated()
                         .anyRequest().authenticated()
                 )
+                .csrf().ignoringRequestMatchers("/stripe/create-checkout-session", "/stripe/webhook") // Deaktiver CSRF for disse endpoints
+                .and()
                 .formLogin(form -> form
                         .loginPage("/login")
                         .loginProcessingUrl("/login")

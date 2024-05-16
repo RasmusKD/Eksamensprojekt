@@ -39,7 +39,7 @@ public class EksamensprojektApplication {
 				System.out.println("New ingredient created successfully!");
 			};
 		}
-	*/
+
 	@Bean
 	public CommandLineRunner demo() {
 		return args -> {
@@ -62,7 +62,7 @@ public class EksamensprojektApplication {
 
 			System.out.println("Recipe created successfully with existing ingredients!");
 		};
-	}
+	}*/
 
 }
 

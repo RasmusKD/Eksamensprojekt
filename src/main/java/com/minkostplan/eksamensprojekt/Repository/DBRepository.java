@@ -6,6 +6,7 @@ import com.minkostplan.eksamensprojekt.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+import com.minkostplan.eksamensprojekt.Model.Subscription;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -292,5 +293,45 @@ public class DBRepository {
             closeResources(conn, pstmt, rs);
         }
         return ingredientsList;
+    }
+
+    public void createSubscription(Subscription subscription) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "INSERT INTO Subscription (userId, startDate, endDate, price, status) VALUES (?, ?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, subscription.getUserId());
+            pstmt.setDate(2, new java.sql.Date(subscription.getStartDate().getTime()));
+            pstmt.setDate(3, new java.sql.Date(subscription.getEndDate().getTime()));
+            pstmt.setDouble(4, subscription.getPrice());
+            pstmt.setString(5, subscription.getStatus());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
+    }
+
+    public void updateSubscriptionStatus(int userId, String status) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE User SET subscriber = ? WHERE userId = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setBoolean(1, status.equals("active"));
+            pstmt.setInt(2, userId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
     }
 }
