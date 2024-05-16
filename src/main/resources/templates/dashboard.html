@@ -4,23 +4,34 @@
     <meta charset="UTF-8">
     <title>Dashboard</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <div class="top-bar">
     <div class="container">
-        <a href="/dashboard" class="logo-link">
+        <a href="/" class="logo-link">
             <h1>Min Kostplan</h1>
         </a>
         <form th:action="@{/perform_logout}" method="post" style="display: inline;">
-            <button class="btn-primary" type="submit">Logout</button>
+            <button class="btn-primary" type="submit">Log ud</button>
         </form>
     </div>
 </div>
-<div class="content center">
+<div class="content dashboard-content center">
     <div class="content-box">
         <div class="text-box">
-            <div class="headline">Velkommen til forsiden</div>
-            <div class="sub-headline">Denne side er kun tilgængelig for brugere der er logget ind.</div>
+            <div class="headline">Velkommen tilbage,</div>
+            <div class="sub-headline" th:text="${user.firstName} + ' ' + ${user.lastName}"></div>
+            <div class="user-info">
+                <p><i class="material-icons">email</i> <strong>Email:</strong> <span th:text="${user.email}"></span></p>
+                <p><i class="material-icons">cake</i> <strong>Alder:</strong> <span th:text="${user.age}"></span></p>
+                <p><i class="material-icons">wc</i> <strong>Køn:</strong> <span th:text="${user.gender == 'M' ? 'Mand' : 'Kvinde'}"></span></p>
+                <p><i class="material-icons">fitness_center</i> <strong>Vægt:</strong> <span th:text="${user.weight}"></span> kg</p>
+                <p><i class="material-icons">height</i> <strong>Højde:</strong> <span th:text="${user.height}"></span> cm</p>
+                <p><i class="material-icons">directions_run</i> <strong>Aktivitetsniveau:</strong> <span th:text="${activityLevelMap[user.activityLevel]}"></span></p>
+                <p><i class="material-icons">flag</i> <strong>Mål:</strong> <span th:text="${goalMap[user.goal]}"></span></p>
+                <p><i class="material-icons">check_circle</i> <strong>Abonnent:</strong> <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span></p>
+            </div>
         </div>
     </div>
     <!-- Tilføj knappen her -->
