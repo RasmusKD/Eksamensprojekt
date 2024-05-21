@@ -7,6 +7,7 @@ import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -53,7 +54,7 @@ public class StripeController {
     }
 
     @GetMapping("/payment-success")
-    public String handlePaymentSuccess(@RequestParam("userId") int userId) {
+    public ModelAndView handlePaymentSuccess(@RequestParam("userId") int userId) {
         Subscription subscription = new Subscription();
         subscription.setUserId(userId);
         subscription.setStartDate(java.sql.Date.valueOf(LocalDate.now()));
@@ -66,6 +67,8 @@ public class StripeController {
         // Update the user's subscription status
         useCase.updateUserSubscriptionStatus(userId, true);
 
-        return "redirect:/payment-success";
+        ModelAndView modelAndView = new ModelAndView("payment-success");
+        modelAndView.addObject("message", "Betaling gennemført! Tak for din betaling. Dit abonnement er nu aktivt.");
+        return modelAndView;
     }
 }
