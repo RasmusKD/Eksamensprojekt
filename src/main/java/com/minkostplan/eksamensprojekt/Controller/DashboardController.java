@@ -24,30 +24,16 @@ public class DashboardController {
         String email = authentication.getName(); // Get the logged-in user's email
         User user = useCase.getUserByEmail(email); // Retrieve user info from the database
 
-        // Mapping activity levels and goals
-        Map<Integer, String> activityLevelMap = new HashMap<>();
-        activityLevelMap.put(0, "Ingen eller meget lidt aktiv");
-        activityLevelMap.put(1, "1-2 gange om ugen");
-        activityLevelMap.put(2, "3-5 gange om ugen");
-        activityLevelMap.put(3, "6-7 gange om ugen");
-        activityLevelMap.put(4, "To gange om dagen");
+        if (user.getEmployed() == 0) {
+            return "redirect:/customer-dashboard.html";
+        } else if (user.getEmployed() == 1) {
+            return "redirect:/employee-dashboard.html";
+        } else if (user.getEmployed() == 2) {
+            return "redirect:/admin-dashboard.html";
+        }
 
-        Map<Integer, String> goalMap = new HashMap<>();
-        goalMap.put(0, "Vægttab");
-        goalMap.put(1, "Vægtøgning");
-        goalMap.put(2, "Muskelopbygning");
-        goalMap.put(3, "Vedligehold vægt");
-
-        // Calculate calories
-        double calorieNeeds = useCase.calculateCalories(user);
-
-        model.addAttribute("user", user);
-        model.addAttribute("activityLevelMap", activityLevelMap);
-        model.addAttribute("goalMap", goalMap);
-        model.addAttribute("calorieNeeds", calorieNeeds); // Add calorie needs to the model
-        model.addAttribute("userId", user.getUserId()); // Add user ID to the model
-
-        return "dashboard";
+        // Default to customer dashboard if no matching role found
+        return "redirect:/customer-dashboard.html";
     }
 
     @PostMapping("/update-goal")
