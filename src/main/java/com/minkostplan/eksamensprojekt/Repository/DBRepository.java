@@ -21,7 +21,10 @@ public class DBRepository {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
+    @Autowired
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
     private Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
@@ -42,6 +45,7 @@ public class DBRepository {
             e.printStackTrace();
         }
     }
+
 
     private void closeResources(Connection conn, PreparedStatement pstmt) {
         closeResources(conn, pstmt, null);
@@ -90,27 +94,28 @@ public class DBRepository {
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                user = new User(
-                        rs.getInt("userId"),
-                        rs.getString("firstName"),
-                        rs.getString("lastName"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getInt("age"),
-                        rs.getString("gender").charAt(0),
-                        rs.getDouble("weight"),
-                        rs.getDouble("height"),
-                        rs.getInt("activityLevel"),
-                        rs.getInt("goal"),
-                        rs.getInt("isEmployed"),
-                        rs.getBoolean("subscriber")
-                );
+                user = new User();
+                user.setUserId(rs.getInt("userId"));
+                user.setFirstName(rs.getString("firstName"));
+                user.setLastName(rs.getString("lastName"));
+                user.setEmail(rs.getString("email"));
+                user.setPassword(rs.getString("password"));
+                user.setAge(rs.getInt("age"));
+                user.setGender(rs.getString("gender").charAt(0));
+                user.setWeight(rs.getDouble("weight"));
+                user.setHeight(rs.getDouble("height"));
+                user.setActivityLevel(rs.getInt("activityLevel"));
+                user.setGoal(rs.getInt("goal"));
+                user.setEmployed(rs.getInt("isEmployed"));
+                user.setSubscriber(rs.getBoolean("subscriber"));
             }
         } catch (SQLException e) {
+            System.out.println("Error finding user by email: " + e.getMessage());
             e.printStackTrace();
         } finally {
             closeResources(conn, pstmt, rs);
         }
+
         return user;
     }
 

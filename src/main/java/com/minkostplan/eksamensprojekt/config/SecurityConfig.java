@@ -18,8 +18,8 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/", "/login", "/register", "/omOs", "/success", "/cancel","/recipe-creation", "/recipe-success").permitAll()
-                        .requestMatchers("/dashboard", "/stripe-payment").authenticated()
+                        .requestMatchers("/", "/login", "/register", "/omOs", "/success", "/cancel", "/recipe-creation", "/recipe-success").permitAll()
+                        .requestMatchers("/dashboard").authenticated()
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf
@@ -43,7 +43,6 @@ public class SecurityConfig {
 
         return http.build();
     }
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
