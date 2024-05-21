@@ -1,9 +1,12 @@
 package com.minkostplan.eksamensprojekt.Model;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class User implements UserDetails {
 
@@ -42,8 +45,19 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // Implement this method based on your roles/authorities logic
-        return null;
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        if (subscriber) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_SUBSCRIBER"));
+        }
+        switch (employed) {
+            case 1:
+                authorities.add(new SimpleGrantedAuthority("ROLE_EMPLOYEE"));
+                break;
+            case 2:
+                authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                break;
+        }
+        return authorities;
     }
 
     @Override
