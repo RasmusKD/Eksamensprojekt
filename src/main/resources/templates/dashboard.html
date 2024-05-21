@@ -73,7 +73,11 @@
     <div class="content-box">
         <div class="text-box">
             <button id="checkout-button" class="btn-primary">Betal med Stripe</button>
-            <input type="hidden" id="user-id" th:value="${userId}"> <!-- Ensure user ID is set correctly -->
+            <input type="hidden" id="user-id" th:value="${userId}">
+            <!-- Knapper kan nu tilføjes for roller eksempel: -->
+            <div th:if="${#authorization.expression('hasRole(''ROLE_SUBSCRIBER'')')}">
+                Dette bliver kun vist hvis brugeren har rollen ROLE_SUBSCRIBER.
+            </div>
         </div>
     </div>
 </div>
