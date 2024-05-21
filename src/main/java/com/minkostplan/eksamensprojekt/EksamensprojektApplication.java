@@ -27,7 +27,7 @@ public class EksamensprojektApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(EksamensprojektApplication.class, args);
 	}
-
+/*
 	@Bean
 	public CommandLineRunner createUserWithIsEmployedTwo() {
 		return args -> {
@@ -56,6 +56,6 @@ public class EksamensprojektApplication {
 			System.out.println("User created successfully with isEmployed set to 2!");
 		};
 	}
-
+*/
 	// Other CommandLineRunners or beans
 }
