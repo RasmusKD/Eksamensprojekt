@@ -45,6 +45,7 @@ public class DashboardController {
         model.addAttribute("activityLevelMap", activityLevelMap);
         model.addAttribute("goalMap", goalMap);
         model.addAttribute("calorieNeeds", calorieNeeds); // Add calorie needs to the model
+        model.addAttribute("userId", user.getUserId()); // Add user ID to the model
 
         return "dashboard";
     }
@@ -58,6 +59,7 @@ public class DashboardController {
 
         return "redirect:/dashboard"; // Redirect back to the dashboard
     }
+
     @PostMapping("/update-user")
     public String updateUser(
             @RequestParam("age") int age,
