@@ -57,7 +57,7 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "INSERT INTO User (firstName, lastName, email, password, age, gender, weight, height, activityLevel, goal, isEmployed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO User (firstName, lastName, email, password, age, gender, weight, height, activityLevel, goal, employed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
@@ -106,11 +106,10 @@ public class DBRepository {
                 user.setHeight(rs.getDouble("height"));
                 user.setActivityLevel(rs.getInt("activityLevel"));
                 user.setGoal(rs.getInt("goal"));
-                user.setEmployed(rs.getInt("isEmployed"));
+                user.setEmployed(rs.getInt("employed"));
                 user.setSubscriber(rs.getBoolean("subscriber"));
             }
         } catch (SQLException e) {
-            System.out.println("Error finding user by email: " + e.getMessage());
             e.printStackTrace();
         } finally {
             closeResources(conn, pstmt, rs);
@@ -125,7 +124,7 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "UPDATE User SET firstName=?, lastName=?, age=?, gender=?, weight=?, height=?, activityLevel=?, goal=?, isEmployed=?, subscriber=? WHERE userId=?";
+            String sql = "UPDATE User SET firstName=?, lastName=?, age=?, gender=?, weight=?, height=?, activityLevel=?, goal=?, employed=?, subscriber=? WHERE userId=?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
@@ -141,7 +140,6 @@ public class DBRepository {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error connecting to the database or executing the query.");
             e.printStackTrace();
         } finally {
             closeResources(conn, pstmt);
@@ -188,7 +186,7 @@ public class DBRepository {
                             rs.getDouble("height"),
                             rs.getInt("activityLevel"),
                             rs.getInt("goal"),
-                            rs.getInt("isEmployed"),
+                            rs.getInt("employed"),
                             rs.getBoolean("subscriber")
                     );
                 }
