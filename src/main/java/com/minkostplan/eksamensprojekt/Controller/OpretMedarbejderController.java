@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.ui.Model;
 
 @Controller
 public class OpretMedarbejderController {
@@ -23,18 +24,18 @@ public class OpretMedarbejderController {
     @PostMapping("/update-employment-status")
     public String updateEmploymentStatus(@RequestParam("email") String email,
                                          @RequestParam("employmentStatus") int employmentStatus,
-                                         RedirectAttributes redirectAttributes) {
+                                         Model model) {
         try {
             User user = useCase.getUserByEmail(email);
             if (user != null) {
                 useCase.updateEmploymentStatus(email, employmentStatus);
-                redirectAttributes.addFlashAttribute("message", "Employment status updated successfully!");
+                model.addAttribute("message", "Employment status updated successfully!");
             } else {
-                redirectAttributes.addFlashAttribute("error", "User not found!");
+                model.addAttribute("error", "User not found!");
             }
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "An error occurred while updating the employment status.");
+            model.addAttribute("error", "An error occurred while updating the employment status.");
         }
-        return "redirect:/opret-medarbejder";
+        return "opret-medarbejder"; // Return the same view to stay on the page
     }
 }
