@@ -67,9 +67,9 @@ public class UseCase {
         System.out.println("New ingredient created successfully!");
     }
 
-    public void createRecipeWithIngredients(Recipe recipe) {
+  /*  public void createRecipeWithIngredients(Recipe recipe) {
         dBRepository.createRecipeWithIngredients(recipe, recipe.getIngredients());
-    }
+    }*/
 
     public List<Ingredients> getAllIngredients() {
         return dBRepository.getAllIngredients();
