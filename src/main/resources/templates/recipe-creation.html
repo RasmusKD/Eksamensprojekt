@@ -6,24 +6,24 @@
 </head>
 <body>
 <h1>Create a New Recipe</h1>
-<form th:action="@{/recipe-creation}" method="post">
+<form th:action="@{/recipe-creation}" method="post" enctype="multipart/form-data">
     <label for="name">Recipe Name:</label>
     <input type="text" id="name" name="title" required><br>
 
-    <label for="description">Description:</label> <!-- Adding missing description field -->
+    <label for="description">Description:</label>
     <textarea id="description" name="description" required></textarea><br>
 
     <label for="ingredients">Ingredients:</label>
     <textarea id="ingredients" name="ingredients" required></textarea><br>
 
     <label for="instructions">Instructions:</label>
-    <textarea id="instructions" name="method" required></textarea><br>
+    <textarea id="instructions" name="instructions" required></textarea><br>
 
     <label for="cookingTime">Cooking Time:</label>
     <input type="text" id="cookingTime" name="cookingTime" required><br>
 
-    <label for="imageUrl">Image URL:</label>
-    <input type="text" id="imageUrl" name="imageUrl" required><br>
+    <label for="imageUrl">Image:</label>
+    <input type="file" id="imageUrl" name="imageFile" required><br>
 
     <button type="submit">Create Recipe</button>
 </form>

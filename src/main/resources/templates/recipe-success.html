@@ -7,7 +7,13 @@
 <body>
 <h1>Recipe Created Successfully</h1>
 <p>Your recipe has been created successfully!</p>
+<p th:text="'Title: ' + ${recipe.title}"></p>
+<p th:text="'Description: ' + ${recipe.description}"></p>
+<p th:text="'Ingredients: ' + ${recipe.ingredients}"></p>
+<p th:text="'Method: ' + ${recipe.method}"></p>
+<p th:text="'Cooking Time: ' + ${recipe.cookingTime}"></p>
+<p th:if="${recipe.imageUrl}">
+    <img th:src="${recipe.imageUrl}" alt="Recipe Image"/>
+</p>
 </body>
 </html>
-
-
