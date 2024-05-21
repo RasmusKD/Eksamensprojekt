@@ -221,13 +221,12 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "INSERT INTO Ingredients (ingredientsId, name, fat, carbohydrate, protein) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Ingredients (name, fat, carbohydrate, protein) VALUES (?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, ingredients.getIngredientsId());
-            pstmt.setString(2, ingredients.getName());
-            pstmt.setDouble(3, ingredients.getFat());
-            pstmt.setDouble(4, ingredients.getCarbohydrate());
-            pstmt.setDouble(5, ingredients.getProtein());
+            pstmt.setString(1, ingredients.getName());
+            pstmt.setDouble(2, ingredients.getFat());
+            pstmt.setDouble(3, ingredients.getCarbohydrate());
+            pstmt.setDouble(4, ingredients.getProtein());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error connecting to the database or executing the query.");
@@ -236,6 +235,7 @@ public class DBRepository {
             closeResources(conn, pstmt);
         }
     }
+
 
     public void createRecipeWithIngredients(Recipe recipe, List<Ingredients> ingredientsList) {
         Connection conn = null;
