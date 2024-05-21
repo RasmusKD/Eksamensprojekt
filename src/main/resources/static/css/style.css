@@ -53,6 +53,22 @@ input, label {
     margin: 0;
     font-size: 24px;
 }
+.color-red {
+    background-color: #d57878!important;
+    transition: none !important;
+}
+
+.color-red:hover {
+    background-color: #b74e4e !important;
+}
+
+.color-blue {
+    background-color: #88cbee !important;
+}
+
+.color-blue:hover {
+    background-color: #4f99d5 !important;
+}
 
 .btn-primary {
     text-decoration: none;
@@ -86,26 +102,6 @@ input, label {
 
 .btn-primary-large:hover {
     background-color: #4eb74e;
-}
-
-.btn-secondary {
-    display: inline-block;
-    background-color: #89cdf0;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 13px;
-    width: 100%;
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.09)!important;
-    transition: background-color 0.3s ease-in-out;
-}
-
-.btn-secondary:hover {
-    background-color: #227dc7;
 }
 
 .content {
@@ -266,6 +262,10 @@ input, label {
 
 .spacing {
     margin-top: 50px;
+}
+
+.button-spacing {
+    margin-bottom: 10px;
 }
 
 .center {

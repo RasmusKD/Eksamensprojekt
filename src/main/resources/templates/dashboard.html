@@ -48,7 +48,7 @@
                         <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span>
                     </p>
                     <p><i class="material-icons">local_dining</i> <strong>Kaloriebehov:</strong>
-                        <span th:text="${calorieNeeds} + ' kcal'"></span>
+                        <span th:text="${#numbers.formatDecimal(calorieNeeds, 0, 0)} + ' kcal'"></span>
                     </p>
                 </div>
                 <form id="user-form" th:action="@{/update-user}" method="post" style="display:none;">
@@ -58,8 +58,8 @@
                     </p>
                     <p><i class="material-icons">wc</i> <strong>Køn:</strong>
                         <select name="gender">
-                            <option value="M" th:selected="${user.gender} == 'M'">Mand</option>
-                            <option value="F" th:selected="${user.gender} == 'F'">Kvinde</option>
+                            <option value="M" th:selected="${user.gender == 'M'}">Mand</option>
+                            <option value="F" th:selected="${user.gender == 'F'}">Kvinde</option>
                         </select>
                     </p>
                     <p><i class="material-icons">fitness_center</i> <strong>Vægt:</strong>
@@ -89,22 +89,20 @@
                         <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span>
                     </p>
                     <p><i class="material-icons">local_dining</i> <strong>Kaloriebehov:</strong>
-                        <span th:text="${calorieNeeds} + ' kcal'"></span>
+                        <span th:text="${#numbers.formatDecimal(calorieNeeds, 0, 0)} + ' kcal'"></span>
                     </p>
-                    <button type="submit" class="btn-primary">Opdater Information</button>
+                    <button type="submit" class="btn-primary w-100 button-spacing">Opdater Information</button>
                 </form>
-                <button id="edit-button" class="btn-primary">Rediger</button>
+                <button id="edit-button" class="btn-primary w-100">Rediger</button>
             </div>
         </div>
     </div>
     <div class="content-box">
         <div class="text-box">
-            <button id="checkout-button" class="btn-primary">Betal med Stripe</button>
+            <button id="checkout-button" class="btn-primary w-100">Betal med Stripe</button>
             <input type="hidden" id="user-id" th:value="${userId}">
-            <div th:if="${#authorization.expression('hasRole(''ROLE_SUBSCRIBER'')')}">
-                Dette bliver kun vist hvis brugeren har rollen ROLE_SUBSCRIBER.
-            </div>
-            <a th:href="@{/opret-medarbejder}" class="btn-primary">Opret medarbejder</a>
+            <!-- Knapper kan nu tilføjes for roller eksempel: -->
+            <button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:href="@{/opret-medarbejder}" class="btn-primary color-blue w-100">Opret medarbejder</button>
         </div>
     </div>
 </div>
@@ -120,10 +118,12 @@
             form.style.display = 'block';
             view.style.display = 'none';
             this.textContent = 'Annuller';
+            this.classList.add('color-red');
         } else {
             form.style.display = 'none';
             view.style.display = 'block';
             this.textContent = 'Rediger';
+            this.classList.remove('color-red');
         }
     });
 
