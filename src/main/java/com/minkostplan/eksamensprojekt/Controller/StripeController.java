@@ -24,14 +24,15 @@ public class StripeController {
         Map<String, String> response = new HashMap<>();
         try {
             String priceId = (String) payload.get("priceId");
-            int userId = Integer.parseInt((String) payload.get("userId"));
-            String name = (String) payload.get("name");
-            String email = (String) payload.get("email");
+            String userIdStr = (String) payload.get("userId"); // User ID received as String
+            int userId = Integer.parseInt(userIdStr); // Convert String to Integer
+
+            String email = useCase.getUserById(userId).getEmail();
 
             SessionCreateParams params = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
                     .setSuccessUrl("http://localhost:8080/stripe/payment-success?userId=" + userId) // Include userId in the success URL
-                    .setCancelUrl("http://localhost:8080/cancel")
+                    .setCancelUrl("http://localhost:8080/payment-cancel")
                     .addLineItem(
                             SessionCreateParams.LineItem.builder()
                                     .setPrice(priceId)
@@ -45,6 +46,8 @@ public class StripeController {
             response.put("id", session.getId());
         } catch (StripeException e) {
             response.put("error", e.getMessage());
+        } catch (NumberFormatException e) {
+            response.put("error", "Invalid user ID format.");
         }
         return response;
     }

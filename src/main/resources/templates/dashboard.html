@@ -5,6 +5,7 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <script src="https://js.stripe.com/v3/"></script> <!-- Stripe script added here -->
 </head>
 <body>
 <div class="top-bar">
@@ -68,15 +69,47 @@
             </div>
         </div>
     </div>
-    <!-- Tilføj knappen her -->
+    <!-- Updated Stripe button here -->
     <div class="content-box">
         <div class="text-box">
-            <a href="/stripe-payment" class="btn-primary">Betal med Stripe</a>
+            <button id="checkout-button" class="btn-primary">Betal med Stripe</button>
+            <input type="hidden" id="user-id" th:value="${userId}"> <!-- Ensure user ID is set correctly -->
         </div>
     </div>
 </div>
 <div class="footer">
     <p>Copyright © 2024 Min Kostplan</p>
 </div>
+
+<script>
+    const stripePublicKey = 'pk_test_51PGz21BcOCSFJlaS9GnQrmz3wFcSw82xsDryxcqWPVb0orDtOWKFiB0clb18lk2CC67VdTnJ7cfjWFCBbudi1Gms00x9Tgqpzd';
+    const stripe = Stripe(stripePublicKey);
+
+    document.getElementById('checkout-button').addEventListener('click', function () {
+        const userId = document.getElementById('user-id').value;
+
+        fetch('/stripe/create-checkout-session', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                priceId: 'price_1PGznYBcOCSFJlaSBsL8PYf2',
+                userId: userId
+            }),
+        })
+            .then(response => response.json())
+            .then(session => {
+                if (session.error) {
+                    alert(session.error);
+                } else {
+                    return stripe.redirectToCheckout({ sessionId: session.id });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
 </body>
 </html>
