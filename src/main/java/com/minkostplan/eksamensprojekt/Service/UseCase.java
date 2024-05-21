@@ -29,6 +29,8 @@ public class UseCase {
 
     private User currentUser;
 
+
+
     public void setCurrentUser(User user) {
         this.currentUser = user;
     }
@@ -41,6 +43,7 @@ public class UseCase {
         dBRepository.updateUser(user);
     }
 
+
     public User getUserById(int userId) {
         return dBRepository.getUserById(userId);
     }
@@ -48,6 +51,10 @@ public class UseCase {
     public boolean isUserLoggedIn() {
         return this.currentUser != null;
     }
+    public void updateEmploymentStatus(String email, int employmentStatus) {
+        dBRepository.updateEmploymentStatus(email, employmentStatus);
+    }
+
 
     public void deleteUser() {
         if (currentUser != null) {
@@ -90,6 +97,8 @@ public class UseCase {
     public User getUserByEmail(String email) {
         return dBRepository.findByEmail(email);
     }
+
+
 
     public String getSuccessUrl() {
         return successUrl;

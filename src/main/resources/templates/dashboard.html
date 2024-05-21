@@ -5,7 +5,7 @@
     <title>Dashboard</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://js.stripe.com/v3/"></script> <!-- Stripe script added here -->
+    <script src="https://js.stripe.com/v3/"></script>
 </head>
 <body>
 <div class="top-bar">
@@ -69,15 +69,14 @@
             </div>
         </div>
     </div>
-    <!-- Updated Stripe button here -->
     <div class="content-box">
         <div class="text-box">
             <button id="checkout-button" class="btn-primary">Betal med Stripe</button>
             <input type="hidden" id="user-id" th:value="${userId}">
-            <!-- Knapper kan nu tilføjes for roller eksempel: -->
             <div th:if="${#authorization.expression('hasRole(''ROLE_SUBSCRIBER'')')}">
                 Dette bliver kun vist hvis brugeren har rollen ROLE_SUBSCRIBER.
             </div>
+            <a th:href="@{/opret-medarbejder}" class="btn-primary">Opret medarbejder</a>
         </div>
     </div>
 </div>
