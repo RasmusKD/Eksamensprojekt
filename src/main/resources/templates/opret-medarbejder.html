@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Employment Status</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+</head>
+<body>
+<div class="container">
+    <h2>Update Employment Status</h2>
+    <form action="/update-employment-status" method="POST">
+        <div class="input-field">
+            <input type="email" id="email" name="email" required>
+            <label for="email">Email</label>
+        </div>
+        <p>
+            <label>
+                <input name="employmentStatus" type="radio" value="1" required />
+                <span>Employee</span>
+            </label>
+        </p>
+        <p>
+            <label>
+                <input name="employmentStatus" type="radio" value="2" required />
+                <span>Admin</span>
+            </label>
+        </p>
+        <button class="btn waves-effect waves-light" type="submit">Update</button>
+    </form>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>

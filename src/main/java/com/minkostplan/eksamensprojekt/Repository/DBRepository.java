@@ -46,6 +46,23 @@ public class DBRepository {
         }
     }
 
+    public void updateEmploymentStatus(String email, int employmentStatus) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE User SET employed = ? WHERE email = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, employmentStatus);
+            pstmt.setString(2, email);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
+    }
 
     private void closeResources(Connection conn, PreparedStatement pstmt) {
         closeResources(conn, pstmt, null);
