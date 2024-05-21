@@ -103,7 +103,7 @@
             <input type="hidden" id="user-id" th:value="${userId}">
             <!-- Knapper kan nu tilføjes for roller eksempel: -->
             <button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:href="@{/opret-medarbejder}" class="btn-primary color-blue w-100">Opret medarbejder</button>
-            <button th:href="@{/add-ingredients}" class="btn-primary color-blue w-100">Tilføj ingredienser</button> <!-- This is the new button -->
+            <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:href="@{/add-ingredients}" class="btn-primary color-blue w-100">Tilføj ingredienser</button>
         </div>
     </div>
 </div>
