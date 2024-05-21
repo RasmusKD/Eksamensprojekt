@@ -65,7 +65,7 @@ public class DBRepository {
             pstmt.setDouble(8, user.getHeight());
             pstmt.setInt(9, user.getActivityLevel());
             pstmt.setInt(10, user.getGoal());
-            pstmt.setBoolean(11, user.isEmployed());
+            pstmt.setInt(11, user.getEmployed());
             pstmt.setBoolean(12, user.isSubscriber());
 
             pstmt.executeUpdate();
@@ -102,7 +102,7 @@ public class DBRepository {
                         rs.getDouble("height"),
                         rs.getInt("activityLevel"),
                         rs.getInt("goal"),
-                        rs.getBoolean("isEmployed"),
+                        rs.getInt("isEmployed"),
                         rs.getBoolean("subscriber")
                 );
             }
@@ -130,7 +130,7 @@ public class DBRepository {
             pstmt.setDouble(6, user.getHeight());
             pstmt.setInt(7, user.getActivityLevel());
             pstmt.setInt(8, user.getGoal());
-            pstmt.setBoolean(9, user.isEmployed());
+            pstmt.setInt(9, user.getEmployed());
             pstmt.setBoolean(10, user.isSubscriber());
             pstmt.setInt(11, user.getUserId());
 
@@ -183,7 +183,7 @@ public class DBRepository {
                             rs.getDouble("height"),
                             rs.getInt("activityLevel"),
                             rs.getInt("goal"),
-                            rs.getBoolean("isEmployed"),
+                            rs.getInt("isEmployed"),
                             rs.getBoolean("subscriber")
                     );
                 }
