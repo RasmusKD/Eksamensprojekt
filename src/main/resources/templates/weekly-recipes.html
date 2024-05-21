@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ugens Opskrifter</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<h1>Ugens Opskrifter</h1>
+<div>
+    <div th:each="day : ${daysOfWeek}">
+        <h2 th:text="${day}"></h2>
+        <div>
+            <h3>Morgenmad</h3>
+            <img src="/images/placeholder.png" alt="Morgenmad billede" style="width:100px;height:100px;">
+            <p>Beskrivelse af morgenmad</p>
+        </div>
+        <div>
+            <h3>Frokost</h3>
+            <img src="/images/placeholder.png" alt="Frokost billede" style="width:100px;height:100px;">
+            <p>Beskrivelse af frokost</p>
+        </div>
+        <div>
+            <h3>Aftensmad</h3>
+            <img src="/images/placeholder.png" alt="Aftensmad billede" style="width:100px;height:100px;">
+            <p>Beskrivelse af aftensmad</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
