@@ -24,15 +24,42 @@
             <div class="headline">Velkommen tilbage,</div>
             <div class="sub-headline" th:text="${user.firstName} + ' ' + ${user.lastName}"></div>
             <div class="user-info">
-                <form th:action="@{/update-user}" method="post">
+                <div id="user-info-view">
+                    <p><i class="material-icons">email</i> <strong>Email:</strong> <span th:text="${user.email}"></span></p>
+                    <p><i class="material-icons">cake</i> <strong>Alder:</strong>
+                        <span th:text="${user.age}"></span>
+                    </p>
+                    <p><i class="material-icons">wc</i> <strong>Køn:</strong>
+                        <span th:text="${user.gender} == 'M' ? 'Mand' : 'Kvinde'"></span>
+                    </p>
+                    <p><i class="material-icons">fitness_center</i> <strong>Vægt:</strong>
+                        <span th:text="${user.weight}"></span> kg
+                    </p>
+                    <p><i class="material-icons">height</i> <strong>Højde:</strong>
+                        <span th:text="${user.height}"></span> cm
+                    </p>
+                    <p><i class="material-icons">directions_run</i> <strong>Aktivitetsniveau:</strong>
+                        <span th:text="${activityLevelMap[user.activityLevel]}"></span>
+                    </p>
+                    <p><i class="material-icons">flag</i> <strong>Mål:</strong>
+                        <span th:text="${goalMap[user.goal]}"></span>
+                    </p>
+                    <p><i class="material-icons">check_circle</i> <strong>Abonnent:</strong>
+                        <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span>
+                    </p>
+                    <p><i class="material-icons">local_dining</i> <strong>Kaloriebehov:</strong>
+                        <span th:text="${calorieNeeds} + ' kcal'"></span>
+                    </p>
+                </div>
+                <form id="user-form" th:action="@{/update-user}" method="post" style="display:none;">
                     <p><i class="material-icons">email</i> <strong>Email:</strong> <span th:text="${user.email}"></span></p>
                     <p><i class="material-icons">cake</i> <strong>Alder:</strong>
                         <input type="number" name="age" th:value="${user.age}" required/>
                     </p>
                     <p><i class="material-icons">wc</i> <strong>Køn:</strong>
                         <select name="gender">
-                            <option value="M" th:selected="${user.gender == 'M'}">Mand</option>
-                            <option value="F" th:selected="${user.gender == 'F'}">Kvinde</option>
+                            <option value="M" th:selected="${user.gender} == 'M'">Mand</option>
+                            <option value="F" th:selected="${user.gender} == 'F'">Kvinde</option>
                         </select>
                     </p>
                     <p><i class="material-icons">fitness_center</i> <strong>Vægt:</strong>
@@ -66,6 +93,7 @@
                     </p>
                     <button type="submit" class="btn-primary">Opdater Information</button>
                 </form>
+                <button id="edit-button" class="btn-primary">Rediger</button>
             </div>
         </div>
     </div>
@@ -85,6 +113,20 @@
 </div>
 
 <script>
+    document.getElementById('edit-button').addEventListener('click', function () {
+        var form = document.getElementById('user-form');
+        var view = document.getElementById('user-info-view');
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+            view.style.display = 'none';
+            this.textContent = 'Annuller';
+        } else {
+            form.style.display = 'none';
+            view.style.display = 'block';
+            this.textContent = 'Rediger';
+        }
+    });
+
     const stripePublicKey = 'pk_test_51PGz21BcOCSFJlaS9GnQrmz3wFcSw82xsDryxcqWPVb0orDtOWKFiB0clb18lk2CC67VdTnJ7cfjWFCBbudi1Gms00x9Tgqpzd';
     const stripe = Stripe(stripePublicKey);
 
