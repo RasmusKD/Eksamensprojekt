@@ -39,10 +39,10 @@ public class RecipeCreationController {
                 byte[] bytes = imageFile.getBytes();
                 Path path = Paths.get(UPLOAD_DIR + imageFile.getOriginalFilename());
                 Files.write(path, bytes);
-                imageUrl = "/images/" + imageFile.getOriginalFilename(); // The URL to access the image
+                imageUrl = "/images/" + imageFile.getOriginalFilename();
             } catch (IOException e) {
                 e.printStackTrace();
-                // Handle error
+
             }
         }
 
