@@ -6,18 +6,15 @@ public class Recipe {
 
     private String title;
     private String description;
-    private List<Ingredients> ingredients;
+    private List<String> ingredients;
     private String method;
     private String cookingTime;
     private String imageUrl;
 
-
-
-
     public Recipe() {
     }
 
-    public Recipe(String title, String description, List<Ingredients> ingredients, String method, String cookingTime, String imageUrl) {
+    public Recipe(String title, String description, List<String> ingredients, String method, String cookingTime, String imageUrl) {
         this.title = title;
         this.description = description;
         this.ingredients = ingredients;
@@ -42,13 +39,13 @@ public class Recipe {
         this.description = description;
     }
 
-    public List<Ingredients> getIngredients() {
+    public List<String> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<Ingredients> ingredients) {
+    public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
-    }
+        }
 
     public String getMethod() {
         return method;
@@ -73,6 +70,7 @@ public class Recipe {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
 
     @Override
     public String toString() {
