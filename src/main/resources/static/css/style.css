@@ -359,9 +359,10 @@ input, label {
     color: #89cdf0;
 }
 
-.sub-headline {
+.info-line {
     font-size: 1.5em;
-    text-align: left;
+    text-align: center;
+    line-height: 1.6;
 }
 
 .login-content {
