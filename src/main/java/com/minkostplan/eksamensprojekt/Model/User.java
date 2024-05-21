@@ -18,13 +18,13 @@ public class User implements UserDetails {
     private double height;
     private int activityLevel;
     private int goal;
-    private boolean employed;
+    private int employed;
     private boolean subscriber;
 
     public User() {
     }
 
-    public User(int userId, String firstName, String lastName, String email, String password, int age, char gender, double weight, double height, int activityLevel, int goal, boolean employed, boolean subscriber) {
+    public User(int userId, String firstName, String lastName, String email, String password, int age, char gender, double weight, double height, int activityLevel, int goal, int employed, boolean subscriber) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -160,11 +160,12 @@ public class User implements UserDetails {
         this.activityLevel = activityLevel;
     }
 
-    public boolean isEmployed() {
+
+    public int getEmployed() {
         return employed;
     }
 
-    public void setEmployed(boolean employed) {
+    public void setEmployed(int employed) {
         this.employed = employed;
     }
 
@@ -176,21 +177,5 @@ public class User implements UserDetails {
         this.subscriber = subscriber;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + userId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", age=" + age +
-                ", gender=" + gender +
-                ", weight=" + weight +
-                ", height=" + height +
-                ", activityLevel=" + activityLevel +
-                ", employed=" + employed +
-                ", subscriber=" + subscriber +
-                '}';
-    }
+
 }
