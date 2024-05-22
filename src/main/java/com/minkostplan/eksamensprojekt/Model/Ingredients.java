@@ -7,15 +7,16 @@ public class Ingredients {
     private double fat;
     private double protein;
     private double carbohydrate;
-
+    private int calories;
     public Ingredients() {
     }
 
-    public Ingredients(String name, double fat, double protein, double carbohydrate) {
+    public Ingredients(String name, double fat, double protein, double carbohydrate, int calories) {
         this.name = name;
         this.fat = fat;
         this.protein = protein;
         this.carbohydrate = carbohydrate;
+        this.calories = calories;
     }
 
 
@@ -59,6 +60,14 @@ public class Ingredients {
         this.carbohydrate = carbohydrate;
     }
 
+    public int getCalories() {
+        return calories;
+    }
+
+    public void setCalories(int calories) {
+        this.calories = calories;
+    }
+
     @Override
     public String toString() {
         return "Ingredients{" +
@@ -67,6 +76,7 @@ public class Ingredients {
                 ", fat=" + fat +
                 ", protein=" + protein +
                 ", carbohydrate=" + carbohydrate +
+                ", calories=" + calories +
                 '}';
     }
 }

@@ -221,12 +221,13 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "INSERT INTO Ingredients (name, fat, carbohydrate, protein) VALUES (?, ?, ?, ?)";
+            String sql = "INSERT INTO Ingredients (name, fat, carbohydrate, protein, calories) VALUES (?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, ingredients.getName());
             pstmt.setDouble(2, ingredients.getFat());
             pstmt.setDouble(3, ingredients.getCarbohydrate());
             pstmt.setDouble(4, ingredients.getProtein());
+            pstmt.setInt(5, ingredients.getCalories());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error connecting to the database or executing the query.");
