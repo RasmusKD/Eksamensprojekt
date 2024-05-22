@@ -20,7 +20,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico").permitAll()
                         .requestMatchers("/", "/opret-medarbejder", "/login", "/register", "/omOs").permitAll()
                         .requestMatchers("/dashboard", "/success", "/cancel").authenticated()
-                        .requestMatchers("/recipe-creation", "/recipe-success").hasAnyRole("EMPLOYEE", "ADMIN")
+                        .requestMatchers("/recipe-creation", "/recipe-success", "/add-ingredients").hasAnyRole("EMPLOYEE", "ADMIN") // Tilføj 'add-ingredients'
                         .anyRequest().authenticated()
                 )
                 .csrf(csrf -> csrf

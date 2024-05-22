@@ -17,8 +17,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class RecipeCreationController {
 
     @GetMapping("/recipe-creation")
-    public String showRecipeForm() {
-        return "recipe-creation";
+    public String showCreateEmployeeForm() {
+        return "recipe-creation"; // This should match the HTML file name without the extension
     }
 
     private static final String UPLOAD_DIR = "src/main/resources/static/images/";
