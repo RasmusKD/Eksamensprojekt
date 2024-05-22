@@ -53,6 +53,7 @@ input, label {
     margin: 0;
     font-size: 24px;
 }
+
 .color-red {
     background-color: #d57878!important;
     transition: none !important;
@@ -60,6 +61,7 @@ input, label {
 
 .color-red:hover {
     background-color: #b74e4e !important;
+    transition: background-color 0.3s ease-in-out;
 }
 
 .color-blue {
@@ -103,7 +105,13 @@ input, label {
 .btn-primary-large:hover {
     background-color: #4eb74e;
 }
+#edit-button {
+    transition: none !important;
+}
 
+#edit-button:hover {
+    transition: background-color 0.3s ease-in-out !important;
+}
 .content {
     flex: 1;
     display: flex;
