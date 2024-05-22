@@ -1,6 +1,6 @@
 package com.minkostplan.eksamensprojekt.Controller;
 
-import com.minkostplan.eksamensprojekt.Model.Ingredients;
+import com.minkostplan.eksamensprojekt.Model.Ingredient;
 import com.minkostplan.eksamensprojekt.Service.UseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,7 +25,7 @@ public class AddIngredientsController {
                                 @RequestParam("carbohydrate") double carbohydrate,
                                 @RequestParam("protein") double protein,
                                 @RequestParam("calories") int calories) {
-        Ingredients ingredient = new Ingredients();
+        Ingredient ingredient = new Ingredient();
         ingredient.setName(name);
         ingredient.setFat(fat);
         ingredient.setCarbohydrate(carbohydrate);
