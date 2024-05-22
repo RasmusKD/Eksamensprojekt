@@ -92,9 +92,12 @@ public class RecipeCreationController {
         recipe.setTotalCarbohydrates(totalCarbohydrates);
 
         useCase.createRecipeWithIngredients(recipe, ingredientIds, quantities);
+
+        // Add success message and recipe to model
+        model.addAttribute("successMessage", "Recipe created successfully!");
         model.addAttribute("recipe", recipe);
 
-        return "recipe-success";
+        // Redirect back to the form to stay on the same page
+        return "recipe-creation";
     }
-
 }
