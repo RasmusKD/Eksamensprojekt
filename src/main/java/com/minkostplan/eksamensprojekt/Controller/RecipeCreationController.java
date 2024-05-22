@@ -5,20 +5,34 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+
+import com.minkostplan.eksamensprojekt.Model.Ingredient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import com.minkostplan.eksamensprojekt.Model.Recipe;
 import org.springframework.web.multipart.MultipartFile;
+import com.minkostplan.eksamensprojekt.Model.Recipe;
+import com.minkostplan.eksamensprojekt.Service.UseCase;
 
 @Controller
 public class RecipeCreationController {
 
+    @Autowired
+    private UseCase useCase;
+
     @GetMapping("/recipe-creation")
-    public String showCreateEmployeeForm() {
-        return "recipe-creation"; // This should match the HTML file name without the extension
+    public String showCreateRecipeForm(Model model) {
+        List<Ingredient> ingredientList = useCase.getAllIngredients();
+        if (ingredientList == null || ingredientList.isEmpty()) {
+            System.out.println("Ingredients List is empty or null!");
+        } else {
+            System.out.println("Ingredients List: " + ingredientList);
+        }
+        model.addAttribute("ingredientsList", ingredientList);
+        return "recipe-creation";
     }
 
     private static final String UPLOAD_DIR = "src/main/resources/static/images/";
@@ -26,9 +40,12 @@ public class RecipeCreationController {
     @PostMapping("/recipe-creation")
     public String createRecipe(@RequestParam("title") String title,
                                @RequestParam("description") String description,
-                               @RequestParam("ingredients") List<String> ingredients,
+                               @RequestParam("ingredients") List<Integer> ingredientIds,
+                               @RequestParam("quantities") List<Double> quantities,
                                @RequestParam("instructions") String instructions,
                                @RequestParam("cookingTime") String cookingTime,
+                               @RequestParam("mealTime") String mealTime,
+                               @RequestParam("day") String day,
                                @RequestParam("imageFile") MultipartFile imageFile,
                                Model model) {
 
@@ -42,13 +59,42 @@ public class RecipeCreationController {
                 imageUrl = "/images/" + imageFile.getOriginalFilename();
             } catch (IOException e) {
                 e.printStackTrace();
-
             }
         }
 
-        Recipe recipe = new Recipe(title, description, ingredients, instructions, cookingTime, imageUrl);
+        Recipe recipe = new Recipe();
+        recipe.setTitle(title);
+        recipe.setDescription(description);
+        recipe.setMethod(instructions);
+        recipe.setCookingTime(cookingTime);
+        recipe.setImageUrl(imageUrl);
+        recipe.setMealTime(mealTime);
+        recipe.setDay(day);
+
+        // Calculate total nutritional values
+        int totalCalories = 0;
+        int totalProtein = 0;
+        int totalFat = 0;
+        int totalCarbohydrates = 0;
+
+        for (int i = 0; i < ingredientIds.size(); i++) {
+            Ingredient ingredient = useCase.getIngredientById(ingredientIds.get(i));
+            double quantity = quantities.get(i);
+            totalCalories += ingredient.getCalories() * quantity / 100;
+            totalProtein += ingredient.getProtein() * quantity / 100;
+            totalFat += ingredient.getFat() * quantity / 100;
+            totalCarbohydrates += ingredient.getCarbohydrate() * quantity / 100;
+        }
+
+        recipe.setTotalCalories(totalCalories);
+        recipe.setTotalProtein(totalProtein);
+        recipe.setTotalFat(totalFat);
+        recipe.setTotalCarbohydrates(totalCarbohydrates);
+
+        useCase.createRecipeWithIngredients(recipe, ingredientIds, quantities);
         model.addAttribute("recipe", recipe);
 
         return "recipe-success";
     }
+
 }

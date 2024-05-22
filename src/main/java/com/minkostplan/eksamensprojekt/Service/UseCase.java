@@ -1,6 +1,6 @@
 package com.minkostplan.eksamensprojekt.Service;
 
-import com.minkostplan.eksamensprojekt.Model.Ingredients;
+import com.minkostplan.eksamensprojekt.Model.Ingredient;
 import com.minkostplan.eksamensprojekt.Model.Recipe;
 import com.minkostplan.eksamensprojekt.Model.Subscription;
 import com.minkostplan.eksamensprojekt.Model.User;
@@ -69,18 +69,22 @@ public class UseCase {
         }
     }
 
-    public void createIngredients(Ingredients ingredients) {
-        dBRepository.createIngredients(ingredients);
+    public void createIngredients(Ingredient ingredient) {
+        dBRepository.createIngredients(ingredient);
         System.out.println("New ingredient created successfully!");
     }
-/*
-    public void createRecipeWithIngredients(Recipe recipe) {
-        dBRepository.createRecipeWithIngredients(recipe, recipe.getIngredients());
-    }*/
-
-    public List<Ingredients> getAllIngredients() {
+    public List<Ingredient> getAllIngredients() {
         return dBRepository.getAllIngredients();
     }
+
+    public Ingredient getIngredientById(int ingredientId) {
+        return dBRepository.getIngredientById(ingredientId);
+    }
+
+    public void createRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
+        dBRepository.createRecipeWithIngredients(recipe, ingredientIds, quantities);
+    }
+
 
     public User getCurrentUser() {
         return currentUser;
