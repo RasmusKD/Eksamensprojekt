@@ -23,12 +23,14 @@ public class AddIngredientsController {
     public String addIngredient(@RequestParam("name") String name,
                                 @RequestParam("fat") double fat,
                                 @RequestParam("carbohydrate") double carbohydrate,
-                                @RequestParam("protein") double protein) {
+                                @RequestParam("protein") double protein,
+                                @RequestParam("calories") int calories) {
         Ingredients ingredient = new Ingredients();
         ingredient.setName(name);
         ingredient.setFat(fat);
         ingredient.setCarbohydrate(carbohydrate);
         ingredient.setProtein(protein);
+        ingredient.setCalories(calories);
         useCase.createIngredients(ingredient);
         return "redirect:/add-ingredients";
     }
