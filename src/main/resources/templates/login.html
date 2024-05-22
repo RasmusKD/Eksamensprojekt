@@ -28,7 +28,7 @@
                     <input class="input-field" type="password" name="password" placeholder="Adgangskode" required/>
                 </div>
                 <input class="btn-primary w-100" type="submit" value="Log ind"/>
-                <a class="btn-primary color-blue w-100" th:href="@{/register}">Registerer</a>
+                <button class="btn-primary color-blue w-100" onclick="window.location.href='/register'">Registerer</button>
                 <div th:if="${param.error}">
                     Ugyldig Email eller Adgangskode.
                 </div>
@@ -37,8 +37,6 @@
     </div>
 </div>
 <img class="image1" src="/images/image.png" alt="Beskrivende billede tekst">
-<div class="footer">
-    <p>Copyright © 2024 Min Kostplan</p>
-</div>
+<div th:insert="fragments/footer :: footer"></div>
 </body>
 </html>

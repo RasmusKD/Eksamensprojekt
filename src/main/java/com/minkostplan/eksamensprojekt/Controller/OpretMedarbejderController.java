@@ -29,12 +29,12 @@ public class OpretMedarbejderController {
             User user = useCase.getUserByEmail(email);
             if (user != null) {
                 useCase.updateEmploymentStatus(email, employmentStatus);
-                model.addAttribute("message", "Employment status updated successfully!");
+                model.addAttribute("message", "Ansættelsesstatus opdateret!");
             } else {
-                model.addAttribute("error", "User not found!");
+                model.addAttribute("error", "Bruger ikke fundet!");
             }
         } catch (Exception e) {
-            model.addAttribute("error", "An error occurred while updating the employment status.");
+            model.addAttribute("error", "Der opstod en fejl under opdatering af ansættelsesstatus.");
         }
         return "opret-medarbejder"; // Return the same view to stay on the page
     }
