@@ -104,7 +104,7 @@
             <!-- Knapper kan nu tilføjes for roller eksempel: -->
             <button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:onclick="|window.location.href='@{/opret-medarbejder}'|" class="btn-primary color-blue w-100">Opret medarbejder</button>
             <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/add-ingredients}'|" class="btn-primary color-blue w-100">Tilføj ingredienser</button>
-            <button th:if="${#authorization.expression('hasRole(''ROLE_SUBSCRIBER'')')}" th:onclick="|window.location.href='@{/weekly-recipes}'|" class="btn-primary color-blue w-100">Ugens Opskrifter</button>
+            <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}" th:onclick="|window.location.href='@{/weekly-recipes}'|" class="btn-primary color-blue w-100">Ugens Opskrifter</button>
         </div>
     </div>
 </div>
