@@ -10,7 +10,7 @@
 <body>
 <div class="top-bar">
     <div class="container">
-        <a href="/" class="logo-link">
+        <a href="/dashboard" class="logo-link">
             <h1>Min Kostplan</h1>
         </a>
         <form th:action="@{/perform_logout}" method="post" style="display: inline;">
@@ -109,9 +109,7 @@
         </div>
     </div>
 </div>
-<div class="footer">
-    <p>Copyright © 2024 Min Kostplan</p>
-</div>
+<div th:insert="fragments/footer :: footer"></div>
 
 <script>
     document.getElementById('edit-button').addEventListener('click', function () {
