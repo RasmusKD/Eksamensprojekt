@@ -28,6 +28,15 @@ input, label {
     font-family: Ubuntu, sans-serif!important;
 }
 
+textarea {
+    font-family: Ubuntu, sans-serif!important;
+    resize: none;
+}
+
+textarea.large, .input-field.large {
+    height: 100px;
+}
+
 .top-bar {
     background-color: #fdfdfd;
     color: #3c3f40;
@@ -317,6 +326,7 @@ input, label {
 .input-icon .material-icons {
     color: #89cdf0;
     padding: 10px;
+    align-self: start;
 }
 
 .input-field {
@@ -483,4 +493,71 @@ input, label {
     .day-container h2 {
         font-size: 2em;
     }
+}
+
+.ingredient-result {
+    display: inline-block;
+    padding: 10px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.ingredient-result:hover {
+    background-color: #ddd;
+}
+
+.ingredient-results {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5em;
+}
+
+.selected-ingredient {
+    display: flex;
+    align-items: center;
+    gap: 1em;
+    padding: 5px 15px;
+    background-color: #f0f0f0;
+    border-radius: 20px;
+    margin: 5px;
+}
+
+.selected-ingredients {
+    display: grid;
+    gap: 10px;
+    width: 100%;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.selected-ingredient span {
+    flex-grow: 1;
+}
+
+.remove-ingredient {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.5em;
+    transition: color 0.3s ease;
+    color: darkgray;
+}
+
+.remove-ingredient:hover {
+    color: red;
+}
+
+.success-message {
+    text-align: center;
+    margin-top: 20px;
+    color: green;
+}
+
+.recipe-card-size {
+    width: 800px;
+}
+
+.recipe-input-size {
+    max-width: 130px;
 }

@@ -8,11 +8,13 @@ import java.util.List;
 
 import com.minkostplan.eksamensprojekt.Model.Ingredient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import com.minkostplan.eksamensprojekt.Model.Recipe;
 import com.minkostplan.eksamensprojekt.Service.UseCase;
@@ -26,11 +28,6 @@ public class RecipeCreationController {
     @GetMapping("/recipe-creation")
     public String showCreateRecipeForm(Model model) {
         List<Ingredient> ingredientList = useCase.getAllIngredients();
-        if (ingredientList == null || ingredientList.isEmpty()) {
-            System.out.println("Ingredients List is empty or null!");
-        } else {
-            System.out.println("Ingredients List: " + ingredientList);
-        }
         model.addAttribute("ingredientsList", ingredientList);
         return "recipe-creation";
     }
@@ -38,16 +35,17 @@ public class RecipeCreationController {
     private static final String UPLOAD_DIR = "src/main/resources/static/images/";
 
     @PostMapping("/recipe-creation")
-    public String createRecipe(@RequestParam("title") String title,
-                               @RequestParam("description") String description,
-                               @RequestParam("ingredients") List<Integer> ingredientIds,
-                               @RequestParam("quantities") List<Double> quantities,
-                               @RequestParam("instructions") String instructions,
-                               @RequestParam("cookingTime") String cookingTime,
-                               @RequestParam("mealTime") String mealTime,
-                               @RequestParam("day") String day,
-                               @RequestParam("imageFile") MultipartFile imageFile,
-                               Model model) {
+    @ResponseBody
+    public ResponseEntity<?> createRecipe(@RequestParam("title") String title,
+                                          @RequestParam("description") String description,
+                                          @RequestParam("ingredients") List<Integer> ingredientIds,
+                                          @RequestParam("quantities") List<Double> quantities,
+                                          @RequestParam("instructions") String instructions,
+                                          @RequestParam("cookingTime") String cookingTime,
+                                          @RequestParam("mealTime") String mealTime,
+                                          @RequestParam("day") String day,
+                                          @RequestParam("imageFile") MultipartFile imageFile,
+                                          Model model) {
 
         // Save the uploaded file
         String imageUrl = null;
@@ -59,6 +57,7 @@ public class RecipeCreationController {
                 imageUrl = "/images/" + imageFile.getOriginalFilename();
             } catch (IOException e) {
                 e.printStackTrace();
+                return ResponseEntity.status(500).body("Fejl ved upload af billede");
             }
         }
 
@@ -93,11 +92,7 @@ public class RecipeCreationController {
 
         useCase.createRecipeWithIngredients(recipe, ingredientIds, quantities);
 
-        // Add success message and recipe to model
-        model.addAttribute("successMessage", "Recipe created successfully!");
-        model.addAttribute("recipe", recipe);
-
-        // Redirect back to the form to stay on the same page
-        return "recipe-creation";
+        // Return success message as JSON response
+        return ResponseEntity.ok().body("{\"message\": \"Opskriften blev oprettet!\"}");
     }
 }
