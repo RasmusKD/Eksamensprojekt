@@ -6,6 +6,12 @@
 </head>
 <body>
 <h1>Create a New Recipe</h1>
+
+<!-- Success Message -->
+<div th:if="${successMessage}" style="color:green;">
+    <p th:text="${successMessage}"></p>
+</div>
+
 <form th:action="@{/recipe-creation}" method="post" enctype="multipart/form-data">
     <label for="title">Recipe Name:</label>
     <input type="text" id="title" name="title" required><br>
@@ -42,7 +48,7 @@
     <label for="ingredients">Ingredients:</label>
     <div id="ingredients">
         <div th:each="ingredient : ${ingredientsList}">
-            <input type="checkbox" id="ingredient_${ingredient.ingredientId}" th:value="${ingredient.ingredientId}" th:text="${ingredient.name}" name="ingredient"/>
+            <input type="checkbox" id="ingredient_${ingredient.ingredientId}" th:value="${ingredient.ingredientId}" th:text="${ingredient.name}" name="ingredients"/>
             <input type="number" name="quantities" placeholder="Quantity (g)" required/><br>
         </div>
     </div><br>
