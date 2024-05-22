@@ -94,7 +94,6 @@
                     <button type="submit" class="btn-primary w-100 button-spacing">Opdater Information</button>
                 </form>
                 <button id="edit-button" class="btn-primary w-100">Rediger</button>
-                <button class="btn-primary w-100" th:onclick="|window.location.href='@{/weekly-recipes}'|">Ugens Opskrifter</button>
             </div>
         </div>
     </div>
@@ -103,8 +102,9 @@
             <button id="checkout-button" class="btn-primary w-100">Betal med Stripe</button>
             <input type="hidden" id="user-id" th:value="${userId}">
             <!-- Knapper kan nu tilføjes for roller eksempel: -->
-            <button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:href="@{/opret-medarbejder}" class="btn-primary color-blue w-100">Opret medarbejder</button>
-            <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:href="@{/add-ingredients}" class="btn-primary color-blue w-100">Tilføj ingredienser</button>
+            <button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:onclick="|window.location.href='@{/opret-medarbejder}'|" class="btn-primary color-blue w-100">Opret medarbejder</button>
+            <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/add-ingredients}'|" class="btn-primary color-blue w-100">Tilføj ingredienser</button>
+            <button th:if="${#authorization.expression('hasRole(''ROLE_SUBSCRIBER'')')}" th:onclick="|window.location.href='@{/weekly-recipes}'|" class="btn-primary color-blue w-100">Ugens Opskrifter</button>
         </div>
     </div>
 </div>
