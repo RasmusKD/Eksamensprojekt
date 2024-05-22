@@ -172,6 +172,7 @@ input, label {
     flex-direction: column;
     align-items: center;
     z-index: 1;
+    min-width: 465px;
 }
 
 .text-box3 form {
