@@ -4,28 +4,80 @@
     <meta charset="UTF-8">
     <title>Ugens Opskrifter</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-<h1>Ugens Opskrifter</h1>
-<div>
-    <div th:each="day : ${daysOfWeek}">
-        <h2 th:text="${day}"></h2>
-        <div>
-            <h3>Morgenmad</h3>
-            <img src="/images/placeholder.png" alt="Morgenmad billede" style="width:100px;height:100px;">
-            <p>Beskrivelse af morgenmad</p>
-        </div>
-        <div>
-            <h3>Frokost</h3>
-            <img src="/images/placeholder.png" alt="Frokost billede" style="width:100px;height:100px;">
-            <p>Beskrivelse af frokost</p>
-        </div>
-        <div>
-            <h3>Aftensmad</h3>
-            <img src="/images/placeholder.png" alt="Aftensmad billede" style="width:100px;height:100px;">
-            <p>Beskrivelse af aftensmad</p>
-        </div>
+<div class="top-bar">
+    <div class="container">
+        <a href="/dashboard" class="logo-link">
+            <h1>Min Kostplan</h1>
+        </a>
     </div>
 </div>
+<div class="content center">
+    <div class="navigation">
+        <i class="material-icons arrow">chevron_left</i>
+    </div>
+    <div class="day-wrapper">
+        <div class="day-container faded small-day">
+            <h2 th:text="${previousDay} ? ${previousDay} : 'Ingen dag'"></h2>
+            <div class="meal-box">
+                <img src="/images/placeholder.png" alt="Morgenmad billede">
+                <div class="bold">Morgenmad</div>
+                <div>Beskrivelse af morgenmad</div>
+            </div>
+            <div class="meal-box">
+                <img src="/images/placeholder.png" alt="Frokost billede">
+                <div class="bold">Frokost</div>
+                <div>Beskrivelse af frokost</div>
+            </div>
+            <div class="meal-box">
+                <img src="/images/placeholder.png" alt="Aftensmad billede">
+                <div class="bold">Aftensmad</div>
+                <div>Beskrivelse af aftensmad</div>
+            </div>
+        </div>
+        <div class="day-container">
+            <h2 th:text="${currentDay} ? ${currentDay} : 'Ingen dag'"></h2>
+            <div class="meal-box">
+                <img src="/images/placeholder.png" alt="Morgenmad billede">
+                <div class="bold">Morgenmad</div>
+                <div>Beskrivelse af morgenmad</div>
+            </div>
+            <div class="meal-box">
+                <img src="/images/placeholder.png" alt="Frokost billede">
+                <div class="bold">Frokost</div>
+                <div>Beskrivelse af frokost</div>
+            </div>
+            <div class="meal-box">
+                <img src="/images/placeholder.png" alt="Aftensmad billede">
+                <div class="bold">Aftensmad</div>
+                <div>Beskrivelse af aftensmad</div>
+            </div>
+        </div>
+        <div class="day-container faded small-day">
+            <h2 th:text="${nextDay} ? ${nextDay} : 'Ingen dag'"></h2>
+            <div class="meal-box">
+                <img src="/images/placeholder.png" alt="Morgenmad billede">
+                <div class="bold">Morgenmad</div>
+                <div>Beskrivelse af morgenmad</div>
+            </div>
+            <div class="meal-box">
+                <img src="/images/placeholder.png" alt="Frokost billede">
+                <div class="bold">Frokost</div>
+                <div>Beskrivelse af frokost</div>
+            </div>
+            <div class="meal-box">
+                <img src="/images/placeholder.png" alt="Aftensmad billede">
+                <div class="bold">Aftensmad</div>
+                <div>Beskrivelse af aftensmad</div>
+            </div>
+        </div>
+    </div>
+    <div class="navigation">
+        <i class="material-icons arrow">chevron_right</i>
+    </div>
+</div>
+<div th:insert="fragments/footer :: footer"></div>
 </body>
 </html>
