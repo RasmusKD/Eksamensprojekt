@@ -23,8 +23,27 @@ public class User implements UserDetails {
     private int goal;
     private int employed;
     private boolean subscriber;
+    private String  subscriptionId; // Add this line
+
 
     public User() {
+    }
+
+    public User(int userId, String firstName, String lastName, String email, String password, int age, char gender, double weight, double height, int activityLevel, int goal, int employed, boolean subscriber, String subscriptionId) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.age = age;
+        this.gender = gender;
+        this.weight = weight;
+        this.height = height;
+        this.activityLevel = activityLevel;
+        this.goal = goal;
+        this.employed = employed;
+        this.subscriber = subscriber;
+        this.subscriptionId = subscriptionId; // Add this line
     }
 
     public User(int userId, String firstName, String lastName, String email, String password, int age, char gender, double weight, double height, int activityLevel, int goal, int employed, boolean subscriber) {
@@ -190,6 +209,12 @@ public class User implements UserDetails {
     public void setSubscriber(boolean subscriber) {
         this.subscriber = subscriber;
     }
+    public String getSubscriptionId() {
+        return subscriptionId;
+    }
 
+    public void setSubscriptionId(String subscriptionId) {
+        this.subscriptionId = subscriptionId;
+    }
 
 }

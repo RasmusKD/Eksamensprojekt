@@ -3,7 +3,7 @@ package com.minkostplan.eksamensprojekt.Model;
 import java.util.Date;
 
 public class Subscription {
-    private int subscriptionId;
+    private String  subscriptionId;
     private int userId;
     private Date startDate;
     private Date endDate;
@@ -14,7 +14,7 @@ public class Subscription {
     public Subscription() {
     }
 
-    public Subscription(int subscriptionId, int userId, Date startDate, Date endDate, double price, String status) {
+    public Subscription(String subscriptionId, int userId, Date startDate, Date endDate, double price, String status) {
         this.subscriptionId = subscriptionId;
         this.userId = userId;
         this.startDate = startDate;
@@ -23,11 +23,11 @@ public class Subscription {
         this.status = status;
     }
 
-    public int getSubscriptionId() {
+    public String getSubscriptionId() {
         return subscriptionId;
     }
 
-    public void setSubscriptionId(int subscriptionId) {
+    public void setSubscriptionId(String subscriptionId) {
         this.subscriptionId = subscriptionId;
     }
 
