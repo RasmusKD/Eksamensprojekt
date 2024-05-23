@@ -46,6 +46,42 @@ public class DBRepository {
         }
     }
 
+    public List<Recipe> getRecipesByDay(String day) {
+        List<Recipe> recipes = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            String sql = "SELECT * FROM Recipe WHERE day = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, day);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Recipe recipe = new Recipe();
+                recipe.setRecipeId(rs.getInt("recipeId"));
+                recipe.setTitle(rs.getString("title"));
+                recipe.setDescription(rs.getString("description"));
+                recipe.setMethod(rs.getString("method"));
+                recipe.setCookingTime(rs.getString("cookingTime"));
+                recipe.setImageUrl(rs.getString("imageUrl"));
+                recipe.setMealTime(rs.getString("meal_time"));
+                recipe.setTotalCalories(rs.getInt("total_calories"));
+                recipe.setTotalProtein(rs.getInt("total_protein"));
+                recipe.setTotalFat(rs.getInt("total_fat"));
+                recipe.setTotalCarbohydrates(rs.getInt("total_carbohydrates"));
+                recipe.setDay(rs.getString("day"));
+                recipes.add(recipe);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt, rs);
+        }
+        return recipes;
+    }
+
     public void updateEmploymentStatus(String email, int employmentStatus) {
         Connection conn = null;
         PreparedStatement pstmt = null;
