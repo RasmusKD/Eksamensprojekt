@@ -30,13 +30,16 @@ public class UseCase {
     private User currentUser;
 
     public List<Recipe> getAllRecipes() {
-        return dBRepository.getAllRecipes(); // Implement this method in your repository
+        return dBRepository.getAllRecipes();
     }
 
     public Recipe getRecipeById(int id) {
-        return dBRepository.getRecipeById(id); // Implement this method in your repository
+        return dBRepository.getRecipeById(id);
     }
 
+    public List<Recipe> getRecipesByDay(String day) {
+        return dBRepository.getRecipesByDay(day);
+    }
 
     public void setCurrentUser(User user) {
         this.currentUser = user;
