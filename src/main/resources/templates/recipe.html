@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${recipe.title}">Recipe Title</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<h1 th:text="${recipe.title}">Recipe Title</h1>
+<img th:src="@{/images/{imageUrl}(imageUrl=${recipe.imageUrl})}" alt="Recipe Image">
+<p th:text="${recipe.description}">Recipe Description</p>
+<h3>Ingredients</h3>
+<ul>
+    <li th:each="ingredient : ${recipe.ingredients}">
+        <span th:text="${ingredient.name}">Ingredient Name</span>:
+        <span th:text="${ingredient.quantity}">Quantity</span>
+    </li>
+</ul>
+<h3>Method</h3>
+<p th:text="${recipe.method}">Recipe Method</p>
+<p><strong>Cooking Time:</strong> <span th:text="${recipe.cookingTime}">Cooking Time</span></p>
+<p><strong>Meal Time:</strong> <span th:text="${recipe.mealTime}">Meal Time</span></p>
+<p><strong>Total Calories:</strong> <span th:text="${recipe.totalCalories}">Total Calories</span></p>
+<p><strong>Total Protein:</strong> <span th:text="${recipe.totalProtein}">Total Protein</span></p>
+<p><strong>Total Fat:</strong> <span th:text="${recipe.totalFat}">Total Fat</span></p>
+<p><strong>Total Carbohydrates:</strong> <span th:text="${recipe.totalCarbohydrates}">Total Carbohydrates</span></p>
+<p><strong>Day:</strong> <span th:text="${recipe.day}">Day</span></p>
+</body>
+</html>

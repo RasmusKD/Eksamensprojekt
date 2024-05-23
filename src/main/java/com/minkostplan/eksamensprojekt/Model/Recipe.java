@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Recipe {
 
+    private int recipeId;
     private String title;
     private String description;
     private List<Ingredient> ingredients;
@@ -20,7 +21,8 @@ public class Recipe {
     public Recipe() {
     }
 
-    public Recipe(String title, String description, List<Ingredient> ingredients, String method, String cookingTime, String imageUrl, String mealTime, int totalCalories, int totalProtein, int totalFat, int totalCarbohydrates, String day) {
+    public Recipe(int recipeId, String title, String description, List<Ingredient> ingredients, String method, String cookingTime, String imageUrl, String mealTime, int totalCalories, int totalProtein, int totalFat, int totalCarbohydrates, String day) {
+        this.recipeId = recipeId;
         this.title = title;
         this.description = description;
         this.ingredients = ingredients;
@@ -33,6 +35,14 @@ public class Recipe {
         this.totalFat = totalFat;
         this.totalCarbohydrates = totalCarbohydrates;
         this.day = day;
+    }
+
+    public int getRecipeId() {
+        return recipeId;
+    }
+
+    public void setRecipeId(int recipeId) {
+        this.recipeId = recipeId;
     }
 
     public String getTitle() {
@@ -134,7 +144,8 @@ public class Recipe {
     @Override
     public String toString() {
         return "Recipe{" +
-                "title='" + title + '\'' +
+                "recipeId=" + recipeId +
+                ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", ingredients=" + ingredients +
                 ", method='" + method + '\'' +

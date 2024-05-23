@@ -388,5 +388,74 @@ public class DBRepository {
         }
     }
 
+    public List<Recipe> getAllRecipes() {
+        List<Recipe> recipes = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            String sql = "SELECT * FROM Recipe";
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Recipe recipe = new Recipe();
+                recipe.setRecipeId(rs.getInt("recipeId"));
+                recipe.setTitle(rs.getString("title"));
+                recipe.setDescription(rs.getString("description"));
+                recipe.setMethod(rs.getString("method"));
+                recipe.setCookingTime(rs.getString("cookingTime"));
+                recipe.setImageUrl(rs.getString("imageUrl"));
+                recipe.setMealTime(rs.getString("meal_time"));
+                recipe.setTotalCalories(rs.getInt("total_calories"));
+                recipe.setTotalProtein(rs.getInt("total_protein"));
+                recipe.setTotalFat(rs.getInt("total_fat"));
+                recipe.setTotalCarbohydrates(rs.getInt("total_carbohydrates"));
+                recipe.setDay(rs.getString("day"));
+                recipes.add(recipe);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt, rs);
+        }
+        return recipes;
+    }
+
+    public Recipe getRecipeById(int id) {
+        Recipe recipe = null;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            String sql = "SELECT * FROM Recipe WHERE recipeId = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, id);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                recipe = new Recipe();
+                recipe.setRecipeId(rs.getInt("recipeId"));
+                recipe.setTitle(rs.getString("title"));
+                recipe.setDescription(rs.getString("description"));
+                recipe.setMethod(rs.getString("method"));
+                recipe.setCookingTime(rs.getString("cookingTime"));
+                recipe.setImageUrl(rs.getString("imageUrl"));
+                recipe.setMealTime(rs.getString("meal_time"));
+                recipe.setTotalCalories(rs.getInt("total_calories"));
+                recipe.setTotalProtein(rs.getInt("total_protein"));
+                recipe.setTotalFat(rs.getInt("total_fat"));
+                recipe.setTotalCarbohydrates(rs.getInt("total_carbohydrates"));
+                recipe.setDay(rs.getString("day"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt, rs);
+        }
+        return recipe;
+    }
 
 }
