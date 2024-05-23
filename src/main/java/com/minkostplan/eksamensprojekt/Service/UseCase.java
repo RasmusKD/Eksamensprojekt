@@ -30,11 +30,11 @@ public class UseCase {
     private User currentUser;
 
     public List<Recipe> getAllRecipes() {
-        return dBRepository.getAllRecipes();
+        return dBRepository.getAllRecipes(); // Implement this method in your repository
     }
 
     public Recipe getRecipeById(int id) {
-        return dBRepository.getRecipeById(id);
+        return dBRepository.getRecipeById(id); // Implement this method in your repository
     }
 
     public List<Recipe> getRecipesByDay(String day) {
@@ -106,6 +106,10 @@ public class UseCase {
 
     public void updateUserSubscriptionStatus(int userId, boolean subscriberStatus) {
         dBRepository.updateUserSubscriptionStatus(userId, subscriberStatus);
+    }
+
+    public void updateUserSubscriptionStatus(int userId, boolean subscriberStatus, String subscriptionId) {
+        dBRepository.updateUserSubscriptionStatus(userId, subscriberStatus, subscriptionId);
     }
 
     public User getUserByEmail(String email) {

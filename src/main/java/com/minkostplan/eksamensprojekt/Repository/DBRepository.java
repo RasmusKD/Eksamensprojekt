@@ -21,10 +21,12 @@ public class DBRepository {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     @Autowired
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
+
     private Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
@@ -110,7 +112,7 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "INSERT INTO User (firstName, lastName, email, password, age, gender, weight, height, activityLevel, goal, employed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO User (firstName, lastName, email, password, age, gender, weight, height, activityLevel, goal, employed, subscriber, subscriptionId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
@@ -124,6 +126,7 @@ public class DBRepository {
             pstmt.setInt(10, user.getGoal());
             pstmt.setInt(11, user.getEmployed());
             pstmt.setBoolean(12, user.isSubscriber());
+            pstmt.setString(13, user.getSubscriptionId());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -161,6 +164,7 @@ public class DBRepository {
                 user.setGoal(rs.getInt("goal"));
                 user.setEmployed(rs.getInt("employed"));
                 user.setSubscriber(rs.getBoolean("subscriber"));
+                user.setSubscriptionId(rs.getString("subscriptionId"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -177,7 +181,7 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "UPDATE User SET firstName=?, lastName=?, age=?, gender=?, weight=?, height=?, activityLevel=?, goal=?, employed=?, subscriber=? WHERE userId=?";
+            String sql = "UPDATE User SET firstName=?, lastName=?, age=?, gender=?, weight=?, height=?, activityLevel=?, goal=?, employed=?, subscriber=?, subscriptionId=? WHERE userId=?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
@@ -189,7 +193,8 @@ public class DBRepository {
             pstmt.setInt(8, user.getGoal());
             pstmt.setInt(9, user.getEmployed());
             pstmt.setBoolean(10, user.isSubscriber());
-            pstmt.setInt(11, user.getUserId());
+            pstmt.setString(11, user.getSubscriptionId());
+            pstmt.setInt(12, user.getUserId());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -198,7 +203,6 @@ public class DBRepository {
             closeResources(conn, pstmt);
         }
     }
-
 
     public boolean deleteUser(int userId) {
         Connection conn = null;
@@ -240,7 +244,8 @@ public class DBRepository {
                             rs.getInt("activityLevel"),
                             rs.getInt("goal"),
                             rs.getInt("employed"),
-                            rs.getBoolean("subscriber")
+                            rs.getBoolean("subscriber"),
+                            rs.getString("subscriptionId")
                     );
                 }
             }
@@ -249,7 +254,6 @@ public class DBRepository {
         }
         return user;
     }
-
 
     public void createIngredients(Ingredient ingredient) {
         Connection conn = null;
@@ -272,6 +276,7 @@ public class DBRepository {
             closeResources(conn, pstmt);
         }
     }
+
     public Ingredient getIngredientById(int ingredientId) {
         Ingredient ingredient = null;
         Connection conn = null;
@@ -355,7 +360,6 @@ public class DBRepository {
         }
     }
 
-
     public List<Ingredient> getAllIngredients() {
         List<Ingredient> ingredientList = new ArrayList<>();
         Connection conn = null;
@@ -384,19 +388,21 @@ public class DBRepository {
         }
         return ingredientList;
     }
+
     public void createSubscription(Subscription subscription) {
         Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {
             conn = getConnection();
-            String sql = "INSERT INTO Subscription (userId, startDate, endDate, price, status) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO Subscription (subscriptionId, userId, startDate, endDate, price, status) VALUES (?, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, subscription.getUserId());
-            pstmt.setDate(2, new java.sql.Date(subscription.getStartDate().getTime()));
-            pstmt.setDate(3, new java.sql.Date(subscription.getEndDate().getTime()));
-            pstmt.setDouble(4, subscription.getPrice());
-            pstmt.setString(5, subscription.getStatus());
+            pstmt.setString(1, subscription.getSubscriptionId());
+            pstmt.setInt(2, subscription.getUserId());
+            pstmt.setDate(3, new java.sql.Date(subscription.getStartDate().getTime()));
+            pstmt.setDate(4, new java.sql.Date(subscription.getEndDate().getTime()));
+            pstmt.setDouble(5, subscription.getPrice());
+            pstmt.setString(6, subscription.getStatus());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -415,6 +421,26 @@ public class DBRepository {
             pstmt = conn.prepareStatement(sql);
             pstmt.setBoolean(1, isSubscriber);
             pstmt.setInt(2, userId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error connecting to the database or executing the query.");
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
+    }
+
+    public void updateUserSubscriptionStatus(int userId, boolean isSubscriber, String subscriptionId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE User SET subscriber = ?, subscriptionId = ? WHERE userId = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setBoolean(1, isSubscriber);
+            pstmt.setString(2, subscriptionId);
+            pstmt.setInt(3, userId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println("Error connecting to the database or executing the query.");

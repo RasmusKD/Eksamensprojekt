@@ -6,6 +6,8 @@
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <script src="https://js.stripe.com/v3/"></script>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 <div class="top-bar">
@@ -14,6 +16,7 @@
             <h1>Min Kostplan</h1>
         </a>
         <form th:action="@{/perform_logout}" method="post" style="display: inline;">
+            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
             <button class="btn-primary" type="submit">Log ud</button>
         </form>
     </div>
@@ -52,6 +55,7 @@
                     </p>
                 </div>
                 <form id="user-form" th:action="@{/update-user}" method="post" style="display:none;">
+                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                     <p><i class="material-icons">email</i> <strong>Email:</strong> <span th:text="${user.email}"></span></p>
                     <p><i class="material-icons">cake</i> <strong>Alder:</strong>
                         <input type="number" name="age" th:value="${user.age}" required/>
@@ -100,7 +104,9 @@
     <div class="content-box">
         <div class="text-box">
             <button id="checkout-button" class="btn-primary w-100">Betal med Stripe</button>
-            <input type="hidden" id="user-id" th:value="${userId}">
+            <button th:if="${#authorization.expression('hasRole(''ROLE_SUBSCRIBER'')')}" id="unsubscribe-button" class="btn-primary w-100">Unsubscribe</button>
+            <input type="hidden" id="user-id" th:value="${user.userId}">
+            <input type="hidden" id="subscription-id" th:value="${user.subscriptionId}">
             <!-- Knapper kan nu tilføjes for roller eksempel: -->
             <button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:onclick="|window.location.href='@{/opret-medarbejder}'|" class="btn-primary color-blue w-100">Opret medarbejder</button>
             <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/add-ingredients}'|" class="btn-primary color-blue w-100">Tilføj ingredienser</button>
@@ -133,11 +139,14 @@
 
     document.getElementById('checkout-button').addEventListener('click', function () {
         const userId = document.getElementById('user-id').value;
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
         fetch('/stripe/create-checkout-session', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
             },
             body: JSON.stringify({
                 priceId: 'price_1PGznYBcOCSFJlaSBsL8PYf2',
@@ -150,6 +159,36 @@
                     alert(session.error);
                 } else {
                     return stripe.redirectToCheckout({ sessionId: session.id });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+
+    document.getElementById('unsubscribe-button').addEventListener('click', function () {
+        const subscriptionId = document.getElementById('subscription-id').value;
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        console.log('Subscription ID:', subscriptionId); // Debugging line
+
+        fetch('/stripe/cancel-subscription', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify({
+                subscriptionId: subscriptionId
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    alert('Subscription will be cancelled at the end of the current period.');
                 }
             })
             .catch(error => {
