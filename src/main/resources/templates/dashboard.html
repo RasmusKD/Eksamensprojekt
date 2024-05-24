@@ -73,11 +73,13 @@
         </div>
     </div>
     <div class="content-column">
-        <div class="text-box">
+        <!-- Conditional Display of Checkout Button -->
+        <div class="text-box" th:if="${subscription == null || subscription.status == 'inactive'}">
             <button id="checkout-button" class="btn-primary w-100">Abonnér med Stripe</button>
-            <input type="hidden" id="user-id" th:value="${user.userId}">
-            <input type="hidden" id="subscription-id" th:value="${subscription != null ? subscription.subscriptionId : ''}">
         </div>
+        <input type="hidden" id="user-id" th:value="${user.userId}">
+        <input type="hidden" id="subscription-id" th:value="${subscription != null ? subscription.subscriptionId : ''}">
+
         <!-- Conditional Display of Unsubscribe Button -->
         <div class="text-box" th:if="${subscription != null && subscription.status != 'inactive'}">
             <button id="unsubscribe-button" class="btn-primary color-red w-100">Opsig Abonnement</button>
