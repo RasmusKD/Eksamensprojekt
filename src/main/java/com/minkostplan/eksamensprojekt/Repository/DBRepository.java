@@ -2,14 +2,15 @@ package com.minkostplan.eksamensprojekt.Repository;
 
 import com.minkostplan.eksamensprojekt.Model.Ingredient;
 import com.minkostplan.eksamensprojekt.Model.Recipe;
+import com.minkostplan.eksamensprojekt.Model.Subscription;
 import com.minkostplan.eksamensprojekt.Model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
-import com.minkostplan.eksamensprojekt.Model.Subscription;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,7 +113,7 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "INSERT INTO User (firstName, lastName, email, password, age, gender, weight, height, activityLevel, goal, employed, subscriber, subscriptionId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO User (firstName, lastName, email, password, age, gender, weight, height, activityLevel, goal, employed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
@@ -126,7 +127,6 @@ public class DBRepository {
             pstmt.setInt(10, user.getGoal());
             pstmt.setInt(11, user.getEmployed());
             pstmt.setBoolean(12, user.isSubscriber());
-            pstmt.setString(13, user.getSubscriptionId());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -164,7 +164,6 @@ public class DBRepository {
                 user.setGoal(rs.getInt("goal"));
                 user.setEmployed(rs.getInt("employed"));
                 user.setSubscriber(rs.getBoolean("subscriber"));
-                user.setSubscriptionId(rs.getString("subscriptionId"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -181,7 +180,7 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "UPDATE User SET firstName=?, lastName=?, age=?, gender=?, weight=?, height=?, activityLevel=?, goal=?, employed=?, subscriber=?, subscriptionId=? WHERE userId=?";
+            String sql = "UPDATE User SET firstName=?, lastName=?, age=?, gender=?, weight=?, height=?, activityLevel=?, goal=?, employed=?, subscriber=? WHERE userId=?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
@@ -193,8 +192,7 @@ public class DBRepository {
             pstmt.setInt(8, user.getGoal());
             pstmt.setInt(9, user.getEmployed());
             pstmt.setBoolean(10, user.isSubscriber());
-            pstmt.setString(11, user.getSubscriptionId());
-            pstmt.setInt(12, user.getUserId());
+            pstmt.setInt(11, user.getUserId());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -244,8 +242,7 @@ public class DBRepository {
                             rs.getInt("activityLevel"),
                             rs.getInt("goal"),
                             rs.getInt("employed"),
-                            rs.getBoolean("subscriber"),
-                            rs.getString("subscriptionId")
+                            rs.getBoolean("subscriber")
                     );
                 }
             }
@@ -430,20 +427,19 @@ public class DBRepository {
         }
     }
 
-    public void updateUserSubscriptionStatus(int userId, boolean isSubscriber, String subscriptionId) {
+    public void updateSubscriptionStatus(String subscriptionId, String status) {
         Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {
             conn = getConnection();
-            String sql = "UPDATE User SET subscriber = ?, subscriptionId = ? WHERE userId = ?";
+            String sql = "UPDATE Subscription SET status = ? WHERE subscriptionId = ?";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setBoolean(1, isSubscriber);
+            pstmt.setString(1, status);
             pstmt.setString(2, subscriptionId);
-            pstmt.setInt(3, userId);
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            System.out.println("Error connecting to the database or executing the query.");
+            System.out.println("Error connecting to the database or executing the query: " + e.getMessage());
             e.printStackTrace();
         } finally {
             closeResources(conn, pstmt);
@@ -520,4 +516,50 @@ public class DBRepository {
         return recipe;
     }
 
+    public Subscription getSubscriptionByUserId(int userId) {
+        Subscription subscription = null;
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            String sql = "SELECT * FROM Subscription WHERE userId = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            rs = pstmt.executeQuery();
+            if (rs.next()) {
+                subscription = new Subscription();
+                subscription.setSubscriptionId(rs.getString("subscriptionId"));
+                subscription.setUserId(rs.getInt("userId"));
+                subscription.setStartDate(rs.getDate("startDate"));
+                subscription.setEndDate(rs.getDate("endDate"));
+                subscription.setPrice(rs.getDouble("price"));
+                subscription.setStatus(rs.getString("status"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt, rs);
+        }
+
+        return subscription;
+    }
+
+    public void deleteInactiveSubscriptionsByUserId(int userId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "DELETE FROM Subscription WHERE userId = ? AND status = 'inactive'";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
+    }
 }

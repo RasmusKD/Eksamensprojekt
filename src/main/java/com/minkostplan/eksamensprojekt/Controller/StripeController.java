@@ -32,6 +32,9 @@ public class StripeController {
             String userIdStr = (String) payload.get("userId"); // User ID received as String
             int userId = Integer.parseInt(userIdStr); // Convert String to Integer
 
+            // Delete any inactive subscriptions for the user
+            useCase.deleteInactiveSubscriptionsByUserId(userId);
+
             String email = useCase.getUserById(userId).getEmail();
 
             SessionCreateParams params = SessionCreateParams.builder()
@@ -58,7 +61,6 @@ public class StripeController {
         return response;
     }
 
-
     @GetMapping("/payment-success")
     public ModelAndView handlePaymentSuccess(@RequestParam("session_id") String sessionId) {
         ModelAndView modelAndView = new ModelAndView("payment-success");
@@ -71,7 +73,7 @@ public class StripeController {
                 Subscription subscription = new Subscription();
                 subscription.setUserId(userId);
                 subscription.setStartDate(java.sql.Date.valueOf(LocalDate.now()));
-                subscription.setEndDate(java.sql.Date.valueOf(LocalDate.now().plusMonths(1)));
+                subscription.setEndDate(java.sql.Date.valueOf(LocalDate.now().plusDays(7))); // Set end date to 7 days from now
                 subscription.setPrice(9.99); // Example price
                 subscription.setStatus("active");
                 subscription.setSubscriptionId(subscriptionId); // Store the Stripe subscription ID
@@ -79,7 +81,7 @@ public class StripeController {
                 useCase.createSubscription(subscription);
 
                 // Update the user's subscription status and subscription ID
-                useCase.updateUserSubscriptionStatus(userId, true, subscriptionId);
+                useCase.updateUserSubscriptionStatus(userId, true);
 
                 modelAndView.addObject("message", "Betaling gennemført! Tak for din betaling. Dit abonnement er nu aktivt.");
             } else {
@@ -100,15 +102,25 @@ public class StripeController {
             System.out.println("Received subscriptionId: " + subscriptionId); // Add this line for debugging
             com.stripe.model.Subscription subscription = com.stripe.model.Subscription.retrieve(subscriptionId);
 
+            if (subscription == null) {
+                response.put("error", "Subscription not found.");
+                return response;
+            }
+
             SubscriptionUpdateParams params = SubscriptionUpdateParams.builder()
                     .setCancelAtPeriodEnd(true)
                     .build();
 
             subscription.update(params);
 
+            // Update the subscription status to inactive in your database
+            useCase.updateSubscriptionStatus(subscriptionId, "inactive");
+
             response.put("status", "subscription_cancelled");
         } catch (StripeException e) {
             response.put("error", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            response.put("error", "Invalid subscriptionId format.");
         }
         return response;
     }

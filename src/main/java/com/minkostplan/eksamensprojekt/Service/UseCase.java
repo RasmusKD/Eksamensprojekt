@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -53,7 +54,6 @@ public class UseCase {
         dBRepository.updateUser(user);
     }
 
-
     public User getUserById(int userId) {
         return dBRepository.getUserById(userId);
     }
@@ -61,10 +61,10 @@ public class UseCase {
     public boolean isUserLoggedIn() {
         return this.currentUser != null;
     }
+
     public void updateEmploymentStatus(String email, int employmentStatus) {
         dBRepository.updateEmploymentStatus(email, employmentStatus);
     }
-
 
     public void deleteUser() {
         if (currentUser != null) {
@@ -83,6 +83,7 @@ public class UseCase {
         dBRepository.createIngredients(ingredient);
         System.out.println("New ingredient created successfully!");
     }
+
     public List<Ingredient> getAllIngredients() {
         return dBRepository.getAllIngredients();
     }
@@ -94,7 +95,6 @@ public class UseCase {
     public void createRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
         dBRepository.createRecipeWithIngredients(recipe, ingredientIds, quantities);
     }
-
 
     public User getCurrentUser() {
         return currentUser;
@@ -108,15 +108,13 @@ public class UseCase {
         dBRepository.updateUserSubscriptionStatus(userId, subscriberStatus);
     }
 
-    public void updateUserSubscriptionStatus(int userId, boolean subscriberStatus, String subscriptionId) {
-        dBRepository.updateUserSubscriptionStatus(userId, subscriberStatus, subscriptionId);
+    public void updateSubscriptionStatus(String subscriptionId, String status) {
+        dBRepository.updateSubscriptionStatus(subscriptionId, status);
     }
 
     public User getUserByEmail(String email) {
         return dBRepository.findByEmail(email);
     }
-
-
 
     public String getSuccessUrl() {
         return successUrl;
@@ -173,5 +171,13 @@ public class UseCase {
         }
 
         return totalCalories;
+    }
+
+    public Subscription getSubscriptionByUserId(int userId) {
+        return dBRepository.getSubscriptionByUserId(userId);
+    }
+
+    public void deleteInactiveSubscriptionsByUserId(int userId) {
+        dBRepository.deleteInactiveSubscriptionsByUserId(userId);
     }
 }
