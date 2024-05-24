@@ -10,17 +10,7 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
-<div class="top-bar">
-    <div class="container">
-        <a href="/dashboard" class="logo-link">
-            <h1>Min Kostplan</h1>
-        </a>
-        <form th:action="@{/perform_logout}" method="post" style="display: inline;">
-            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-            <button class="btn-primary" type="submit">Log ud</button>
-        </form>
-    </div>
-</div>
+<div th:replace="fragments/header :: header"></div>
 <div class="content dashboard-content center">
     <div class="content-box">
         <div class="text-box3">
