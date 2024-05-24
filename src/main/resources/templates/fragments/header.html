@@ -10,9 +10,7 @@
             </form>
         </div>
         <div th:if="${#authorization.expression('!isAuthenticated()')}">
-            <a href="/login">
-                <button class="btn-primary">Login</button>
-            </a>
+            <button onclick="window.location.href='/login'" class="btn-primary">Login</button>
         </div>
     </div>
 </div>

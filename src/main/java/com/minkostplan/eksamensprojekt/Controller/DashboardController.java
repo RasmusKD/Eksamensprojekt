@@ -1,5 +1,6 @@
 package com.minkostplan.eksamensprojekt.Controller;
 
+import com.minkostplan.eksamensprojekt.Model.Subscription;
 import com.minkostplan.eksamensprojekt.Model.User;
 import com.minkostplan.eksamensprojekt.Service.UseCase;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,8 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.Map;
 
 @Controller
 public class DashboardController {
@@ -41,49 +44,30 @@ public class DashboardController {
         // Calculate calories
         double calorieNeeds = useCase.calculateCalories(user);
 
+        // Retrieve the subscription (active or not)
+        Subscription subscription = useCase.getSubscriptionByUserId(user.getUserId());
+        long daysLeft = 0;
+        if (subscription != null) {
+            LocalDate endDate = convertToLocalDate(subscription.getEndDate());
+            LocalDate currentDate = LocalDate.now();
+            daysLeft = ChronoUnit.DAYS.between(currentDate, endDate);
+            if (daysLeft < 0) {
+                daysLeft = 0;
+            }
+        }
+
         model.addAttribute("user", user);
         model.addAttribute("activityLevelMap", activityLevelMap);
         model.addAttribute("goalMap", goalMap);
         model.addAttribute("calorieNeeds", calorieNeeds); // Add calorie needs to the model
         model.addAttribute("userId", user.getUserId()); // Add user ID to the model
+        model.addAttribute("daysLeft", daysLeft); // Add days left to the model
+        model.addAttribute("subscription", subscription); // Add subscription to the model
 
         return "dashboard";
     }
 
-    @PostMapping("/update-goal")
-    public String updateGoal(@RequestParam("goal") int goal, Authentication authentication) {
-        String email = authentication.getName(); // Get the logged-in user's email
-        User user = useCase.getUserByEmail(email); // Retrieve user info from the database
-        user.setGoal(goal); // Update the user's goal
-        useCase.updateUser(user); // Save the updated user to the database
-
-        return "redirect:/dashboard"; // Redirect back to the dashboard
-    }
-
-    @PostMapping("/update-user")
-    public String updateUser(
-            @RequestParam("age") int age,
-            @RequestParam("gender") char gender,
-            @RequestParam("weight") double weight,
-            @RequestParam("height") double height,
-            @RequestParam("activityLevel") int activityLevel,
-            @RequestParam("goal") int goal,
-            Authentication authentication) {
-
-        String email = authentication.getName(); // Get the logged-in user's email
-        User user = useCase.getUserByEmail(email); // Retrieve user info from the database
-
-        // Update user details
-        user.setAge(age);
-        user.setGender(gender);
-        user.setWeight(weight);
-        user.setHeight(height);
-        user.setActivityLevel(activityLevel);
-        user.setGoal(goal);
-
-        // Save the updated user to the database
-        useCase.updateUser(user);
-
-        return "redirect:/dashboard"; // Redirect back to the dashboard
+    private LocalDate convertToLocalDate(java.util.Date date) {
+        return new java.sql.Date(date.getTime()).toLocalDate();
     }
 }

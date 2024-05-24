@@ -69,7 +69,6 @@ textarea.large, .input-field.large {
 
 .color-red {
     background-color: #d57878!important;
-    transition: none !important;
 }
 
 .color-red:hover {
@@ -93,6 +92,10 @@ textarea.large, .input-field.large {
     border: none;
     border-radius: 5px;
     box-shadow: 0 .125rem .25rem rgba(0,0,0,.09)!important;
+    display: flex;
+    gap: 0.5em;
+    place-items: center;
+    justify-content: center;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out;
 }
@@ -144,6 +147,12 @@ textarea.large, .input-field.large {
 .content-box {
     display: flex;
     height: fit-content;
+}
+
+.content-column {
+    display: flex;
+    flex-direction: column;
+    gap: 2em;
 }
 
 .text-box {
@@ -270,6 +279,7 @@ textarea.large, .input-field.large {
     gap: 1em;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 .headline {
@@ -393,12 +403,6 @@ textarea.large, .input-field.large {
 
 .login-content {
     justify-content: center;
-}
-
-.dashboard-content {
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding-top: 20px;
 }
 
 .hidden {

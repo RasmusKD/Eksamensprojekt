@@ -3,10 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Payment Success</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-<h1>Betaling gennemført!</h1>
-<p>Tak for din betaling. Dit abonnement er nu aktivt.</p>
-<a href="/dashboard">Gå til Dashboard</a>
+<div th:replace="fragments/header :: header"></div>
+<div class="content center">
+    <div class="content-box">
+        <div class="text-box">
+            <h1>Betaling gennemført!</h1>
+            <p>Tak for din betaling. Dit abonnement er nu aktivt.</p>
+            <button onclick="window.location.href='/dashboard'" class="btn-primary w-100">
+                <i class="material-icons" style="vertical-align: middle;">arrow_back</i>
+                <div>Gå til Dashboard</div>
+            </button>
+        </div>
+    </div>
+</div>
+<div th:replace="fragments/footer :: footer"></div>
 </body>
 </html>
