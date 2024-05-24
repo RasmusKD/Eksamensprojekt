@@ -267,6 +267,9 @@ textarea.large, .input-field.large {
     text-align: center;
     padding: 20px;
     z-index: 1;
+    gap: 1em;
+    display: flex;
+    flex-direction: column;
 }
 
 .headline {
