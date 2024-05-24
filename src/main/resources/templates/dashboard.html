@@ -119,64 +119,73 @@
     const stripePublicKey = 'pk_test_51PGz21BcOCSFJlaS9GnQrmz3wFcSw82xsDryxcqWPVb0orDtOWKFiB0clb18lk2CC67VdTnJ7cfjWFCBbudi1Gms00x9Tgqpzd';
     const stripe = Stripe(stripePublicKey);
 
-    document.getElementById('checkout-button').addEventListener('click', function () {
-        const userId = document.getElementById('user-id').value;
-        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+    document.addEventListener('DOMContentLoaded', function () {
+        var checkoutButton = document.getElementById('checkout-button');
+        var unsubscribeButton = document.getElementById('unsubscribe-button');
 
-        fetch('/stripe/create-checkout-session', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                [csrfHeader]: csrfToken
-            },
-            body: JSON.stringify({
-                priceId: 'price_1PGznYBcOCSFJlaSBsL8PYf2',
-                userId: userId
-            }),
-        })
-            .then(response => response.json())
-            .then(session => {
-                if (session.error) {
-                    alert(session.error);
-                } else {
-                    return stripe.redirectToCheckout({ sessionId: session.id });
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
+        if (checkoutButton) {
+            checkoutButton.addEventListener('click', function () {
+                const userId = document.getElementById('user-id').value;
+                const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+                fetch('/stripe/create-checkout-session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                    body: JSON.stringify({
+                        priceId: 'price_1PGznYBcOCSFJlaSBsL8PYf2',
+                        userId: userId
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(session => {
+                        if (session.error) {
+                            alert(session.error);
+                        } else {
+                            return stripe.redirectToCheckout({ sessionId: session.id });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             });
-    });
+        }
 
-    document.getElementById('unsubscribe-button').addEventListener('click', function () {
-        const subscriptionId = document.getElementById('subscription-id').value;
-        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
-        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+        if (unsubscribeButton) {
+            unsubscribeButton.addEventListener('click', function () {
+                const subscriptionId = document.getElementById('subscription-id').value;
+                const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+                const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-        console.log('Subscription ID:', subscriptionId); // Logging subscription ID for debugging
+                console.log('Subscription ID:', subscriptionId); // Logging subscription ID for debugging
 
-        fetch('/stripe/cancel-subscription', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                [csrfHeader]: csrfToken
-            },
-            body: JSON.stringify({
-                subscriptionId: subscriptionId
-            }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    alert('Subscription will be cancelled at the end of the current period.');
-                    location.reload(); // Reload the page to reflect the changes
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
+                fetch('/stripe/cancel-subscription', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                    body: JSON.stringify({
+                        subscriptionId: subscriptionId
+                    }),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            alert('Subscription will be cancelled at the end of the current period.');
+                            location.reload(); // Reload the page to reflect the changes
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
             });
+        }
     });
 </script>
 </body>
