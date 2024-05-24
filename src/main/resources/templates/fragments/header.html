@@ -1,0 +1,18 @@
+<div class="top-bar" th:fragment="header">
+    <div class="container">
+        <a th:href="${#authorization.expression('isAuthenticated()') ? '/dashboard' : '/'}" class="logo-link">
+            <h1>Min Kostplan</h1>
+        </a>
+        <div th:if="${#authorization.expression('isAuthenticated()')}">
+            <form th:action="@{/perform_logout}" method="post" style="display: inline;">
+                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                <button class="btn-primary" type="submit">Log ud</button>
+            </form>
+        </div>
+        <div th:if="${#authorization.expression('!isAuthenticated()')}">
+            <a href="/login">
+                <button class="btn-primary">Login</button>
+            </a>
+        </div>
+    </div>
+</div>
