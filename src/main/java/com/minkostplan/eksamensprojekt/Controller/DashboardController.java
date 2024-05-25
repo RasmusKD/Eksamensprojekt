@@ -66,6 +66,7 @@ public class DashboardController {
 
         return "dashboard";
     }
+
     @PostMapping("/update-goal")
     public String updateGoal(@RequestParam("goal") int goal, Authentication authentication) {
         String email = authentication.getName(); // Get the logged-in user's email
