@@ -10,7 +10,7 @@
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <div class="content center">
     <div class="content-box">
         <div class="text-box3">
@@ -100,7 +100,7 @@
         </div>
     </div>
 </div>
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script>
     document.getElementById('edit-button').addEventListener('click', function () {

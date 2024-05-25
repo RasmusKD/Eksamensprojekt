@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
-<div th:replace="fragments/header :: header"></div>
+<div th:replace="~{fragments/header :: header}"></div>
 <div class="content">
     <div class="text-box">
         <div class="headline">Skab din vej til sundhed og velvære</div>
@@ -21,6 +21,6 @@
         <div class="info-line">Info:<br>Farimagsvej 45, 4700 Næstved,<br>kontakt@minkostplan.com</div>
     </div>
 </div>
-<div th:replace="fragments/footer :: footer"></div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
