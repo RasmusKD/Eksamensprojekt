@@ -32,9 +32,6 @@ public class StripeController {
             String userIdStr = (String) payload.get("userId"); // User ID received as String
             int userId = Integer.parseInt(userIdStr); // Convert String to Integer
 
-            // Delete any inactive subscriptions for the user
-            useCase.deleteInactiveSubscriptionsByUserId(userId);
-
             String email = useCase.getUserById(userId).getEmail();
 
             SessionCreateParams params = SessionCreateParams.builder()
@@ -53,6 +50,7 @@ public class StripeController {
 
             Session session = Session.create(params);
             response.put("id", session.getId());
+            
         } catch (StripeException e) {
             response.put("error", e.getMessage());
         } catch (NumberFormatException e) {
@@ -60,6 +58,7 @@ public class StripeController {
         }
         return response;
     }
+
 
     @GetMapping("/payment-success")
     public ModelAndView handlePaymentSuccess(@RequestParam("session_id") String sessionId) {
@@ -82,6 +81,9 @@ public class StripeController {
 
                 // Update the user's subscription status and subscription ID
                 useCase.updateUserSubscriptionStatus(userId, true);
+
+                // Delete any inactive subscriptions for the user after the new subscription is created
+                useCase.deleteInactiveSubscriptionsByUserId(userId);
 
                 modelAndView.addObject("message", "Betaling gennemført! Tak for din betaling. Dit abonnement er nu aktivt.");
             } else {
