@@ -11,8 +11,8 @@ public class HomeController {
     @GetMapping("/")
     public String landing() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.isAuthenticated() && !auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ANONYMOUS"))) {
+        if (auth != null && auth.isAuthenticated() && auth.getAuthorities().stream()
+                .noneMatch(a -> a.getAuthority().equals("ROLE_ANONYMOUS"))) {
             return "redirect:/dashboard";
         }
         return "home";
@@ -21,8 +21,8 @@ public class HomeController {
     @GetMapping("/login")
     public String login() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth != null && auth.isAuthenticated() && !auth.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ANONYMOUS"))) {
+        if (auth != null && auth.isAuthenticated() && auth.getAuthorities().stream()
+                .noneMatch(a -> a.getAuthority().equals("ROLE_ANONYMOUS"))) {
             return "redirect:/dashboard";
         }
         return "login";
