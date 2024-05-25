@@ -293,6 +293,7 @@ textarea.large, .input-field.large {
 
 .description {
     font-size: 1.1em;
+    line-height: 1.5;
 }
 
 .spacing {
