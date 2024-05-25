@@ -15,14 +15,18 @@ import java.util.List;
 @Service
 public class UseCase {
 
+    // Injicerer Stripe success URL fra applikationsindstillingerne
     @Value("${stripe.success.url}")
     private String successUrl;
 
+    // Injicerer Stripe cancel URL fra applikationsindstillingerne
     @Value("${stripe.cancel.url}")
     private String cancelUrl;
 
+    // Reference til database repository
     private DBRepository dBRepository;
 
+    // Konstruktor til dependency injection af repository
     @Autowired
     public UseCase(DBRepository dBRepository) {
         this.dBRepository = dBRepository;
@@ -30,10 +34,12 @@ public class UseCase {
 
     private User currentUser;
 
+    // Henter alle opskrifter fra databasen
     public List<Recipe> getAllRecipes() {
         return dBRepository.getAllRecipes(); // Implement this method in your repository
     }
 
+    // Henter en specifik opskrift ved dens ID
     public Recipe getRecipeById(int id) {
         return dBRepository.getRecipeById(id); // Implement this method in your repository
     }
@@ -42,30 +48,37 @@ public class UseCase {
         return dBRepository.getRecipesByDay(day);
     }
 
+    // Sætter eller vælger den aktuelle bruger
     public void setCurrentUser(User user) {
         this.currentUser = user;
     }
 
+    // Opretter en ny bruger i databasen
     public void createUser(User user) {
         dBRepository.createUser(user);
     }
 
+    // Opdaterer en eksisterende bruger i databasen
     public void updateUser(User user) {
         dBRepository.updateUser(user);
     }
 
+    // Henter en bruger ved deres ID
     public User getUserById(int userId) {
         return dBRepository.getUserById(userId);
     }
 
+    // Kontrollerer om en bruger er logget ind
     public boolean isUserLoggedIn() {
         return this.currentUser != null;
     }
 
+    // Opdaterer ansættelsesstatus for en bruger baseret på deres email
     public void updateEmploymentStatus(String email, int employmentStatus) {
         dBRepository.updateEmploymentStatus(email, employmentStatus);
     }
 
+    // Sletter den aktuelt loggede bruger
     public void deleteUser() {
         if (currentUser != null) {
             if (dBRepository.deleteUser(currentUser.getUserId())) {
@@ -79,51 +92,63 @@ public class UseCase {
         }
     }
 
+    // Opretter en ny ingrediens i databasen
     public void createIngredients(Ingredient ingredient) {
         dBRepository.createIngredients(ingredient);
         System.out.println("New ingredient created successfully!");
     }
 
+    // Henter alle ingredienser fra databasen
     public List<Ingredient> getAllIngredients() {
         return dBRepository.getAllIngredients();
     }
 
+    // Henter en specifik ingrediens ved dens ID
     public Ingredient getIngredientById(int ingredientId) {
         return dBRepository.getIngredientById(ingredientId);
     }
 
+    // Opretter en ny opskrift med tilhørende ingredienser og mængder
     public void createRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
         dBRepository.createRecipeWithIngredients(recipe, ingredientIds, quantities);
     }
 
+    // Henter den aktuelt loggede bruger
     public User getCurrentUser() {
         return currentUser;
     }
 
+    // Opretter et nyt abonnement i databasen
     public void createSubscription(Subscription subscription) {
         dBRepository.createSubscription(subscription);
     }
 
+    // Opdaterer abonnementsstatus for en bruger baseret på deres ID
     public void updateUserSubscriptionStatus(int userId, boolean subscriberStatus) {
         dBRepository.updateUserSubscriptionStatus(userId, subscriberStatus);
     }
 
+    // Opdaterer status for et abonnement baseret på dets ID
     public void updateSubscriptionStatus(String subscriptionId, String status) {
         dBRepository.updateSubscriptionStatus(subscriptionId, status);
     }
 
+    // Henter en bruger ved deres email
     public User getUserByEmail(String email) {
         return dBRepository.findByEmail(email);
     }
 
+    // Henter Stripe success URL
     public String getSuccessUrl() {
         return successUrl;
     }
 
+    // Henter Stripe cancel URL
     public String getCancelUrl() {
         return cancelUrl;
     }
 
+    // Beregner det daglige kaloriebehov for en bruger
     public double calculateCalories(User user) {
         double bmr;
         if (user.getGender() == 'M') {
@@ -173,10 +198,12 @@ public class UseCase {
         return totalCalories;
     }
 
+    // Henter et abonnement ved bruger ID
     public Subscription getSubscriptionByUserId(int userId) {
         return dBRepository.getSubscriptionByUserId(userId);
     }
 
+    // Sletter inaktive abonnementer for en bruger baseret på deres ID
     public void deleteInactiveSubscriptionsByUserId(int userId) {
         dBRepository.deleteInactiveSubscriptionsByUserId(userId);
     }
