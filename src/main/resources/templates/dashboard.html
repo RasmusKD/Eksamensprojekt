@@ -102,6 +102,20 @@
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 
+<!-- Confirmation Modal -->
+<div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Bekræft Opsigelse</h2>
+        <p>Er du sikker på, at du vil opsige dit abonnement? <br> Denne handling kan ikke fortrydes.</p>
+        <div class="button-container">
+            <button id="confirm-unsubscribe" class="btn-primary color-red">Ja, opsig abonnement</button>
+            <button id="cancel-unsubscribe" class="btn-primary">Annuller</button>
+        </div>
+    </div>
+</div>
+
+
 <script>
     document.getElementById('edit-button').addEventListener('click', function () {
         var form = document.getElementById('user-form');
@@ -125,6 +139,10 @@
     document.addEventListener('DOMContentLoaded', function () {
         var checkoutButton = document.getElementById('checkout-button');
         var unsubscribeButton = document.getElementById('unsubscribe-button');
+        var modal = document.getElementById('confirmation-modal');
+        var closeButton = document.querySelector('.close-button');
+        var confirmButton = document.getElementById('confirm-unsubscribe');
+        var cancelButton = document.getElementById('cancel-unsubscribe');
 
         if (checkoutButton) {
             checkoutButton.addEventListener('click', function () {
@@ -159,11 +177,21 @@
 
         if (unsubscribeButton) {
             unsubscribeButton.addEventListener('click', function () {
+                modal.style.display = 'block';
+            });
+
+            closeButton.addEventListener('click', function () {
+                modal.style.display = 'none';
+            });
+
+            cancelButton.addEventListener('click', function () {
+                modal.style.display = 'none';
+            });
+
+            confirmButton.addEventListener('click', function () {
                 const subscriptionId = document.getElementById('subscription-id').value;
                 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
                 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
-
-                console.log('Subscription ID:', subscriptionId); // Logging subscription ID for debugging
 
                 fetch('/stripe/cancel-subscription', {
                     method: 'POST',
@@ -180,16 +208,24 @@
                         if (data.error) {
                             alert(data.error);
                         } else {
-                            alert('Subscription will be cancelled at the end of the current period.');
                             location.reload(); // Reload the page to reflect the changes
                         }
                     })
                     .catch(error => {
                         console.error('Error:', error);
                     });
+                modal.style.display = 'none';
             });
         }
     });
+
+    // Close modal if clicked outside of it
+    window.onclick = function(event) {
+        var modal = document.getElementById('confirmation-modal');
+        if (event.target == modal) {
+            modal.style.display = 'none';
+        }
+    };
 </script>
 </body>
 </html>
