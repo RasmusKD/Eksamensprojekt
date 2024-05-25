@@ -50,7 +50,7 @@ public class StripeController {
 
             Session session = Session.create(params);
             response.put("id", session.getId());
-            
+
         } catch (StripeException e) {
             response.put("error", e.getMessage());
         } catch (NumberFormatException e) {
