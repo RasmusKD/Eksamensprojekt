@@ -102,10 +102,8 @@ public class DashboardController {
 
         return "redirect:/dashboard"; // Redirect back to the dashboard
     }
-    
+
     private LocalDate convertToLocalDate(java.util.Date date) {
         return new java.sql.Date(date.getTime()).toLocalDate();
     }
-
-
 }
