@@ -1,5 +1,6 @@
 package com.minkostplan.eksamensprojekt.Model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Recipe {
@@ -7,7 +8,6 @@ public class Recipe {
     private int recipeId;
     private String title;
     private String description;
-    private List<Ingredient> ingredients;
     private String method;
     private String cookingTime;
     private String imageUrl;
@@ -17,6 +17,8 @@ public class Recipe {
     private int totalFat; // Added totalFat
     private int totalCarbohydrates; // Added totalCarbohydrates
     private String day; // Added day
+    private int adjustedCalories;
+    private List<Ingredient> ingredients = new ArrayList<>();
 
     public Recipe() {
     }
@@ -36,7 +38,23 @@ public class Recipe {
         this.totalCarbohydrates = totalCarbohydrates;
         this.day = day;
     }
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
 
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
+    public int getAdjustedCalories() {
+        return adjustedCalories;
+    }
+    public int getCalories() {
+        return this.totalCalories; // Assuming totalCalories represents the calories of the recipe
+    }
+
+    public void setAdjustedCalories(int adjustedCalories) {
+        this.adjustedCalories = adjustedCalories;
+    }
     public int getRecipeId() {
         return recipeId;
     }
@@ -61,13 +79,7 @@ public class Recipe {
         this.description = description;
     }
 
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
 
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
 
     public String getMethod() {
         return method;
@@ -157,6 +169,7 @@ public class Recipe {
                 ", totalFat=" + totalFat +
                 ", totalCarbohydrates=" + totalCarbohydrates +
                 ", day='" + day + '\'' +
+                ", adjustedCalories=" + adjustedCalories +
                 '}';
     }
 }

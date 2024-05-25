@@ -13,14 +13,18 @@
 <ul>
     <li th:each="ingredient : ${recipe.ingredients}">
         <span th:text="${ingredient.name}">Ingredient Name</span>:
-        <span th:text="${ingredient.quantity}">Quantity</span>
+        <span th:text="${ingredient.quantity}">Quantity</span>g,
+        <span th:text="${ingredient.calories}">Calories</span>,
+        <span th:text="${ingredient.fat}">Fat</span>g,
+        <span th:text="${ingredient.protein}">Protein</span>g,
+        <span th:text="${ingredient.carbohydrate}">Carbohydrates</span>g
     </li>
 </ul>
 <h3>Method</h3>
 <p th:text="${recipe.method}">Recipe Method</p>
 <p><strong>Cooking Time:</strong> <span th:text="${recipe.cookingTime}">Cooking Time</span></p>
 <p><strong>Meal Time:</strong> <span th:text="${recipe.mealTime}">Meal Time</span></p>
-<p><strong>Total Calories:</strong> <span th:text="${recipe.totalCalories}">Total Calories</span></p>
+<p><strong>Adjusted Calories:</strong> <span th:text="${recipe.adjustedCalories}">Adjusted Calories</span></p>
 <p><strong>Total Protein:</strong> <span th:text="${recipe.totalProtein}">Total Protein</span></p>
 <p><strong>Total Fat:</strong> <span th:text="${recipe.totalFat}">Total Fat</span></p>
 <p><strong>Total Carbohydrates:</strong> <span th:text="${recipe.totalCarbohydrates}">Total Carbohydrates</span></p>
