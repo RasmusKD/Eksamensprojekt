@@ -88,12 +88,15 @@
             <div>Abonnement er inaktivt</div>
             <div>Dage tilbage: <span th:text="${daysLeft}"></span></div>
         </div>
+        <!-- Subscriber Buttons -->
+        <div class="text-box"  th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}">
+            <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}" th:onclick="|window.location.href='@{/weekly-recipes}'|" class="btn-primary color-blue w-100">Ugens Opskrifter</button>
+        </div>
         <!-- Admin and Employee Buttons -->
-        <div class="text-box" th:if="${user.employed}">
+        <div class="text-box" th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}">
             <button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:onclick="|window.location.href='@{/opret-medarbejder}'|" class="btn-primary color-blue w-100">Opret medarbejder</button>
             <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/add-ingredients}'|" class="btn-primary color-blue w-100">Tilføj ingredienser</button>
             <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/recipe-creation}'|" class="btn-primary color-blue w-100">Tilføj opskrift</button>
-            <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}" th:onclick="|window.location.href='@{/weekly-recipes}'|" class="btn-primary color-blue w-100">Ugens Opskrifter</button>
         </div>
     </div>
 </div>
