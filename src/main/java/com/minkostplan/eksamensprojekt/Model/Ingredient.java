@@ -11,6 +11,7 @@ public class Ingredient {
     private double protein;
     private double carbohydrate;
     private int calories;
+    private double quantity; // Add this line
 
     /**
      * Default constructor.
@@ -143,6 +144,24 @@ public class Ingredient {
         this.calories = calories;
     }
 
+    /**
+     * Gets the quantity of the ingredient.
+     *
+     * @return the quantity of the ingredient
+     */
+    public double getQuantity() {
+        return quantity;
+    }
+
+    /**
+     * Sets the quantity of the ingredient.
+     *
+     * @param quantity the quantity to set
+     */
+    public void setQuantity(double quantity) {
+        this.quantity = quantity;
+    }
+
     @Override
     public String toString() {
         return "Ingredient{" +
@@ -152,6 +171,7 @@ public class Ingredient {
                 ", protein=" + protein +
                 ", carbohydrate=" + carbohydrate +
                 ", calories=" + calories +
+                ", quantity=" + quantity +
                 '}';
     }
 }

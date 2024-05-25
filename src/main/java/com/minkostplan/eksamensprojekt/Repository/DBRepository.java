@@ -507,6 +507,30 @@ public class DBRepository {
                 recipe.setTotalFat(rs.getInt("total_fat"));
                 recipe.setTotalCarbohydrates(rs.getInt("total_carbohydrates"));
                 recipe.setDay(rs.getString("day"));
+
+                // Initialize ingredients list
+                recipe.setIngredients(new ArrayList<>());
+
+                // Retrieve and add ingredients to the recipe
+                String ingredientSql = "SELECT i.*, ri.quantity FROM Ingredient i " +
+                        "JOIN Recipe_Ingredients ri ON i.ingredientId = ri.ingredient_id " +
+                        "WHERE ri.recipe_id = ?";
+                try (PreparedStatement ingredientPstmt = conn.prepareStatement(ingredientSql)) {
+                    ingredientPstmt.setInt(1, id);
+                    try (ResultSet ingredientRs = ingredientPstmt.executeQuery()) {
+                        while (ingredientRs.next()) {
+                            Ingredient ingredient = new Ingredient();
+                            ingredient.setIngredientId(ingredientRs.getInt("ingredientId"));
+                            ingredient.setName(ingredientRs.getString("name"));
+                            ingredient.setCalories(ingredientRs.getInt("calories"));
+                            ingredient.setFat(ingredientRs.getDouble("fat"));
+                            ingredient.setProtein(ingredientRs.getDouble("protein"));
+                            ingredient.setCarbohydrate(ingredientRs.getDouble("carbohydrate"));
+                            ingredient.setQuantity(ingredientRs.getDouble("quantity"));
+                            recipe.getIngredients().add(ingredient);
+                        }
+                    }
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -515,6 +539,8 @@ public class DBRepository {
         }
         return recipe;
     }
+
+
 
     public Subscription getSubscriptionByUserId(int userId) {
         Subscription subscription = null;

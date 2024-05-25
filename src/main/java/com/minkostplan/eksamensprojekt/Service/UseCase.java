@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -152,9 +153,11 @@ public class UseCase {
     public double calculateCalories(User user) {
         double bmr;
         if (user.getGender() == 'M') {
-            bmr = 88.362 + (13.397 * user.getWeight()) + (4.799 * user.getHeight()) - (5.677 * user.getAge());
+            // Updated BMR formula for males
+            bmr = (10 * user.getWeight()) + (6.25 * user.getHeight()) - (5 * user.getAge()) + 5;
         } else {
-            bmr = 447.593 + (9.247 * user.getWeight()) + (3.098 * user.getHeight()) - (4.330 * user.getAge());
+            // Updated BMR formula for females
+            bmr = (10 * user.getWeight()) + (6.25 * user.getHeight()) - (5 * user.getAge()) - 161;
         }
 
         double activityMultiplier;
@@ -163,16 +166,16 @@ public class UseCase {
                 activityMultiplier = 1.2;
                 break;
             case 1:
-                activityMultiplier = 1.375;
+                activityMultiplier = 1.5;
                 break;
             case 2:
-                activityMultiplier = 1.55;
+                activityMultiplier = 1.7;
                 break;
             case 3:
-                activityMultiplier = 1.725;
+                activityMultiplier = 1.9;
                 break;
             case 4:
-                activityMultiplier = 1.9;
+                activityMultiplier = 2.4;
                 break;
             default:
                 activityMultiplier = 1.2; // Default to sedentary if activity level is unknown
@@ -181,16 +184,16 @@ public class UseCase {
         double totalCalories = bmr * activityMultiplier;
 
         switch (user.getGoal()) {
-            case 0: // Vægttab
+            case 0: // Weight loss
                 totalCalories -= 500;
                 break;
-            case 1: // Vægtøgning
+            case 1: // Weight gain
                 totalCalories += 500;
                 break;
-            case 2: // Muskelopbygning
+            case 2: // Muscle gain
                 totalCalories += 300; // Slight surplus for muscle gain
                 break;
-            case 3: // Vedligehold vægt
+            case 3: // Maintain weight
                 // No adjustment needed
                 break;
         }
@@ -198,6 +201,76 @@ public class UseCase {
         return totalCalories;
     }
 
+    public double getCaloriesForMeal(double totalCalories, String mealTime) {
+        switch (mealTime) {
+            case "Breakfast":
+                return totalCalories * 0.4;
+            case "Lunch":
+            case "Dinner":
+                return totalCalories * 0.3;
+            default:
+                return 0;
+        }
+    }
+    public List<Ingredient> getAdjustedIngredients(Recipe recipe, double adjustedCalories) {
+        List<Ingredient> adjustedIngredients = new ArrayList<>();
+        double totalCalories = recipe.getTotalCalories();
+        double adjustmentFactor = adjustedCalories / totalCalories;
+
+        for (Ingredient ingredient : recipe.getIngredients()) {
+            Ingredient adjustedIngredient = new Ingredient();
+            adjustedIngredient.setName(ingredient.getName());
+            adjustedIngredient.setFat(ingredient.getFat() * adjustmentFactor);
+            adjustedIngredient.setProtein(ingredient.getProtein() * adjustmentFactor);
+            adjustedIngredient.setCarbohydrate(ingredient.getCarbohydrate() * adjustmentFactor);
+            adjustedIngredient.setCalories((int) (ingredient.getCalories() * adjustmentFactor));
+            adjustedIngredient.setQuantity(ingredient.getQuantity() * adjustmentFactor); // Adjust the quantity
+            adjustedIngredients.add(adjustedIngredient);
+        }
+        return adjustedIngredients;
+    }
+
+
+
+    public Recipe getRecipeByIdWithAdjustedCalories(int id, User user) {
+        Recipe recipe = dBRepository.getRecipeById(id);
+        double userCaloricNeeds = calculateCalories(user);
+        double adjustedCalories = getCaloriesForMeal(userCaloricNeeds, recipe.getMealTime());
+        recipe.setAdjustedCalories((int) adjustedCalories);
+        List<Ingredient> adjustedIngredients = getAdjustedIngredients(recipe, adjustedCalories);
+        recipe.setIngredients(adjustedIngredients);
+        return recipe;
+    }
+
+    public List<Recipe> getRecipesByDayWithAdjustedCalories(String day, User user) {
+        List<Recipe> recipes = getRecipesByDay(day);
+        double totalCalories = calculateCalories(user);
+
+        for (Recipe recipe : recipes) {
+            double adjustedCalories = getCaloriesForMeal(totalCalories, recipe.getMealTime());
+            recipe.setAdjustedCalories((int) adjustedCalories);
+        }
+
+        return recipes;
+    }
+    public double calculateAdjustedCalories(double userCaloricNeeds, String mealTime) {
+        double mealCalorieFraction;
+        switch (mealTime) {
+            case "Breakfast":
+                mealCalorieFraction = 0.4;
+                break;
+            case "Lunch":
+                mealCalorieFraction = 0.3;
+                break;
+            case "Dinner":
+                mealCalorieFraction = 0.3;
+                break;
+            default:
+                mealCalorieFraction = 0;
+                break;
+        }
+        return userCaloricNeeds * mealCalorieFraction;
+    }
     // Henter et abonnement ved bruger ID
     public Subscription getSubscriptionByUserId(int userId) {
         return dBRepository.getSubscriptionByUserId(userId);
