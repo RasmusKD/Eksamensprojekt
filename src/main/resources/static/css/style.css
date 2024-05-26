@@ -143,7 +143,6 @@ textarea.large, .input-field.large {
     width: 100%;
     overflow: hidden;
     position: relative;
-    bottom: -1px;
 }
 
 .wave {
