@@ -59,59 +59,6 @@ public class User implements UserDetails {
         }
         return authorities;
     }
-    public double getCaloricNeeds() {
-        double bmr;
-        if (this.gender == 'M') {
-            bmr = (10 * this.weight) + (6.25 * this.height) - (5 * this.age) + 5;
-        } else {
-            bmr = (10 * this.weight) + (6.25 * this.height) - (5 * this.age) - 161;
-        }
-
-        double totalCalories = getTotalCalories(bmr);
-
-        switch (this.goal) {
-            case 0: // Weight loss
-                totalCalories -= 500;
-                break;
-            case 1: // Weight gain
-                totalCalories += 500;
-                break;
-            case 2: // Muscle gain
-                totalCalories += 300; // Slight surplus for muscle gain
-                break;
-            case 3: // Maintain weight
-                // No adjustment needed
-                break;
-        }
-
-        return totalCalories;
-    }
-
-    private double getTotalCalories(double bmr) {
-        double activityMultiplier;
-        switch (this.activityLevel) {
-            case 0:
-                activityMultiplier = 1.2;
-                break;
-            case 1:
-                activityMultiplier = 1.5;
-                break;
-            case 2:
-                activityMultiplier = 1.7;
-                break;
-            case 3:
-                activityMultiplier = 1.9;
-                break;
-            case 4:
-                activityMultiplier = 2.4;
-                break;
-            default:
-                activityMultiplier = 1.2;
-        }
-
-        double totalCalories = bmr * activityMultiplier;
-        return totalCalories;
-    }
 
     @Override
     public String getPassword() {

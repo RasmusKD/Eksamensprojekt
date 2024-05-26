@@ -31,7 +31,7 @@ public class RecipeController {
     public String getRecipeById(@PathVariable int id, Model model, Principal principal) {
         Recipe recipe = useCase.getRecipeById(id);
         User user = useCase.getUserByEmail(principal.getName());
-        double userCaloricNeeds = user.getCaloricNeeds();
+        double userCaloricNeeds = useCase.calculateCalories(user);
         double adjustedCalories = useCase.calculateAdjustedCalories(userCaloricNeeds, recipe.getMealTime());
         recipe.setAdjustedCalories((int) adjustedCalories);
         List<Ingredient> adjustedIngredients = useCase.getAdjustedIngredients(recipe, adjustedCalories);
@@ -39,6 +39,4 @@ public class RecipeController {
         model.addAttribute("recipe", recipe);
         return "recipe";
     }
-
-
 }
