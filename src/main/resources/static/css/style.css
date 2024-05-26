@@ -523,7 +523,11 @@ textarea.large, .input-field.large {
     flex-direction: column;
     align-items: center;
     width: 33%;
-    transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease, z-index 0.3s ease;
+}
+
+.day-container:hover {
+    z-index: 10;
 }
 
 .day-container.faded {
@@ -548,13 +552,23 @@ textarea.large, .input-field.large {
     font-size: 2em;
 }
 
-.meal-box {
+.weekly-recipes-page .day-wrapper, .weekly-recipes-page .content {
+    display: flex;
+    justify-content: center;
+    padding: 0 2em;
+    max-width: 1200px;
+    margin: auto;
+    gap: 1em;
+    padding-bottom: 2em;
+}
+
+.weekly-recipes-page .meal-box {
     background-color: white;
     border-radius: .25rem;
     box-shadow: 0 .125rem .25rem rgba(0,0,0,.09) !important;
     width: 100%;
     max-width: 500px;
-    margin-bottom: 20px;
+    margin-bottom: 1em;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -562,7 +576,26 @@ textarea.large, .input-field.large {
     height: 300px;
     gap: 0.75em;
     cursor: pointer;
+    transition: transform 0.3s ease, z-index 0.3s ease;
 }
+
+.weekly-recipes-page .meal-box:hover {
+    transform: scale(1.05);
+    z-index: 10;
+}
+
+.weekly-recipes-page .day-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 33%;
+    transition: opacity 0.3s ease, z-index 0.3s ease;
+}
+
+.weekly-recipes-page .day-container:hover {
+    z-index: 10;
+}
+
 
 .meal-box img {
     width: 100%;
@@ -581,7 +614,7 @@ textarea.large, .input-field.large {
     padding: 0 10px 20px;
 }
 
-.navigation {
+.weekly-recipes-page .navigation {
     display: flex;
     align-items: center;
     cursor: pointer;
@@ -589,13 +622,22 @@ textarea.large, .input-field.large {
     transition: opacity 0.3s ease;
 }
 
-.navigation:hover {
+.weekly-recipes-page .arrow {
+    font-size: 5em !important;
+    color: #3c3f40;
+    transition: color 0.3s ease;
+}
+
+.weekly-recipes-page .arrow:hover {
+    color: forestgreen;
     opacity: 1;
 }
 
-.arrow {
-    font-size: 5em !important;
+.weekly-recipes-page .arrow:active {
+    color: #3c3f40;
+    opacity: 1;
 }
+
 
 @media (max-width: 768px) {
     .meal-box {
