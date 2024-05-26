@@ -64,7 +64,7 @@ public class WeeklyRecipesController {
         model.addAttribute("previousDayOffset", dayOffset - 1);
         model.addAttribute("nextDayOffset", dayOffset + 1);
 
-        model.addAttribute("dayOffset", dayOffset); // Add dayOffset to model
+        model.addAttribute("dayOffset", dayOffset);
 
         return "weekly-recipes";
     }
