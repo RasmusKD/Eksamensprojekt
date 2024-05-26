@@ -10,7 +10,7 @@
 <div th:replace="~{fragments/header :: header}"></div>
 <div class="content center">
     <div class="navigation">
-        <a th:href="@{/weekly-recipes(day=${previousDayOffset})}">
+        <a th:href="@{/weekly-recipes(day=${previousDayOffset})}" aria-label="Previous Day">
             <i class="material-icons arrow">chevron_left</i>
         </a>
     </div>
@@ -74,7 +74,7 @@
         </div>
     </div>
     <div class="navigation">
-        <a th:href="@{/weekly-recipes(day=${nextDayOffset})}">
+        <a th:href="@{/weekly-recipes(day=${nextDayOffset})}" aria-label="Next Day">
             <i class="material-icons arrow">chevron_right</i>
         </a>
     </div>
