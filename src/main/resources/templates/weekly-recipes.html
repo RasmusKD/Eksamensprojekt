@@ -9,17 +9,16 @@
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 <div class="content center">
-    <div class="navigation" th:classappend="${isFirstDay} ? 'disabled' : ''">
-        <a th:if="!${isFirstDay}" th:href="@{/weekly-recipes(day=${previousDayOffset})}">
+    <div class="navigation">
+        <a th:href="@{/weekly-recipes(day=${previousDayOffset})}">
             <i class="material-icons arrow">chevron_left</i>
         </a>
-        <i th:if="${isFirstDay}" class="material-icons arrow">chevron_left</i>
     </div>
     <div class="day-wrapper">
-        <div class="day-container small-day faded" th:classappend="${isFirstDay} ? 'hidden' : ''">
+        <div class="day-container small-day faded">
             <h2 th:text="${previousDayName}"></h2>
             <div th:each="recipe, stat : ${previousDayRecipes}">
-                <div th:if="${recipe != null}" class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId})}'|">
+                <div th:if="${recipe != null}" class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId}, dayOffset=${previousDayOffset})}'|">
                     <img th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
                     <div class="padding-container">
                         <div class="bold" th:text="${recipe.mealTime == 'Breakfast' ? 'Morgenmad' : recipe.mealTime == 'Lunch' ? 'Frokost' : 'Aftensmad'}"></div>
@@ -38,7 +37,7 @@
         <div class="day-container">
             <h2 th:text="${currentDayName}"></h2>
             <div th:each="recipe, stat : ${currentDayRecipes}">
-                <div th:if="${recipe != null}" class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId})}'|">
+                <div th:if="${recipe != null}" class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId}, dayOffset=${dayOffset})}'|">
                     <img th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
                     <div class="padding-container">
                         <div class="bold" th:text="${recipe.mealTime == 'Breakfast' ? 'Morgenmad' : recipe.mealTime == 'Lunch' ? 'Frokost' : 'Aftensmad'}"></div>
@@ -54,10 +53,10 @@
                 </div>
             </div>
         </div>
-        <div class="day-container small-day faded" th:classappend="${isLastDay} ? 'hidden' : ''">
+        <div class="day-container small-day faded">
             <h2 th:text="${nextDayName}"></h2>
             <div th:each="recipe, stat : ${nextDayRecipes}">
-                <div th:if="${recipe != null}" class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId})}'|">
+                <div th:if="${recipe != null}" class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId}, dayOffset=${nextDayOffset})}'|">
                     <img th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
                     <div class="padding-container">
                         <div class="bold" th:text="${recipe.mealTime == 'Breakfast' ? 'Morgenmad' : recipe.mealTime == 'Lunch' ? 'Frokost' : 'Aftensmad'}"></div>
@@ -74,11 +73,10 @@
             </div>
         </div>
     </div>
-    <div class="navigation" th:classappend="${isLastDay} ? 'disabled' : ''">
-        <a th:if="!${isLastDay}" th:href="@{/weekly-recipes(day=${nextDayOffset})}">
+    <div class="navigation">
+        <a th:href="@{/weekly-recipes(day=${nextDayOffset})}">
             <i class="material-icons arrow">chevron_right</i>
         </a>
-        <i th:if="${isLastDay}" class="material-icons arrow">chevron_right</i>
     </div>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>

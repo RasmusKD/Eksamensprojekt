@@ -6,28 +6,40 @@
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-<h1 th:text="${recipe.title}">Recipe Title</h1>
-<img th:src="@{/images/{imageUrl}(imageUrl=${recipe.imageUrl})}" alt="Recipe Image">
-<p th:text="${recipe.description}">Recipe Description</p>
-<h3>Ingredients</h3>
-<ul>
-    <li th:each="ingredient : ${recipe.ingredients}">
-        <span th:text="${ingredient.name}">Ingredient Name</span>:
-        <span th:text="${ingredient.quantity}">Quantity</span>g,
-        <span th:text="${ingredient.calories}">Calories</span>,
-        <span th:text="${ingredient.fat}">Fat</span>g,
-        <span th:text="${ingredient.protein}">Protein</span>g,
-        <span th:text="${ingredient.carbohydrate}">Carbohydrates</span>g
-    </li>
-</ul>
-<h3>Method</h3>
-<p th:text="${recipe.method}">Recipe Method</p>
-<p><strong>Cooking Time:</strong> <span th:text="${recipe.cookingTime}">Cooking Time</span></p>
-<p><strong>Meal Time:</strong> <span th:text="${recipe.mealTime}">Meal Time</span></p>
-<p><strong>Adjusted Calories:</strong> <span th:text="${recipe.adjustedCalories}">Adjusted Calories</span></p>
-<p><strong>Total Protein:</strong> <span th:text="${recipe.totalProtein}">Total Protein</span></p>
-<p><strong>Total Fat:</strong> <span th:text="${recipe.totalFat}">Total Fat</span></p>
-<p><strong>Total Carbohydrates:</strong> <span th:text="${recipe.totalCarbohydrates}">Total Carbohydrates</span></p>
-<p><strong>Day:</strong> <span th:text="${recipe.day}">Day</span></p>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="content recipe-content">
+    <a th:href="@{/weekly-recipes(day=${dayOffset})}" class="back-button">Tilbage</a>
+    <h1 class="headline" th:text="${recipe.mealTime} + ': ' + ${recipe.title}">Meal Time: Recipe Title</h1>
+    <div class="recipe-container">
+        <div class="recipe-image">
+            <img th:src="@{${recipe.imageUrl}}" alt="Recipe Image">
+            <p class="cooking-time"><strong>Madlavningstid:</strong> <span th:text="${recipe.cookingTime}">Cooking Time</span></p>
+        </div>
+        <div class="recipe-details-box">
+            <div class="text-box recipe-text-box">
+                <h3>Ingredienser:</h3>
+                <ul class="ingredients-list">
+                    <li th:each="ingredient : ${recipe.ingredients}">
+                        <span th:utext="${#numbers.formatDecimal(ingredient.quantity, 0, 0)} + 'g - &nbsp;&nbsp;' + ${ingredient.name}">Ingredient Name</span>
+                    </li>
+                </ul>
+                <h3>Fremgangsmåde:</h3>
+                <ul class="method-list">
+                    <li th:each="sentence : ${methodSentences}">
+                        <span th:text="${sentence}">Method Sentence</span>
+                    </li>
+                </ul>
+                <h3>Næringsindhold:</h3>
+                <ul class="ingredients-list">
+                    <li><span th:text="'Kalorier: '"></span><span th:text="${#numbers.formatDecimal(recipe.adjustedCalories, 0, 0)}">Adjusted Calories</span></li>
+                    <li><span th:text="'Protein: '"></span><span th:text="${#numbers.formatDecimal(recipe.totalProtein, 0, 0)}">Total Protein</span>g</li>
+                    <li><span th:text="'Fedt: '"></span><span th:text="${#numbers.formatDecimal(recipe.totalFat, 0, 0)}">Total Fat</span>g</li>
+                    <li><span th:text="'Kulhydrater: '"></span><span th:text="${#numbers.formatDecimal(recipe.totalCarbohydrates, 0, 0)}">Total Carbohydrates</span>g</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

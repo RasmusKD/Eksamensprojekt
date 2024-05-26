@@ -1,16 +1,13 @@
 package com.minkostplan.eksamensprojekt.Controller;
 
 import com.minkostplan.eksamensprojekt.Model.Recipe;
-import com.minkostplan.eksamensprojekt.Model.User;
 import com.minkostplan.eksamensprojekt.Service.UseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.security.Principal;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -34,6 +31,13 @@ public class WeeklyRecipesController {
         if (dayOffset == null) {
             // Default to current day of the week
             dayOffset = LocalDate.now().getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue();
+        }
+
+        // Wrap-around logic for dayOffset
+        if (dayOffset < 0) {
+            dayOffset = 6;
+        } else if (dayOffset > 6) {
+            dayOffset = 0;
         }
 
         LocalDate currentDate = LocalDate.now().with(DayOfWeek.MONDAY).plusDays(dayOffset);
@@ -60,8 +64,7 @@ public class WeeklyRecipesController {
         model.addAttribute("previousDayOffset", dayOffset - 1);
         model.addAttribute("nextDayOffset", dayOffset + 1);
 
-        model.addAttribute("isFirstDay", currentDate.getDayOfWeek() == DayOfWeek.MONDAY);
-        model.addAttribute("isLastDay", currentDate.getDayOfWeek() == DayOfWeek.SUNDAY);
+        model.addAttribute("dayOffset", dayOffset); // Add dayOffset to model
 
         return "weekly-recipes";
     }
@@ -85,4 +88,3 @@ public class WeeklyRecipesController {
         return mealsWithPlaceholders;
     }
 }
-
