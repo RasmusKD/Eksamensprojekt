@@ -9,9 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class RecipeController {
@@ -28,7 +31,7 @@ public class RecipeController {
     }
 
     @GetMapping("/recipe/{id}")
-    public String getRecipeById(@PathVariable int id, Model model, Principal principal) {
+    public String getRecipeById(@PathVariable int id, @RequestParam(value = "dayOffset", required = false) Integer dayOffset, Model model, Principal principal) {
         Recipe recipe = useCase.getRecipeById(id);
         User user = useCase.getUserByEmail(principal.getName());
         double userCaloricNeeds = useCase.calculateCalories(user);
@@ -36,7 +39,16 @@ public class RecipeController {
         recipe.setAdjustedCalories((int) adjustedCalories);
         List<Ingredient> adjustedIngredients = useCase.getAdjustedIngredients(recipe, adjustedCalories);
         recipe.setIngredients(adjustedIngredients); // Set adjusted ingredients
+
         model.addAttribute("recipe", recipe);
+        model.addAttribute("dayOffset", dayOffset); // Pass the dayOffset to the model
+        // Split method into sentences
+        List<String> methodSentences = Arrays.stream(recipe.getMethod().split("\\. "))
+                .map(sentence -> sentence.trim() + ".")
+                .collect(Collectors.toList());
+
+        model.addAttribute("recipe", recipe);
+        model.addAttribute("methodSentences", methodSentences);
         return "recipe";
     }
 }
