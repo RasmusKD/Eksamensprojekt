@@ -878,3 +878,53 @@ textarea.large, .input-field.large {
     color: #3c3f40;
     font-weight: bold;
 }
+.back-button {
+    display: flex;
+    align-items: center;
+    color: #3c3f40;
+    text-decoration: none;
+    font-size: 1.5em;
+    transition: color 0.3s ease;
+    position: absolute;
+    left: 0;
+}
+
+.back-button .material-icons.arrow {
+    font-size: 1.5em;
+    margin-right: 0.5em;
+    color: #3c3f40;
+    transition: color 0.3s ease;
+}
+
+.back-button:hover {
+    color: forestgreen;
+}
+
+.back-button:hover .material-icons.arrow {
+    color: forestgreen;
+}
+
+.header-flex-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    margin-bottom: 1em;
+}
+
+.header-flex-container h1 {
+    flex: 1;
+    text-align: center;
+}
+
+.recipe-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+}
+
+.recipe-container {
+    display: flex;
+    gap: 2em; /* Adjust gap as needed */
+}
