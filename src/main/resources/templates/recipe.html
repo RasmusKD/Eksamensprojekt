@@ -1,15 +1,25 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da">
 <head>
     <meta charset="UTF-8">
     <title th:text="${recipe.title}">Recipe Title</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 <div class="content recipe-content">
-    <a th:href="@{/weekly-recipes(day=${dayOffset})}" class="back-button">Tilbage</a>
-    <h1 class="headline" th:text="${recipe.mealTime} + ': ' + ${recipe.title}">Meal Time: Recipe Title</h1>
+    <div class="header-flex-container">
+        <a th:href="@{/weekly-recipes(day=${dayOffset})}" class="back-button" aria-label="Tilbage">
+            <i class="material-icons arrow">chevron_left</i>
+        </a>
+        <h1 class="headline">
+            <span th:if="${recipe.mealTime == 'Breakfast'}">Morgenmad:</span>
+            <span th:if="${recipe.mealTime == 'Lunch'}">Frokost:</span>
+            <span th:if="${recipe.mealTime == 'Dinner'}">Aftensmad:</span>
+            <span th:text="${recipe.title}"></span>
+        </h1>
+    </div>
     <div class="recipe-container">
         <div class="recipe-image">
             <img th:src="@{${recipe.imageUrl}}" alt="Recipe Image">
