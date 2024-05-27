@@ -170,4 +170,15 @@ public class RecipeCreationController {
         // Return success message as JSON response
         return ResponseEntity.ok().body("{\"message\": \"Opskriften blev opdateret!\"}");
     }
+
+    @DeleteMapping("/delete-recipe/{id}")
+    @ResponseBody
+    public ResponseEntity<?> deleteRecipe(@PathVariable("id") int id) {
+        boolean isDeleted = useCase.deleteRecipeById(id);
+        if (isDeleted) {
+            return ResponseEntity.ok().body("{\"message\": \"Recipe deleted successfully\"}");
+        } else {
+            return ResponseEntity.status(500).body("{\"message\": \"Failed to delete recipe\"}");
+        }
+    }
 }
