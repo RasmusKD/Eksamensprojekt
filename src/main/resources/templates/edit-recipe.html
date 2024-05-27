@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rediger Opskrift</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="content center">
+    <div class="content-box">
+        <div class="text-box recipe-card-size">
+            <div class="login-headline">Rediger Opskrift</div>
+
+            <div class="input-icon">
+                <i class="material-icons">search</i>
+                <select class="input-field" id="recipeSelect" name="recipeSelect" required>
+                    <option value="" disabled selected>Vælg en opskrift</option>
+                    <option th:each="recipe : ${recipes}" th:value="${recipe.recipeId}" th:text="${recipe.title}"></option>
+                </select>
+            </div>
+
+            <form id="recipeForm" method="post" enctype="multipart/form-data" style="display: none;" th:action="@{/edit-recipe}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                <input type="hidden" id="recipeId" name="recipeId"/>
+                <div class="input-icon">
+                    <i class="material-icons">title</i>
+                    <input class="input-field" type="text" id="title" name="title" placeholder="Navn" required/>
+                </div>
+                <div class="input-icon">
+                    <i class="material-icons">description</i>
+                    <textarea class="input-field large" id="description" name="description" placeholder="Beskrivelse" required></textarea>
+                </div>
+                <div class="input-icon">
+                    <i class="material-icons">schedule</i>
+                    <select class="input-field" id="mealTime" name="mealTime" required>
+                        <option value="" disabled selected>Måltid</option>
+                        <option value="Breakfast">Morgenmad</option>
+                        <option value="Lunch">Frokost</option>
+                        <option value="Dinner">Aftensmad</option>
+                    </select>
+                </div>
+                <div class="input-icon">
+                    <i class="material-icons">calendar_today</i>
+                    <input class="input-field" type="date" id="day" name="day" required/>
+                </div>
+                <div class="input-icon">
+                    <i class="material-icons">timer</i>
+                    <select class="input-field" id="cookingTime" name="cookingTime" required>
+                        <option value="" disabled selected>Tilberedningstid</option>
+                        <option value="5 min">5 min</option>
+                        <option value="10 min">10 min</option>
+                        <option value="15 min">15 min</option>
+                        <option value="20 min">20 min</option>
+                        <option value="25 min">25 min</option>
+                        <option value="30 min">30 min</option>
+                        <option value="35 min">35 min</option>
+                        <option value="40 min">40 min</option>
+                        <option value="45 min">45 min</option>
+                        <option value="50 min">50 min</option>
+                        <option value="55 min">55 min</option>
+                        <option value="60 min">60 min</option>
+                    </select>
+                </div>
+                <div class="input-icon">
+                    <i class="material-icons">search</i>
+                    <input class="input-field" type="text" id="ingredientsSearch" placeholder="Søg ingredienser..."/>
+                </div>
+                <div id="ingredientsResults" class="ingredient-results"></div>
+                <div id="selectedIngredients" class="selected-ingredients"></div>
+                <div class="full-width">
+                    <div class="input-icon">
+                        <i class="material-icons">menu_book</i>
+                        <textarea class="input-field large" id="instructions" name="instructions" placeholder="Instruktioner" required></textarea>
+                    </div>
+                    <div class="input-icon">
+                        <i class="material-icons">image</i>
+                        <input class="input-field" type="file" id="imageFile" name="imageFile"/>
+                        <p>Current Image: <span id="currentImage"></span></p>
+                    </div>
+                </div>
+                <div class="full-width">
+                    <input class="btn-primary w-100" type="submit" value="Opdater Opskrift"/>
+                    <button class="btn-primary color-blue w-100" type="button" onclick="window.location.href='/weekly-recipes'">Se Alle Opskrifter</button>
+                </div>
+            </form>
+
+            <!-- Success Message -->
+            <div id="successMessage" class="success-message" style="display:none;">
+                <p></p>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script th:inline="javascript">
+    var ingredientsList = /*[[${ingredientsList}]]*/ [];
+    ingredientsList.sort((a, b) => a.name.localeCompare(b.name));
+
+    document.getElementById('ingredientsSearch').addEventListener('input', function() {
+        const searchQuery = this.value.toLowerCase();
+        const resultsDiv = document.getElementById('ingredientsResults');
+        resultsDiv.innerHTML = '';
+
+        if (searchQuery === '') {
+            return;
+        }
+
+        const selectedIngredientIds = Array.from(document.querySelectorAll('#selectedIngredients input[name="ingredients"]'))
+            .map(input => input.value);
+
+        const filteredIngredients = ingredientsList.filter(ingredient =>
+            ingredient.name.toLowerCase().includes(searchQuery) &&
+            !selectedIngredientIds.includes(ingredient.ingredientId.toString())
+        );
+
+        filteredIngredients.forEach(ingredient => {
+            const ingredientDiv = document.createElement('div');
+            ingredientDiv.textContent = ingredient.name;
+            ingredientDiv.classList.add('ingredient-result');
+            ingredientDiv.dataset.ingredientId = ingredient.ingredientId;
+            resultsDiv.appendChild(ingredientDiv);
+        });
+    });
+
+    document.getElementById('ingredientsResults').addEventListener('click', function(e) {
+        if (e.target && e.target.matches('div.ingredient-result')) {
+            const selectedDiv = document.getElementById('selectedIngredients');
+            const ingredientId = e.target.dataset.ingredientId;
+            const ingredientName = e.target.textContent;
+
+            const selectedIngredientDiv = document.createElement('div');
+            selectedIngredientDiv.classList.add('selected-ingredient');
+            selectedIngredientDiv.innerHTML = `
+                <span>${ingredientName}</span>
+                <input type="hidden" name="ingredients" value="${ingredientId}">
+                <input type="number" name="quantities" placeholder="Mængde (g)" class="input-field recipe-input-size" required>
+                <button type="button" class="remove-ingredient">&times;</button>
+            `;
+            selectedDiv.appendChild(selectedIngredientDiv);
+            e.target.remove();
+        }
+    });
+
+    document.getElementById('selectedIngredients').addEventListener('click', function(e) {
+        if (e.target && e.target.matches('button.remove-ingredient')) {
+            const ingredientId = e.target.parentElement.querySelector('input[name="ingredients"]').value;
+            e.target.parentElement.remove();
+
+            // Re-run the search to include the removed ingredient
+            document.getElementById('ingredientsSearch').dispatchEvent(new Event('input'));
+        }
+    });
+
+    document.getElementById('recipeSelect').addEventListener('change', function() {
+        const recipeId = this.value;
+        if (recipeId) {
+            fetch(`/recipe-edit/${recipeId}`)
+                .then(response => response.json())
+                .then(recipe => {
+                    document.getElementById('recipeId').value = recipe.recipeId;
+                    document.getElementById('title').value = recipe.title;
+                    document.getElementById('description').value = recipe.description;
+                    document.getElementById('mealTime').value = recipe.mealTime;
+                    document.getElementById('day').value = recipe.day;
+                    document.getElementById('cookingTime').value = recipe.cookingTime;
+                    document.getElementById('instructions').value = recipe.method;
+                    document.getElementById('currentImage').textContent = recipe.imageUrl;
+
+                    const selectedIngredientsDiv = document.getElementById('selectedIngredients');
+                    selectedIngredientsDiv.innerHTML = '';
+                    recipe.ingredients.forEach(ingredient => {
+                        const selectedIngredientDiv = document.createElement('div');
+                        selectedIngredientDiv.classList.add('selected-ingredient');
+                        selectedIngredientDiv.innerHTML = `
+                            <span>${ingredient.name}</span>
+                            <input type="hidden" name="ingredients" value="${ingredient.ingredientId}">
+                            <input type="number" name="quantities" placeholder="Mængde (g)" class="input-field recipe-input-size" required value="${ingredient.quantity}">
+                            <button type="button" class="remove-ingredient">&times;</button>
+                        `;
+                        selectedIngredientsDiv.appendChild(selectedIngredientDiv);
+                    });
+
+                    document.getElementById('recipeForm').style.display = 'flex';
+                    document.getElementById('recipeForm').style.flexDirection = 'column';
+                    document.getElementById('recipeForm').style.gap = '1em';
+                    document.getElementById('recipeForm').style.width = '100%';
+                })
+                .catch(error => {
+                    console.error('Error fetching recipe details:', error);
+                });
+        } else {
+            document.getElementById('recipeForm').style.display = 'none';
+        }
+    });
+
+    document.getElementById('recipeForm').addEventListener('submit', function(e) {
+        e.preventDefault(); // Prevent the form from submitting the default way
+
+        const formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle response data
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('successMessage').querySelector('p').textContent = data.message;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    });
+</script>
+
+</body>
+</html>

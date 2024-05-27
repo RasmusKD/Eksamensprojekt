@@ -588,4 +588,59 @@ public class DBRepository {
             closeResources(conn, pstmt);
         }
     }
+
+    public void updateRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false);
+
+            String recipeSql = "UPDATE Recipe SET title=?, description=?, method=?, cookingTime=?, imageUrl=?, meal_time=?, total_calories=?, total_protein=?, total_fat=?, total_carbohydrates=?, day=? WHERE recipeId=?";
+            pstmt = conn.prepareStatement(recipeSql);
+            pstmt.setString(1, recipe.getTitle());
+            pstmt.setString(2, recipe.getDescription());
+            pstmt.setString(3, recipe.getMethod());
+            pstmt.setString(4, recipe.getCookingTime());
+            pstmt.setString(5, recipe.getImageUrl());
+            pstmt.setString(6, recipe.getMealTime());
+            pstmt.setInt(7, recipe.getTotalCalories());
+            pstmt.setInt(8, recipe.getTotalProtein());
+            pstmt.setInt(9, recipe.getTotalFat());
+            pstmt.setInt(10, recipe.getTotalCarbohydrates());
+            pstmt.setString(11, recipe.getDay());
+            pstmt.setInt(12, recipe.getRecipeId());
+            pstmt.executeUpdate();
+
+            String deleteOldIngredientsSql = "DELETE FROM Recipe_Ingredients WHERE recipe_id=?";
+            pstmt = conn.prepareStatement(deleteOldIngredientsSql);
+            pstmt.setInt(1, recipe.getRecipeId());
+            pstmt.executeUpdate();
+
+            String recipeIngredientsSql = "INSERT INTO Recipe_Ingredients (recipe_id, ingredient_id, quantity) VALUES (?, ?, ?)";
+            pstmt = conn.prepareStatement(recipeIngredientsSql);
+            for (int i = 0; i < ingredientIds.size(); i++) {
+                pstmt.setInt(1, recipe.getRecipeId());
+                pstmt.setInt(2, ingredientIds.get(i));
+                pstmt.setDouble(3, quantities.get(i));
+                pstmt.executeUpdate();
+            }
+
+            conn.commit();
+        } catch (SQLException e) {
+            try {
+                if (conn != null) {
+                    conn.rollback();
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt, rs);
+        }
+    }
+
 }
