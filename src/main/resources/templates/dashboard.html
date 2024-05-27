@@ -27,7 +27,7 @@
                     <p><i class="material-icons">directions_run</i> <strong>Aktivitetsniveau:</strong> <span th:text="${activityLevelMap[user.activityLevel]}"></span></p>
                     <p><i class="material-icons">flag</i> <strong>Mål:</strong> <span th:text="${goalMap[user.goal]}"></span></p>
                     <p><i class="material-icons">check_circle</i> <strong>Abonnent:</strong> <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span></p>
-                    <p><i class="material-icons">local_dining</i> <strong>Kaloriebehov:</strong> <span th:text="${#numbers.formatDecimal(calorieNeeds, 0, 0)} + ' kcal'"></span></p>
+                    <p th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}"><i class="material-icons">local_dining</i> <strong>Kaloriebehov:</strong> <span th:text="${#numbers.formatDecimal(calorieNeeds, 0, 0)} + ' kcal'"></span></p>
                 </div>
                 <!-- Edit Form -->
                 <form id="user-form" th:action="@{/update-user}" method="post" style="display:none;">
@@ -97,6 +97,7 @@
             <button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:onclick="|window.location.href='@{/opret-medarbejder}'|" class="btn-primary color-blue w-100">Opret medarbejder</button>
             <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/add-ingredients}'|" class="btn-primary color-blue w-100">Tilføj ingredienser</button>
             <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/recipe-creation}'|" class="btn-primary color-blue w-100">Tilføj opskrift</button>
+            <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/recipe-edit}'|" class="btn-primary color-blue w-100">Rediger Opskrift</button>
         </div>
     </div>
 </div>

@@ -7,9 +7,11 @@ import com.minkostplan.eksamensprojekt.Model.User;
 import com.minkostplan.eksamensprojekt.Repository.DBRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,8 @@ public class UseCase {
     private String cancelUrl;
 
     // Reference til database repository
-    private DBRepository dBRepository;
+    private final DBRepository dBRepository;
+    private User currentUser;
 
     // Konstruktor til dependency injection af repository
     @Autowired
@@ -33,18 +36,17 @@ public class UseCase {
         this.dBRepository = dBRepository;
     }
 
-    private User currentUser;
-
     // Henter alle opskrifter fra databasen
     public List<Recipe> getAllRecipes() {
-        return dBRepository.getAllRecipes(); // Implement this method in your repository
+        return dBRepository.getAllRecipes();
     }
 
     // Henter en specifik opskrift ved dens ID
     public Recipe getRecipeById(int id) {
-        return dBRepository.getRecipeById(id); // Implement this method in your repository
+        return dBRepository.getRecipeById(id);
     }
 
+    // Henter opskrifter baseret på dag
     public List<Recipe> getRecipesByDay(String day) {
         return dBRepository.getRecipesByDay(day);
     }
@@ -83,8 +85,8 @@ public class UseCase {
     public void deleteUser() {
         if (currentUser != null) {
             if (dBRepository.deleteUser(currentUser.getUserId())) {
-                System.out.println("User deleted successfully.");
                 currentUser = null;
+                System.out.println("User deleted successfully.");
             } else {
                 System.out.println("Failed to delete user.");
             }
@@ -127,6 +129,17 @@ public class UseCase {
     // Opdaterer abonnementsstatus for en bruger baseret på deres ID
     public void updateUserSubscriptionStatus(int userId, boolean subscriberStatus) {
         dBRepository.updateUserSubscriptionStatus(userId, subscriberStatus);
+
+        if (currentUser != null && currentUser.getUserId() == userId) {
+            currentUser.setSubscriber(subscriberStatus);
+            reauthenticateCurrentUser();
+        }
+    }
+
+    private void reauthenticateCurrentUser() {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                currentUser, currentUser.getPassword(), currentUser.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     // Opdaterer status for et abonnement baseret på dets ID
@@ -153,65 +166,40 @@ public class UseCase {
     public double calculateCalories(User user) {
         double bmr;
         if (user.getGender() == 'M') {
-            // Updated BMR formula for males
             bmr = (10 * user.getWeight()) + (6.25 * user.getHeight()) - (5 * user.getAge()) + 5;
         } else {
-            // Updated BMR formula for females
             bmr = (10 * user.getWeight()) + (6.25 * user.getHeight()) - (5 * user.getAge()) - 161;
         }
 
-        double activityMultiplier;
-        switch (user.getActivityLevel()) {
-            case 0:
-                activityMultiplier = 1.2;
-                break;
-            case 1:
-                activityMultiplier = 1.5;
-                break;
-            case 2:
-                activityMultiplier = 1.7;
-                break;
-            case 3:
-                activityMultiplier = 1.9;
-                break;
-            case 4:
-                activityMultiplier = 2.4;
-                break;
-            default:
-                activityMultiplier = 1.2; // Default to sedentary if activity level is unknown
-        }
+        double activityMultiplier = switch (user.getActivityLevel()) {
+            case 1 -> 1.5;
+            case 2 -> 1.7;
+            case 3 -> 1.9;
+            case 4 -> 2.4;
+            default -> 1.2;
+        };
 
         double totalCalories = bmr * activityMultiplier;
 
         switch (user.getGoal()) {
-            case 0: // Weight loss
-                totalCalories -= 500;
-                break;
-            case 1: // Weight gain
-                totalCalories += 500;
-                break;
-            case 2: // Muscle gain
-                totalCalories += 300; // Slight surplus for muscle gain
-                break;
-            case 3: // Maintain weight
-                // No adjustment needed
-                break;
+            case 0 -> totalCalories -= 500;
+            case 1 -> totalCalories += 500;
+            case 2 -> totalCalories += 300;
         }
 
         return totalCalories;
     }
 
+    // Henter kalorier for et specifikt måltid
     public double getCaloriesForMeal(double totalCalories, String mealTime) {
-        switch (mealTime) {
-            case "Breakfast":
-                return totalCalories * 0.4;
-            case "Lunch":
-            case "Dinner":
-                return totalCalories * 0.3;
-            default:
-                return 0;
-        }
+        return switch (mealTime) {
+            case "Breakfast" -> totalCalories * 0.4;
+            case "Lunch", "Dinner" -> totalCalories * 0.3;
+            default -> 0;
+        };
     }
+
+    // Justerer ingrediensmængder baseret på justerede kalorier
     public List<Ingredient> getAdjustedIngredients(Recipe recipe, double adjustedCalories) {
         List<Ingredient> adjustedIngredients = new ArrayList<>();
         double totalCalories = recipe.getTotalCalories();
@@ -224,24 +212,23 @@ public class UseCase {
             adjustedIngredient.setProtein(ingredient.getProtein() * adjustmentFactor);
             adjustedIngredient.setCarbohydrate(ingredient.getCarbohydrate() * adjustmentFactor);
             adjustedIngredient.setCalories((int) (ingredient.getCalories() * adjustmentFactor));
-            adjustedIngredient.setQuantity(ingredient.getQuantity() * adjustmentFactor); // Adjust the quantity
+            adjustedIngredient.setQuantity(ingredient.getQuantity() * adjustmentFactor); // Justerer mængden
             adjustedIngredients.add(adjustedIngredient);
         }
         return adjustedIngredients;
     }
 
-
-
+    // Henter en opskrift ved dens ID med justerede kalorier baseret på brugerens behov
     public Recipe getRecipeByIdWithAdjustedCalories(int id, User user) {
         Recipe recipe = dBRepository.getRecipeById(id);
         double userCaloricNeeds = calculateCalories(user);
         double adjustedCalories = getCaloriesForMeal(userCaloricNeeds, recipe.getMealTime());
         recipe.setAdjustedCalories((int) adjustedCalories);
-        List<Ingredient> adjustedIngredients = getAdjustedIngredients(recipe, adjustedCalories);
-        recipe.setIngredients(adjustedIngredients);
+        recipe.setIngredients(getAdjustedIngredients(recipe, adjustedCalories));
         return recipe;
     }
 
+    // Henter opskrifter baseret på dag med justerede kalorier baseret på brugerens behov
     public List<Recipe> getRecipesByDayWithAdjustedCalories(String day, User user) {
         List<Recipe> recipes = getRecipesByDay(day);
         double totalCalories = calculateCalories(user);
@@ -253,24 +240,12 @@ public class UseCase {
 
         return recipes;
     }
+
+    // Beregner justerede kalorier for et måltid baseret på brugerens kaloribehov og måltidstidspunkt
     public double calculateAdjustedCalories(double userCaloricNeeds, String mealTime) {
-        double mealCalorieFraction;
-        switch (mealTime) {
-            case "Breakfast":
-                mealCalorieFraction = 0.4;
-                break;
-            case "Lunch":
-                mealCalorieFraction = 0.3;
-                break;
-            case "Dinner":
-                mealCalorieFraction = 0.3;
-                break;
-            default:
-                mealCalorieFraction = 0;
-                break;
-        }
-        return userCaloricNeeds * mealCalorieFraction;
+        return getCaloriesForMeal(userCaloricNeeds, mealTime);
     }
+
     // Henter et abonnement ved bruger ID
     public Subscription getSubscriptionByUserId(int userId) {
         return dBRepository.getSubscriptionByUserId(userId);
@@ -280,4 +255,9 @@ public class UseCase {
     public void deleteInactiveSubscriptionsByUserId(int userId) {
         dBRepository.deleteInactiveSubscriptionsByUserId(userId);
     }
+
+    public void updateRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
+        dBRepository.updateRecipeWithIngredients(recipe, ingredientIds, quantities);
+    }
+
 }
