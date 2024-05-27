@@ -21,7 +21,7 @@ public class SecurityConfig {
                         .requestMatchers("/",  "/login", "/register", "/omOs").permitAll()
                         .requestMatchers("/dashboard", "/success", "/cancel").authenticated()
                         .requestMatchers("/weekly-recipes", "/recipe").hasAnyRole("SUBSCRIBER","EMPLOYEE", "ADMIN")
-                        .requestMatchers("/recipe-creation", "/recipe-success", "/add-ingredients").hasAnyRole("EMPLOYEE", "ADMIN")
+                        .requestMatchers("/recipe-creation", "/edit-recipe", "/recipe-success", "/add-ingredients").hasAnyRole("EMPLOYEE", "ADMIN")
                         .requestMatchers("/opret-medarbejder").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )

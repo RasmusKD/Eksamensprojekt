@@ -255,4 +255,9 @@ public class UseCase {
     public void deleteInactiveSubscriptionsByUserId(int userId) {
         dBRepository.deleteInactiveSubscriptionsByUserId(userId);
     }
+
+    public void updateRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
+        dBRepository.updateRecipeWithIngredients(recipe, ingredientIds, quantities);
+    }
+
 }
