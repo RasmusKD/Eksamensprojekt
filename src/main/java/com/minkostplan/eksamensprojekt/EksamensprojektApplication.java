@@ -1,5 +1,6 @@
 package com.minkostplan.eksamensprojekt;
 
+import com.minkostplan.eksamensprojekt.Repository.DatabaseSetup;
 import com.minkostplan.eksamensprojekt.Service.UseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +19,11 @@ public class EksamensprojektApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EksamensprojektApplication.class, args);
+		DatabaseSetup.setupDatabase();
 	}
+
+
+
 /*
 	@Bean
 	public CommandLineRunner createUserWithIsEmployedTwo() {
