@@ -7,6 +7,9 @@ import com.minkostplan.eksamensprojekt.Model.User;
 import com.minkostplan.eksamensprojekt.Repository.DBRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -126,6 +129,17 @@ public class UseCase {
     // Opdaterer abonnementsstatus for en bruger baseret på deres ID
     public void updateUserSubscriptionStatus(int userId, boolean subscriberStatus) {
         dBRepository.updateUserSubscriptionStatus(userId, subscriberStatus);
+
+        if (currentUser != null && currentUser.getUserId() == userId) {
+            currentUser.setSubscriber(subscriberStatus);
+            reauthenticateCurrentUser();
+        }
+    }
+
+    private void reauthenticateCurrentUser() {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                currentUser, currentUser.getPassword(), currentUser.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
     }
 
     // Opdaterer status for et abonnement baseret på dets ID
