@@ -6,6 +6,8 @@
     <title>Rediger Opskrift</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -83,6 +85,7 @@
                 </div>
                 <div class="full-width">
                     <input class="btn-primary w-100" type="submit" value="Opdater Opskrift"/>
+                    <button type="button" id="deleteButton" class="btn-primary color-red w-100" style="display: none;">Slet Opskrift</button>
                     <button class="btn-primary color-blue w-100" type="button" onclick="window.location.href='/weekly-recipes'">Se Alle Opskrifter</button>
                 </div>
             </form>
@@ -95,6 +98,19 @@
     </div>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Confirmation Modal -->
+<div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Bekræft Sletning</h2>
+        <p>Er du sikker på, at du vil slette denne opskrift? <br> Denne handling kan ikke fortrydes.</p>
+        <div class="button-container">
+            <button id="confirm-delete" class="btn-primary color-red">Ja, slet opskrift</button>
+            <button id="cancel-delete" class="btn-primary">Annuller</button>
+        </div>
+    </div>
+</div>
 
 <script th:inline="javascript">
     var ingredientsList = /*[[${ingredientsList}]]*/ [];
@@ -188,12 +204,14 @@
                     document.getElementById('recipeForm').style.flexDirection = 'column';
                     document.getElementById('recipeForm').style.gap = '1em';
                     document.getElementById('recipeForm').style.width = '100%';
+                    document.getElementById('deleteButton').style.display = 'block';
                 })
                 .catch(error => {
                     console.error('Error fetching recipe details:', error);
                 });
         } else {
             document.getElementById('recipeForm').style.display = 'none';
+            document.getElementById('deleteButton').style.display = 'none';
         }
     });
 
@@ -216,7 +234,46 @@
                 console.error('Error:', error);
             });
     });
-</script>
 
+    document.getElementById('deleteButton').addEventListener('click', function() {
+        const modal = document.getElementById('confirmation-modal');
+        modal.style.display = 'block';
+    });
+
+    document.querySelector('.close-button').addEventListener('click', function() {
+        const modal = document.getElementById('confirmation-modal');
+        modal.style.display = 'none';
+    });
+
+    document.getElementById('cancel-delete').addEventListener('click', function() {
+        const modal = document.getElementById('confirmation-modal');
+        modal.style.display = 'none';
+    });
+
+    document.getElementById('confirm-delete').addEventListener('click', function() {
+        const recipeId = document.getElementById('recipeId').value;
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        fetch(`/delete-recipe/${recipeId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Recipe deleted successfully') {
+                    window.location.href = '/dashboard';
+                } else {
+                    alert('Failed to delete recipe');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting recipe:', error);
+            });
+    });
+</script>
 </body>
 </html>

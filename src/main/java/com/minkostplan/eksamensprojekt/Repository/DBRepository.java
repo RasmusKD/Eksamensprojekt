@@ -643,4 +643,41 @@ public class DBRepository {
         }
     }
 
+    public boolean deleteRecipeById(int id) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false);
+
+            // First, delete from Recipe_Ingredients
+            String deleteRecipeIngredientsSql = "DELETE FROM Recipe_Ingredients WHERE recipe_id = ?";
+            pstmt = conn.prepareStatement(deleteRecipeIngredientsSql);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            // Then, delete from Recipe
+            String deleteRecipeSql = "DELETE FROM Recipe WHERE recipeId = ?";
+            pstmt = conn.prepareStatement(deleteRecipeSql);
+            pstmt.setInt(1, id);
+            int affectedRows = pstmt.executeUpdate();
+
+            conn.commit();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            closeResources(conn, pstmt);
+        }
+    }
 }
