@@ -1,21 +1,30 @@
 package com.minkostplan.eksamensprojekt.Repository;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.PostConstruct;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+@Component
 public class DatabaseSetup {
 
     private static final String DATABASE_NAME = "wentzelevent_dk_db_min_kostplan_lauge";
 
+    @Value("${spring.datasource.url}")
+    private String jdbcUrl;
 
-    public static void setupDatabase() {
-        // Database connection details
-        String jdbcUrl = "jdbc:mysql://mysql63.unoeuro.com:3306/wentzelevent_dk_db_min_kostplan_lauge";
-        String username = "wentzelevent_dk";
-        String password = "oy7kKprjjwUBBv";
+    @Value("${spring.datasource.username}")
+    private String username;
 
+    @Value("${spring.datasource.password}")
+    private String password;
+
+    @PostConstruct
+    public void setupDatabase() {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
             createDatabase(connection);
             createIngredientTable(connection);
@@ -31,13 +40,11 @@ public class DatabaseSetup {
     }
 
     private static void createDatabase(Connection connection) throws SQLException {
-        // Check if the database already exists
         if (databaseExists(connection)) {
             System.out.println("Database already exists. No issues.");
             return;
         }
 
-        // If not exists, create the database
         String createDatabaseSQL = "CREATE DATABASE IF NOT EXISTS `" + DATABASE_NAME + "` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;";
         try (Statement statement = connection.createStatement()) {
             statement.execute(createDatabaseSQL);
@@ -46,7 +53,6 @@ public class DatabaseSetup {
     }
 
     private static boolean databaseExists(Connection connection) throws SQLException {
-        // Check if the database exists
         try (Statement statement = connection.createStatement()) {
             statement.execute("SHOW DATABASES LIKE '" + DATABASE_NAME + "'");
             return statement.getResultSet().next();
