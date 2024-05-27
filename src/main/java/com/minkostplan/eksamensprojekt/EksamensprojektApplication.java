@@ -5,6 +5,7 @@ import com.minkostplan.eksamensprojekt.Service.UseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
@@ -17,11 +18,13 @@ public class EksamensprojektApplication {
 	@Autowired
 	private PasswordEncoder passwordEncoder;  // Autowire PasswordEncoder
 
-	public static void main(String[] args) {
-		SpringApplication.run(EksamensprojektApplication.class, args);
-		DatabaseSetup.setupDatabase();
-	}
 
+		public static void main(String[] args) {
+			ApplicationContext context = SpringApplication.run(EksamensprojektApplication.class, args);
+			DatabaseSetup databaseSetup = context.getBean(DatabaseSetup.class);
+			databaseSetup.setupDatabase();
+		}
+	}
 
 
 /*
@@ -55,4 +58,4 @@ public class EksamensprojektApplication {
 	}
 */
 	// Other CommandLineRunners or beans
-}
+
