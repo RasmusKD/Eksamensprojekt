@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 @Controller
 public class WeeklyRecipesController {
@@ -49,6 +51,9 @@ public class WeeklyRecipesController {
         List<Recipe> previousDayRecipes = getMealsWithPlaceholders(previousDay.format(DateTimeFormatter.ISO_DATE));
         List<Recipe> nextDayRecipes = getMealsWithPlaceholders(nextDay.format(DateTimeFormatter.ISO_DATE));
 
+        WeekFields weekFields = WeekFields.of(Locale.getDefault());
+        int weekNumber = currentDate.get(weekFields.weekOfWeekBasedYear());
+
         model.addAttribute("currentDayName", DAY_NAMES.get(currentDate.getDayOfWeek().getValue() - 1));
         model.addAttribute("previousDayName", DAY_NAMES.get(previousDay.getDayOfWeek().getValue() - 1));
         model.addAttribute("nextDayName", DAY_NAMES.get(nextDay.getDayOfWeek().getValue() - 1));
@@ -65,6 +70,8 @@ public class WeeklyRecipesController {
         model.addAttribute("nextDayOffset", dayOffset + 1);
 
         model.addAttribute("dayOffset", dayOffset);
+        model.addAttribute("weekNumber", weekNumber); // Add week number to model
+        model.addAttribute("page", "weekly-recipes"); // Indicate the current page
 
         return "weekly-recipes";
     }

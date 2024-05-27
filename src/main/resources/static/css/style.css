@@ -810,7 +810,7 @@ textarea.large, .input-field.large {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100%; /* Ensure the image container matches the height of the recipe details box */
+    height: 100%;
 }
 
 .recipe-image img {
@@ -822,8 +822,8 @@ textarea.large, .input-field.large {
 }
 
 .cooking-time {
-    margin: 10px 0 0 0; /* Margin to separate from image */
-    color: black; /* Black text for cooking time */
+    margin: 10px 0 0 0;
+    color: black;
 }
 
 .recipe-details-box {
@@ -833,24 +833,24 @@ textarea.large, .input-field.large {
 .recipe-text-box {
     padding: 35px;
     box-sizing: border-box;
-    background-color: #84c176; /* Specified green background */
+    background-color: #84c176;
     border-radius: .25rem;
     height: 100%;
     box-shadow: 0 .125rem .25rem rgba(0,0,0,.09) !important;
     display: flex;
     flex-direction: column;
     gap: 1em;
-    align-items: flex-start; /* Align items to the left */
-    color: white; /* White text inside the text box */
+    align-items: flex-start;
+    color: white;
 }
 
 .recipe-text-box h3 {
     margin: 0;
-    font-weight: bold; /* Bold titles */
+    font-weight: bold;
 }
 
 .recipe-text-box p, .recipe-text-box ul {
-    margin: 0; /* Remove margins from paragraphs and lists */
+    margin: 0;
 }
 
 .recipe-text-box .method-list {
@@ -866,6 +866,15 @@ textarea.large, .input-field.large {
 }
 
 .headline {
-    margin: 0 0 20px 0; /* Remove top and side margins from the headline */
-    font-weight: bold; /* Bold headline */
+    margin: 0 0 20px;
+    font-weight: bold;
+}
+
+.weekly-recipes-page .week-number {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.5em;
+    color: #3c3f40;
+    font-weight: bold;
 }
