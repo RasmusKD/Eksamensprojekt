@@ -96,6 +96,7 @@
         <div class="text-box" th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}">
             <button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:onclick="|window.location.href='@{/opret-medarbejder}'|" class="btn-primary color-blue w-100">Opret medarbejder</button>
             <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/add-ingredients}'|" class="btn-primary color-blue w-100">Tilføj ingredienser</button>
+            <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/edit-ingredients}'|" class="btn-primary color-blue w-100">Rediger ingredienser</button>
             <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/recipe-creation}'|" class="btn-primary color-blue w-100">Tilføj opskrift</button>
             <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/recipe-edit}'|" class="btn-primary color-blue w-100">Rediger Opskrift</button>
         </div>

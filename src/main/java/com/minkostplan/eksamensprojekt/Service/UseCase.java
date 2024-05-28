@@ -259,8 +259,17 @@ public class UseCase {
     public void updateRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
         dBRepository.updateRecipeWithIngredients(recipe, ingredientIds, quantities);
     }
-    
+
     public boolean deleteRecipeById(int id) {
         return dBRepository.deleteRecipeById(id);
     }
+
+    public void updateIngredient(Ingredient ingredient) {
+        dBRepository.updateIngredient(ingredient);
+    }
+
+    public boolean deleteIngredientById(int id) {
+        return dBRepository.deleteIngredientById(id);
+    }
+
 }
