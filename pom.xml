@@ -197,7 +197,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<executable>true</executable>
-					<jvmArguments>-Dfile.encoding=UTF8</jvmArguments>
+					<jvmArguments>-XX:+EnableDynamicAgentLoading -Djdk.instrument.traceUsage=true -Dfile.encoding=UTF8</jvmArguments>
 				</configuration>
 			</plugin>
 		</plugins>
