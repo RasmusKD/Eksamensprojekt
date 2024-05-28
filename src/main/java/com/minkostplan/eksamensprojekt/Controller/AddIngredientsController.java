@@ -22,7 +22,7 @@ public class AddIngredientsController {
 
     //Denne annotation specificerer, at metoden skal håndtere GET-forespørgsler til URL'en "/add-ingredients".
     @GetMapping("/add-ingredients")
-    public String showAddIngredientsForm() {
+    public String showAddIngredientsForm(Model model) {
         return "add-ingredients";
     }
 
@@ -32,7 +32,8 @@ public class AddIngredientsController {
                                 @RequestParam("fat") double fat,
                                 @RequestParam("carbohydrate") double carbohydrate,
                                 @RequestParam("protein") double protein,
-                                @RequestParam("calories") int calories) {
+                                @RequestParam("calories") int calories,
+                                Model model) {
         Ingredient ingredient = new Ingredient(); //Opretter en ny instans af klassen Ingredient
         ingredient.setName(name);      //Bliver sat med værdien fra POST-forespørgslen
         ingredient.setFat(fat);         //Bliver sat med værdien fra POST-forespørgslen
@@ -40,7 +41,10 @@ public class AddIngredientsController {
         ingredient.setProtein(protein);         //osv
         ingredient.setCalories(calories);       //osv
         useCase.createIngredients(ingredient);  //osv
-        return "redirect:/add-ingredients";     //Returnerer en omdirigering til URL'en "/add-ingredients"
+
+        model.addAttribute("message", "Ingrediens tilføjet!"); // tilføjer success meddelelse
+
+        return "add-ingredients"; //Returnerer en omdirigering til URL'en "/add-ingredients"
     }
 
     @GetMapping("/edit-ingredients")
