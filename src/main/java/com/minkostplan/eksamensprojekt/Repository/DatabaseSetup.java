@@ -33,7 +33,7 @@ public class DatabaseSetup {
             createSubscriptionTable(connection);
             createUserTable(connection);
 
-            System.out.println("Database setup completed successfully.");
+            System.out.println("Database setup completed successfully. Everything is in order.");
         } catch (SQLException e) {
             e.printStackTrace();
         }
