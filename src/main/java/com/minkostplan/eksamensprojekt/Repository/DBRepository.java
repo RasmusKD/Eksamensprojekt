@@ -680,4 +680,64 @@ public class DBRepository {
             closeResources(conn, pstmt);
         }
     }
+
+    public void updateIngredient(Ingredient ingredient) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE Ingredient SET name = ?, fat = ?, carbohydrate = ?, protein = ?, calories = ? WHERE ingredientId = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1, ingredient.getName());
+            pstmt.setDouble(2, ingredient.getFat());
+            pstmt.setDouble(3, ingredient.getCarbohydrate());
+            pstmt.setDouble(4, ingredient.getProtein());
+            pstmt.setInt(5, ingredient.getCalories());
+            pstmt.setInt(6, ingredient.getIngredientId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
+    }
+
+    public boolean deleteIngredientById(int id) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            conn.setAutoCommit(false);
+
+            // First, delete from Recipe_Ingredients where this ingredient is used
+            String deleteRecipeIngredientsSql = "DELETE FROM Recipe_Ingredients WHERE ingredient_id = ?";
+            pstmt = conn.prepareStatement(deleteRecipeIngredientsSql);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            // Then, delete from Ingredient
+            String deleteIngredientSql = "DELETE FROM Ingredient WHERE ingredientId = ?";
+            pstmt = conn.prepareStatement(deleteIngredientSql);
+            pstmt.setInt(1, id);
+            int affectedRows = pstmt.executeUpdate();
+
+            conn.commit();
+            return affectedRows > 0;
+        } catch (SQLException e) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            closeResources(conn, pstmt);
+        }
+    }
 }

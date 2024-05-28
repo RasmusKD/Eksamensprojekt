@@ -435,6 +435,7 @@ textarea.large, .input-field.large {
     border-radius: 0.5em;
     border-color: #78d578;
     border-style: solid;
+    padding: 0em 0.5em 0 0;
 }
 
 .input-icon .material-icons {

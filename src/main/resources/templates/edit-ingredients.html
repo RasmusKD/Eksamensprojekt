@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Ingredients</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="content login-content center">
+    <div class="content-box">
+        <div class="text-box">
+            <div class="login-headline">Rediger Ingredienser</div>
+            <div class="input-icon">
+                <i class="material-icons">search</i>
+                <select class="input-field" id="ingredientSelect" name="ingredientSelect" required>
+                    <option value="" disabled selected>Vælg en ingrediens</option>
+                    <option th:each="ingredient : ${ingredients}" th:value="${ingredient.ingredientId}" th:text="${ingredient.name}"></option>
+                </select>
+            </div>
+            <form id="ingredientForm" th:action="@{/edit-ingredients}" method="post" style="display: none;">
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                <input type="hidden" id="ingredientId" name="ingredientId"/>
+                <div class="input-icon">
+                    <i class="material-icons">label</i>
+                    <input class="input-field" type="text" id="name" name="name" placeholder="Navn" required>
+                </div>
+                <div class="input-icon">
+                    <i class="material-icons">local_dining</i>
+                    <input class="input-field" type="number" step="0.01" id="fat" name="fat" placeholder="Fedt (g)" required>
+                </div>
+                <div class="input-icon">
+                    <i class="material-icons">restaurant</i>
+                    <input class="input-field" type="number" step="0.01" id="carbohydrate" name="carbohydrate" placeholder="Kulhydrater (g)" required>
+                </div>
+                <div class="input-icon">
+                    <i class="material-icons">fitness_center</i>
+                    <input class="input-field" type="number" step="0.01" id="protein" name="protein" placeholder="Protein (g)" required>
+                </div>
+                <div class="input-icon">
+                    <i class="material-icons">local_fire_department</i>
+                    <input class="input-field" type="number" step="0.01" id="calories" name="calories" placeholder="Kalorier (g)" required>
+                </div>
+                <input class="btn-primary w-100" type="submit" value="Opdater Ingrediens"/>
+                <button type="button" id="deleteButton" class="btn-primary color-red w-100" style="display: none;">Slet Ingrediens</button>
+            </form>
+            <div th:if="${message}" class="message-container">
+                <span th:text="${message}" style="color:green"></span>
+            </div>
+            <div th:if="${error}" class="error-container">
+                <span th:text="${error}" style="color:red"></span>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<!-- Confirmation Modal -->
+<div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <h2>Bekræft Sletning</h2>
+        <p>Er du sikker på, at du vil slette denne ingrediens? <br> Denne handling kan ikke fortrydes.</p>
+        <div class="button-container">
+            <button id="confirm-delete" class="btn-primary color-red">Ja, slet ingrediens</button>
+            <button id="cancel-delete" class="btn-primary">Annuller</button>
+        </div>
+    </div>
+</div>
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function() {
+        const ingredientSelect = document.getElementById('ingredientSelect');
+        const ingredientForm = document.getElementById('ingredientForm');
+        const deleteButton = document.getElementById('deleteButton');
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        if (ingredientSelect) {
+            ingredientSelect.addEventListener('change', function() {
+                const ingredientId = this.value;
+                if (ingredientId) {
+                    fetch(`/ingredient-details/${ingredientId}`)
+                        .then(response => response.json())
+                        .then(ingredient => {
+                            document.getElementById('ingredientId').value = ingredient.ingredientId;
+                            document.getElementById('name').value = ingredient.name;
+                            document.getElementById('fat').value = ingredient.fat;
+                            document.getElementById('carbohydrate').value = ingredient.carbohydrate;
+                            document.getElementById('protein').value = ingredient.protein;
+                            document.getElementById('calories').value = ingredient.calories;
+
+                            ingredientForm.style.display = 'flex';
+                            ingredientForm.style.flexDirection = 'column';
+                            ingredientForm.style.gap = '1em';
+                            ingredientForm.style.width = '100%';
+
+                            deleteButton.style.display = 'block';
+                        })
+                        .catch(error => {
+                            console.error('Error fetching ingredient details:', error);
+                        });
+                } else {
+                    ingredientForm.style.display = 'none';
+                    deleteButton.style.display = 'none';
+                }
+            });
+        }
+
+        if (ingredientForm) {
+            ingredientForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(this);
+
+                fetch(this.action, {
+                    method: 'POST',
+                    headers: {
+                        [csrfHeader]: csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const messageContainer = document.querySelector('.message-container');
+                        if (messageContainer) {
+                            messageContainer.querySelector('span').textContent = data.message;
+                            messageContainer.style.display = 'block';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            });
+        }
+
+        if (deleteButton) {
+            deleteButton.addEventListener('click', function() {
+                const modal = document.getElementById('confirmation-modal');
+                modal.style.display = 'block';
+            });
+        }
+
+        const closeButton = document.querySelector('.close-button');
+        if (closeButton) {
+            closeButton.addEventListener('click', function() {
+                const modal = document.getElementById('confirmation-modal');
+                modal.style.display = 'none';
+            });
+        }
+
+        const cancelDeleteButton = document.getElementById('cancel-delete');
+        if (cancelDeleteButton) {
+            cancelDeleteButton.addEventListener('click', function() {
+                const modal = document.getElementById('confirmation-modal');
+                modal.style.display = 'none';
+            });
+        }
+
+        const confirmDeleteButton = document.getElementById('confirm-delete');
+        if (confirmDeleteButton) {
+            confirmDeleteButton.addEventListener('click', function() {
+                const ingredientId = document.getElementById('ingredientId').value;
+
+                fetch(`/delete-ingredient/${ingredientId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'Ingredient deleted successfully') {
+                            window.location.href = '/edit-ingredients';
+                        } else {
+                            alert('Failed to delete ingredient');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting ingredient:', error);
+                    });
+            });
+        }
+    });
+</script>
+</body>
+</html>
