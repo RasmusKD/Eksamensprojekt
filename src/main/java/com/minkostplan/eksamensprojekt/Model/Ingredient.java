@@ -1,7 +1,7 @@
 package com.minkostplan.eksamensprojekt.Model;
 
 /**
- * Represents an ingredient with its nutritional information.
+ * Repræsenterer en ingrediens med dens ernæringsinformation.
  */
 public class Ingredient {
 
@@ -11,22 +11,22 @@ public class Ingredient {
     private double protein;
     private double carbohydrate;
     private int calories;
-    private double quantity; // Add this line
+    private double quantity;
 
     /**
-     * Default constructor.
+     * Standardkonstruktør.
      */
     public Ingredient() {
     }
 
     /**
-     * Parameterized constructor to initialize all fields.
+     * Konstruktør med parametre til at initialisere alle felter.
      *
-     * @param name the name of the ingredient
-     * @param fat the amount of fat in grams
-     * @param protein the amount of protein in grams
-     * @param carbohydrate the amount of carbohydrate in grams
-     * @param calories the amount of calories
+     * @param name          ingrediensens navn
+     * @param fat           mængden af fedt i gram
+     * @param protein       mængden af protein i gram
+     * @param carbohydrate  mængden af kulhydrater i gram
+     * @param calories      mængden af kalorier
      */
     public Ingredient(String name, double fat, double protein, double carbohydrate, int calories) {
         this.name = name;
@@ -36,128 +36,60 @@ public class Ingredient {
         this.calories = calories;
     }
 
-    /**
-     * Gets the ingredient ID.
-     *
-     * @return the ingredient ID
-     */
+    // Getters og setters for alle felter
+
     public int getIngredientId() {
         return ingredientId;
     }
 
-    /**
-     * Sets the ingredient ID.
-     *
-     * @param ingredientId the ingredient ID to set
-     */
     public void setIngredientId(int ingredientId) {
         this.ingredientId = ingredientId;
     }
 
-    /**
-     * Gets the name of the ingredient.
-     *
-     * @return the name of the ingredient
-     */
     public String getName() {
         return name;
     }
 
-    /**
-     * Sets the name of the ingredient.
-     *
-     * @param name the name to set
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * Gets the amount of fat in grams.
-     *
-     * @return the amount of fat in grams
-     */
     public double getFat() {
         return fat;
     }
 
-    /**
-     * Sets the amount of fat in grams.
-     *
-     * @param fat the amount of fat to set
-     */
     public void setFat(double fat) {
         this.fat = fat;
     }
 
-    /**
-     * Gets the amount of protein in grams.
-     *
-     * @return the amount of protein in grams
-     */
     public double getProtein() {
         return protein;
     }
 
-    /**
-     * Sets the amount of protein in grams.
-     *
-     * @param protein the amount of protein to set
-     */
     public void setProtein(double protein) {
         this.protein = protein;
     }
 
-    /**
-     * Gets the amount of carbohydrate in grams.
-     *
-     * @return the amount of carbohydrate in grams
-     */
     public double getCarbohydrate() {
         return carbohydrate;
     }
 
-    /**
-     * Sets the amount of carbohydrate in grams.
-     *
-     * @param carbohydrate the amount of carbohydrate to set
-     */
     public void setCarbohydrate(double carbohydrate) {
         this.carbohydrate = carbohydrate;
     }
 
-    /**
-     * Gets the amount of calories.
-     *
-     * @return the amount of calories
-     */
     public int getCalories() {
         return calories;
     }
 
-    /**
-     * Sets the amount of calories.
-     *
-     * @param calories the amount of calories to set
-     */
     public void setCalories(int calories) {
         this.calories = calories;
     }
 
-    /**
-     * Gets the quantity of the ingredient.
-     *
-     * @return the quantity of the ingredient
-     */
     public double getQuantity() {
         return quantity;
     }
 
-    /**
-     * Sets the quantity of the ingredient.
-     *
-     * @param quantity the quantity to set
-     */
     public void setQuantity(double quantity) {
         this.quantity = quantity;
     }

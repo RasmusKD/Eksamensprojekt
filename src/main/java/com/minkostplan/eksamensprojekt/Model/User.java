@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Repræsenterer en bruger i systemet med detaljer om brugerens oplysninger og sikkerhedsroller.
+ */
 public class User implements UserDetails {
 
     private int userId;
@@ -24,9 +27,29 @@ public class User implements UserDetails {
     private int employed;
     private boolean subscriber;
 
+    /**
+     * Standardkonstruktør.
+     */
     public User() {
     }
 
+    /**
+     * Konstruktør med parametre til at initialisere alle felter.
+     *
+     * @param userId        brugerens ID
+     * @param firstName     brugerens fornavn
+     * @param lastName      brugerens efternavn
+     * @param email         brugerens email
+     * @param password      brugerens kodeord
+     * @param age           brugerens alder
+     * @param gender        brugerens køn
+     * @param weight        brugerens vægt
+     * @param height        brugerens højde
+     * @param activityLevel brugerens aktivitetsniveau
+     * @param goal          brugerens mål
+     * @param employed      brugerens ansættelsesstatus
+     * @param subscriber    om brugeren er abonnent
+     */
     public User(int userId, String firstName, String lastName, String email, String password, int age, char gender, double weight, double height, int activityLevel, int goal, int employed, boolean subscriber) {
         this.userId = userId;
         this.firstName = firstName;
@@ -43,6 +66,12 @@ public class User implements UserDetails {
         this.subscriber = subscriber;
     }
 
+    /**
+     * Henter brugerens autoriteter baseret på ansættelsesstatus og abonnementsstatus.
+     * Autoriteter bruges til at bestemme en brugers adgangsniveau i systemet.
+     *
+     * @return en samling af autoriteter
+     */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -60,35 +89,67 @@ public class User implements UserDetails {
         return authorities;
     }
 
+    /**
+     * Henter brugerens kodeord.
+     *
+     * @return brugerens kodeord
+     */
     @Override
     public String getPassword() {
         return password;
     }
 
+    /**
+     * Henter brugerens brugernavn (email).
+     *
+     * @return brugerens email
+     */
     @Override
     public String getUsername() {
         return email;
     }
 
+    /**
+     * Kontrollerer om kontoen ikke er udløbet.
+     *
+     * @return true, da kontoen aldrig udløber
+     */
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
+    /**
+     * Kontrollerer om kontoen ikke er låst.
+     *
+     * @return true, da kontoen aldrig er låst
+     */
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
+    /**
+     * Kontrollerer om legitimationsoplysningerne ikke er udløbet.
+     *
+     * @return true, da legitimationsoplysningerne aldrig udløber
+     */
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    /**
+     * Kontrollerer om kontoen er aktiveret.
+     *
+     * @return true, da kontoen altid er aktiveret
+     */
     @Override
     public boolean isEnabled() {
         return true;
     }
+
+    // Getters og setters for alle felter
 
     public int getUserId() {
         return userId;
