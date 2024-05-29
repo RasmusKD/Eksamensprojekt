@@ -12,7 +12,7 @@
     <div class="content-box">
         <div class="text-box">
             <div class="login-headline">Registrer</div>
-            <form th:action="@{/register}" method="post" th:object="${user}">
+            <form th:action="@{/register}" method="post" th:object="${user}" id="register-form">
                 <div class="form-grid">
                     <div class="left-column">
                         <div class="input-icon">
@@ -83,5 +83,14 @@
 </div>
 <img class="image1" src="/images/image.png" alt="Beskrivende billede tekst">
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<script>
+    document.getElementById("register-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+        if (confirm("Bruger oprettet")) {
+            this.submit();
+        }
+    });
+</script>
 </body>
 </html>

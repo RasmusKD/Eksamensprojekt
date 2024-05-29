@@ -73,7 +73,7 @@ public class StripeController {
                 subscription.setUserId(userId);
                 subscription.setStartDate(java.sql.Date.valueOf(LocalDate.now()));
                 subscription.setEndDate(java.sql.Date.valueOf(LocalDate.now().plusDays(7))); // Set end date to 7 days from now
-                subscription.setPrice(9.99); // Example price
+                subscription.setPrice(49);
                 subscription.setStatus("active");
                 subscription.setSubscriptionId(subscriptionId); // Store the Stripe subscription ID
 
@@ -134,13 +134,34 @@ public class StripeController {
             SubscriptionCollection subscriptions = com.stripe.model.Subscription.list(params);
 
             for (com.stripe.model.Subscription stripeSubscription : subscriptions.getData()) {
-                if (stripeSubscription.getCancelAtPeriodEnd() && stripeSubscription.getCurrentPeriodEnd() <= Instant.now().getEpochSecond()) {
-                    int userId = Integer.parseInt(stripeSubscription.getMetadata().get("userId"));
-                    useCase.updateUserSubscriptionStatus(userId, false);
+                Map<String, String> metadata = stripeSubscription.getMetadata();
+                if (metadata.containsKey("userId")) {
+                    int userId = Integer.parseInt(metadata.get("userId"));
+
+                    if (stripeSubscription.getCancelAtPeriodEnd() && stripeSubscription.getCurrentPeriodEnd() <= Instant.now().getEpochSecond()) {
+                        useCase.updateUserSubscriptionStatus(userId, false);
+                    } else if (stripeSubscription.getCurrentPeriodEnd() <= Instant.now().getEpochSecond()) {
+                        // Renew subscription
+                        SubscriptionUpdateParams updateParams = SubscriptionUpdateParams.builder()
+                                .setCancelAtPeriodEnd(false)
+                                .build();
+                        stripeSubscription.update(updateParams);
+
+                        // Extend end date by 7 days
+                        Subscription subscription = useCase.getSubscriptionByUserId(userId);
+                        subscription.setEndDate(java.sql.Date.valueOf(LocalDate.now().plusDays(7)));
+                        useCase.createSubscription(subscription);
+
+                        // Update the user's subscription status
+                        useCase.updateUserSubscriptionStatus(userId, true);
+                    }
+                } else {
+                    System.out.println("Metadata does not contain userId for subscription: " + stripeSubscription.getId());
                 }
             }
         } catch (StripeException e) {
             e.printStackTrace();
         }
     }
+
 }
