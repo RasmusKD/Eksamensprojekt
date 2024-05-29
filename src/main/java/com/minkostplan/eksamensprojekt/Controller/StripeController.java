@@ -29,33 +29,32 @@ public class StripeController {
         Map<String, String> response = new HashMap<>();
         try {
             String priceId = (String) payload.get("priceId");
-            String userIdStr = (String) payload.get("userId");
-            int userId = Integer.parseInt(userIdStr);
-
-            // Check for existing active subscription
-            if (useCase.getSubscriptionByUserId(userId) != null) {
-                response.put("error", "User already has an active subscription.");
-                return response;
-            }
+            String userIdStr = (String) payload.get("userId"); // User ID received as String
+            int userId = Integer.parseInt(userIdStr); // Convert String to Integer
 
             String email = useCase.getUserById(userId).getEmail();
+
             SessionCreateParams params = SessionCreateParams.builder()
                     .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
                     .setSuccessUrl("http://localhost:8080/stripe/payment-success?session_id={CHECKOUT_SESSION_ID}")
                     .setCancelUrl("http://localhost:8080/payment-cancel")
-                    .setClientReferenceId(userIdStr)
-                    .addLineItem(SessionCreateParams.LineItem.builder()
-                            .setPrice(priceId)
-                            .setQuantity(1L)
-                            .build())
+                    .setClientReferenceId(userIdStr) // Set client_reference_id
+                    .addLineItem(
+                            SessionCreateParams.LineItem.builder()
+                                    .setPrice(priceId)
+                                    .setQuantity(1L)
+                                    .build()
+                    )
                     .setCustomerEmail(email)
                     .build();
 
             Session session = Session.create(params);
             response.put("id", session.getId());
 
-        } catch (StripeException | NumberFormatException e) {
+        } catch (StripeException e) {
             response.put("error", e.getMessage());
+        } catch (NumberFormatException e) {
+            response.put("error", "Invalid user ID format.");
         }
         return response;
     }
@@ -82,9 +81,6 @@ public class StripeController {
 
                 // Update the user's subscription status and subscription ID
                 useCase.updateUserSubscriptionStatus(userId, true);
-
-                // Delete any inactive subscriptions for the user after the new subscription is created
-                useCase.deleteInactiveSubscriptionsByUserId(userId);
 
                 modelAndView.addObject("message", "Betaling gennemført! Tak for din betaling. Dit abonnement er nu aktivt.");
             } else {

@@ -247,8 +247,8 @@ public class UseCase {
     }
 
     // Henter et abonnement ved bruger ID
-    public Subscription getSubscriptionByUserId(int userId) {
-        return dBRepository.getSubscriptionByUserId(userId);
+    public Subscription getLatestSubscriptionByUserId(int userId) {
+        return dBRepository.getLatestSubscriptionByUserId(userId);
     }
 
     // Sletter inaktive abonnementer for en bruger baseret på deres ID

@@ -45,7 +45,7 @@ public class DashboardController {
         double calorieNeeds = useCase.calculateCalories(user);
 
         // Retrieve the subscription (active or not)
-        Subscription subscription = useCase.getSubscriptionByUserId(user.getUserId());
+        Subscription subscription = useCase.getLatestSubscriptionByUserId(user.getUserId());
         long daysLeft = 0;
         if (subscription != null) {
             LocalDate endDate = convertToLocalDate(subscription.getEndDate());
