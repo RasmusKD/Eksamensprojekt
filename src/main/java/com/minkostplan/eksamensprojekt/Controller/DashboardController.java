@@ -16,18 +16,28 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Controller-klasse til håndtering af forespørgsler relateret til brugerens dashboard.
+ */
 @Controller
 public class DashboardController {
 
     @Autowired
     private UseCase useCase;
 
+    /**
+     * Viser dashboard-siden for den loggede bruger.
+     *
+     * @param authentication Autentificeringsobjekt, der indeholder oplysninger om den loggede bruger.
+     * @param model          Model-objekt til at tilføje attributter.
+     * @return Navnet på viewet "dashboard".
+     */
     @GetMapping("/dashboard")
     public String dashboard(Authentication authentication, Model model) {
-        String email = authentication.getName(); // Get the logged-in user's email
-        User user = useCase.getUserByEmail(email); // Retrieve user info from the database
+        String email = authentication.getName(); // Henter den loggede brugers email
+        User user = useCase.getUserByEmail(email); // Henter brugeroplysninger fra databasen
 
-        // Mapping activity levels and goals
+        // Mapping af aktivitetsniveauer og mål
         Map<Integer, String> activityLevelMap = new HashMap<>();
         activityLevelMap.put(0, "Ingen eller meget lidt aktiv");
         activityLevelMap.put(1, "1-2 gange om ugen");
@@ -41,10 +51,10 @@ public class DashboardController {
         goalMap.put(2, "Muskelopbygning");
         goalMap.put(3, "Vedligehold vægt");
 
-        // Calculate calories
+        // Beregner kaloriebehov
         double calorieNeeds = useCase.calculateCalories(user);
 
-        // Retrieve the subscription (active or not)
+        // Henter abonnementsoplysninger (aktivt eller ej)
         Subscription subscription = useCase.getLatestSubscriptionByUserId(user.getUserId());
         long daysLeft = 0;
         if (subscription != null) {
@@ -59,24 +69,43 @@ public class DashboardController {
         model.addAttribute("user", user);
         model.addAttribute("activityLevelMap", activityLevelMap);
         model.addAttribute("goalMap", goalMap);
-        model.addAttribute("calorieNeeds", calorieNeeds); // Add calorie needs to the model
-        model.addAttribute("userId", user.getUserId()); // Add user ID to the model
-        model.addAttribute("daysLeft", daysLeft); // Add days left to the model
-        model.addAttribute("subscription", subscription); // Add subscription to the model
+        model.addAttribute("calorieNeeds", calorieNeeds);
+        model.addAttribute("userId", user.getUserId());
+        model.addAttribute("daysLeft", daysLeft);
+        model.addAttribute("subscription", subscription);
 
         return "dashboard";
     }
 
+    /**
+     * Opdaterer brugerens mål.
+     *
+     * @param goal          Det nye mål.
+     * @param authentication Autentificeringsobjekt, der indeholder oplysninger om den loggede bruger.
+     * @return Redirect til dashboard-siden.
+     */
     @PostMapping("/update-goal")
     public String updateGoal(@RequestParam("goal") int goal, Authentication authentication) {
-        String email = authentication.getName(); // Get the logged-in user's email
-        User user = useCase.getUserByEmail(email); // Retrieve user info from the database
-        user.setGoal(goal); // Update the user's goal
-        useCase.updateUser(user); // Save the updated user to the database
+        String email = authentication.getName();
+        User user = useCase.getUserByEmail(email);
+        user.setGoal(goal);
+        useCase.updateUser(user);
 
-        return "redirect:/dashboard"; // Redirect back to the dashboard
+        return "redirect:/dashboard";
     }
 
+    /**
+     * Opdaterer brugerens oplysninger.
+     *
+     * @param age            Brugerens alder.
+     * @param gender         Brugerens køn.
+     * @param weight         Brugerens vægt.
+     * @param height         Brugerens højde.
+     * @param activityLevel  Brugerens aktivitetsniveau.
+     * @param goal           Brugerens mål.
+     * @param authentication Autentificeringsobjekt, der indeholder oplysninger om den loggede bruger.
+     * @return Redirect til dashboard-siden.
+     */
     @PostMapping("/update-user")
     public String updateUser(
             @RequestParam("age") int age,
@@ -87,10 +116,9 @@ public class DashboardController {
             @RequestParam("goal") int goal,
             Authentication authentication) {
 
-        String email = authentication.getName(); // Get the logged-in user's email
-        User user = useCase.getUserByEmail(email); // Retrieve user info from the database
+        String email = authentication.getName();
+        User user = useCase.getUserByEmail(email);
 
-        // Update user details
         user.setAge(age);
         user.setGender(gender);
         user.setWeight(weight);
@@ -98,10 +126,9 @@ public class DashboardController {
         user.setActivityLevel(activityLevel);
         user.setGoal(goal);
 
-        // Save the updated user to the database
         useCase.updateUser(user);
 
-        return "redirect:/dashboard"; // Redirect back to the dashboard
+        return "redirect:/dashboard";
     }
 
     private LocalDate convertToLocalDate(java.util.Date date) {

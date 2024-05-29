@@ -16,12 +16,23 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Controller-klasse til håndtering af forespørgsler relateret til opskrifter.
+ */
 @Controller
 public class RecipeController {
 
     @Autowired
     private UseCase useCase;
 
+    /**
+     * Henter opskrifter for en bestemt dag.
+     *
+     * @param day       Dagen for hvilke opskrifter skal hentes.
+     * @param model     Model-objekt til at tilføje attributter.
+     * @param principal Principal-objekt, der indeholder oplysninger om den loggede bruger.
+     * @return Navnet på viewet "recipesByDay".
+     */
     @GetMapping("/recipes/{day}")
     public String getRecipesByDay(@PathVariable String day, Model model, Principal principal) {
         User user = useCase.getUserByEmail(principal.getName());
@@ -30,6 +41,15 @@ public class RecipeController {
         return "recipesByDay";
     }
 
+    /**
+     * Henter en opskrift ved dens ID.
+     *
+     * @param id        Opskriftens ID.
+     * @param dayOffset Valgfri dagsoffset.
+     * @param model     Model-objekt til at tilføje attributter.
+     * @param principal Principal-objekt, der indeholder oplysninger om den loggede bruger.
+     * @return Navnet på viewet "recipe".
+     */
     @GetMapping("/recipe/{id}")
     public String getRecipeById(@PathVariable int id, @RequestParam(value = "dayOffset", required = false) Integer dayOffset, Model model, Principal principal) {
         Recipe recipe = useCase.getRecipeById(id);
@@ -38,11 +58,11 @@ public class RecipeController {
         double adjustedCalories = useCase.calculateAdjustedCalories(userCaloricNeeds, recipe.getMealTime());
         recipe.setAdjustedCalories((int) adjustedCalories);
         List<Ingredient> adjustedIngredients = useCase.getAdjustedIngredients(recipe, adjustedCalories);
-        recipe.setIngredients(adjustedIngredients); // Set adjusted ingredients
+        recipe.setIngredients(adjustedIngredients);
 
         model.addAttribute("recipe", recipe);
-        model.addAttribute("dayOffset", dayOffset); // Pass the dayOffset to the model
-        // Split method into sentences
+        model.addAttribute("dayOffset", dayOffset);
+
         List<String> methodSentences = Arrays.stream(recipe.getMethod().split("\\. "))
                 .map(sentence -> sentence.trim() + ".")
                 .collect(Collectors.toList());

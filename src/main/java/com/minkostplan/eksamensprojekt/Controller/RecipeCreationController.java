@@ -17,12 +17,23 @@ import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Controller-klasse til håndtering af opskriftsoprettelse og -redigering.
+ */
 @Controller
 public class RecipeCreationController {
 
     @Autowired
     private UseCase useCase;
 
+    private static final String UPLOAD_DIR = "src/main/resources/static/images/";
+
+    /**
+     * Viser formularen til oprettelse af opskrift.
+     *
+     * @param model Model-objekt til at tilføje attributter.
+     * @return Navnet på viewet "recipe-creation".
+     */
     @GetMapping("/recipe-creation")
     public String showCreateRecipeForm(Model model) {
         List<Ingredient> ingredientList = useCase.getAllIngredients();
@@ -30,6 +41,12 @@ public class RecipeCreationController {
         return "recipe-creation";
     }
 
+    /**
+     * Viser formularen til redigering af opskrifter.
+     *
+     * @param model Model-objekt til at tilføje attributter.
+     * @return Navnet på viewet "edit-recipe".
+     */
     @GetMapping("/recipe-edit")
     public String showEditRecipeForm(Model model) {
         List<Recipe> recipes = useCase.getAllRecipes();
@@ -39,14 +56,33 @@ public class RecipeCreationController {
         return "edit-recipe";
     }
 
+    /**
+     * Henter detaljer om en specifik opskrift.
+     *
+     * @param id Opskriftens ID.
+     * @return En Recipe-objekt med detaljerne om opskriften.
+     */
     @GetMapping("/recipe-edit/{id}")
     @ResponseBody
     public Recipe getRecipeDetails(@PathVariable("id") int id) {
         return useCase.getRecipeById(id);
     }
 
-    private static final String UPLOAD_DIR = "src/main/resources/static/images/";
-
+    /**
+     * Opretter en ny opskrift med ingredienser.
+     *
+     * @param title        Opskriftens titel.
+     * @param description  Opskriftens beskrivelse.
+     * @param ingredientIds Ingrediensernes ID'er.
+     * @param quantities   Mængder af ingredienser.
+     * @param instructions Opskriftens instruktioner.
+     * @param cookingTime  Opskriftens tilberedningstid.
+     * @param mealTime     Opskriftens måltidstid.
+     * @param day          Dagen opskriften er tilknyttet.
+     * @param imageFile    Billedfil af opskriften.
+     * @param model        Model-objekt til at tilføje attributter.
+     * @return JSON-respons med succesmeddelelse.
+     */
     @PostMapping("/recipe-creation")
     @ResponseBody
     public ResponseEntity<?> createRecipe(@RequestParam("title") String title,
@@ -60,7 +96,7 @@ public class RecipeCreationController {
                                           @RequestParam("imageFile") MultipartFile imageFile,
                                           Model model) {
 
-        // Save the uploaded file
+        // Gem den uploadede fil
         String imageUrl = null;
         if (!imageFile.isEmpty()) {
             try {
@@ -83,7 +119,7 @@ public class RecipeCreationController {
         recipe.setMealTime(mealTime);
         recipe.setDay(day);
 
-        // Calculate total nutritional values
+        // Beregn de totale ernæringsværdier
         int totalCalories = 0;
         int totalProtein = 0;
         int totalFat = 0;
@@ -105,10 +141,26 @@ public class RecipeCreationController {
 
         useCase.createRecipeWithIngredients(recipe, ingredientIds, quantities);
 
-        // Return success message as JSON response
+        // Returner succesmeddelelse som JSON-respons
         return ResponseEntity.ok().body("{\"message\": \"Opskriften blev oprettet!\"}");
     }
 
+    /**
+     * Redigerer en eksisterende opskrift.
+     *
+     * @param id           Opskriftens ID.
+     * @param title        Opskriftens titel.
+     * @param description  Opskriftens beskrivelse.
+     * @param ingredientIds Ingrediensernes ID'er.
+     * @param quantities   Mængder af ingredienser.
+     * @param instructions Opskriftens instruktioner.
+     * @param cookingTime  Opskriftens tilberedningstid.
+     * @param mealTime     Opskriftens måltidstid.
+     * @param day          Dagen opskriften er tilknyttet.
+     * @param imageFile    Valgfri billedfil af opskriften.
+     * @param model        Model-objekt til at tilføje attributter.
+     * @return JSON-respons med succesmeddelelse.
+     */
     @PostMapping("/edit-recipe")
     @ResponseBody
     public ResponseEntity<?> editRecipe(@RequestParam("recipeId") int id,
@@ -125,7 +177,7 @@ public class RecipeCreationController {
 
         Recipe recipe = useCase.getRecipeById(id);
 
-        // Save the uploaded file if present
+        // Gem den uploadede fil, hvis den er til stede
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
                 byte[] bytes = imageFile.getBytes();
@@ -145,7 +197,7 @@ public class RecipeCreationController {
         recipe.setMealTime(mealTime);
         recipe.setDay(day);
 
-        // Calculate total nutritional values
+        // Beregn de totale ernæringsværdier
         int totalCalories = 0;
         int totalProtein = 0;
         int totalFat = 0;
@@ -167,10 +219,16 @@ public class RecipeCreationController {
 
         useCase.updateRecipeWithIngredients(recipe, ingredientIds, quantities);
 
-        // Return success message as JSON response
+        // Returner succesmeddelelse som JSON-respons
         return ResponseEntity.ok().body("{\"message\": \"Opskriften blev opdateret!\"}");
     }
 
+    /**
+     * Sletter en opskrift baseret på ID.
+     *
+     * @param id Opskriftens ID.
+     * @return JSON-respons med succes- eller fejlfunktion.
+     */
     @DeleteMapping("/delete-recipe/{id}")
     @ResponseBody
     public ResponseEntity<?> deleteRecipe(@PathVariable("id") int id) {
