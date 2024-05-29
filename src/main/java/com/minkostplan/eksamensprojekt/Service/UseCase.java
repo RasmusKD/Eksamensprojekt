@@ -6,7 +6,6 @@ import com.minkostplan.eksamensprojekt.Model.Subscription;
 import com.minkostplan.eksamensprojekt.Model.User;
 import com.minkostplan.eksamensprojekt.Repository.DBRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,13 +19,6 @@ import java.util.List;
  */
 @Service
 public class UseCase {
-
-    @Value("${stripe.success.url}")
-    private String successUrl;
-
-    @Value("${stripe.cancel.url}")
-    private String cancelUrl;
-
     private final DBRepository dBRepository;
     private User currentUser;
 
@@ -199,7 +191,7 @@ public class UseCase {
                 currentUser, currentUser.getPassword(), currentUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-    
+
     /**
      * Opdaterer status for et abonnement baseret på dets ID.
      *
