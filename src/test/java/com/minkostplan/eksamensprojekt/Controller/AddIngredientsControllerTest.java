@@ -16,6 +16,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+/**
+ * Testklasse for AddIngredientsController.
+ */
 @WebMvcTest(AddIngredientsController.class)
 @Import(SecurityConfig.class)  // Tilføj denne linje for at inkludere SecurityConfig
 public class AddIngredientsControllerTest {
@@ -26,6 +29,11 @@ public class AddIngredientsControllerTest {
     @MockBean
     private UseCase useCase;
 
+    /**
+     * Test for at sikre, at visningen af formularen til at tilføje ingredienser er tilgængelig for brugere med rollen EMPLOYEE.
+     *
+     * @throws Exception hvis der opstår en fejl under behandlingen af HTTP-forespørgslen.
+     */
     @Test
     @WithMockUser(roles = "EMPLOYEE")
     public void testShowAddIngredientsForm() throws Exception {
@@ -33,6 +41,11 @@ public class AddIngredientsControllerTest {
                 .andExpect(status().isOk());
     }
 
+    /**
+     * Test for at sikre, at en ingrediens kan tilføjes via POST-anmodningen, og at UseCase.createIngredients() kaldes korrekt.
+     *
+     * @throws Exception hvis der opstår en fejl under behandlingen af HTTP-forespørgslen.
+     */
     @Test
     @WithMockUser(roles = "EMPLOYEE")
     public void testAddIngredient() throws Exception {

@@ -13,6 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.*;
 
+/**
+ * Testklasse for sletning af brugere i DBRepository.
+ */
 public class DBRepositoryDeleteUserTest {
 
     private DBRepository dbRepository;
@@ -23,22 +26,32 @@ public class DBRepositoryDeleteUserTest {
     @Mock
     private PreparedStatement mockPreparedStatement;
 
+    /**
+     * Opsætning af tests. Initialiserer mocks og spy til DBRepository.
+     *
+     * @throws SQLException hvis der opstår en fejl under opsætning af forbindelse.
+     */
     @BeforeEach
     public void setUp() throws SQLException {
         MockitoAnnotations.initMocks(this);
         dbRepository = spy(DBRepository.class);
 
-        // Mock getConnection to return our mockConnection
+        // Mock getConnection til at returnere mockConnection
         doReturn(mockConnection).when(dbRepository).getConnection();
     }
 
+    /**
+     * Test for at sikre, at en bruger kan slettes korrekt fra databasen.
+     *
+     * @throws SQLException hvis der opstår en fejl under SQL-udførelse.
+     */
     @Test
     public void testDeleteUserSuccess() throws SQLException {
         int userId = 1;
 
-        // Mock prepareStatement to return our mockPreparedStatement
+        // Mock prepareStatement til at returnere mockPreparedStatement
         when(mockConnection.prepareStatement(any(String.class))).thenReturn(mockPreparedStatement);
-        when(mockPreparedStatement.executeUpdate()).thenReturn(1);  // Simulate successful deletion
+        when(mockPreparedStatement.executeUpdate()).thenReturn(1);  // Simulerer succesfuld sletning
 
         boolean result = dbRepository.deleteUser(userId);
 
@@ -49,13 +62,18 @@ public class DBRepositoryDeleteUserTest {
         verify(dbRepository).closeResources(mockConnection, mockPreparedStatement);
     }
 
+    /**
+     * Test for at sikre, at en fejlet sletning håndteres korrekt.
+     *
+     * @throws SQLException hvis der opstår en fejl under SQL-udførelse.
+     */
     @Test
     public void testDeleteUserFailure() throws SQLException {
         int userId = 1;
 
-        // Mock prepareStatement to return our mockPreparedStatement
+        // Mock prepareStatement til at returnere mockPreparedStatement
         when(mockConnection.prepareStatement(any(String.class))).thenReturn(mockPreparedStatement);
-        when(mockPreparedStatement.executeUpdate()).thenReturn(0);  // Simulate failed deletion
+        when(mockPreparedStatement.executeUpdate()).thenReturn(0);  // Simulerer fejlet sletning
 
         boolean result = dbRepository.deleteUser(userId);
 
@@ -66,11 +84,16 @@ public class DBRepositoryDeleteUserTest {
         verify(dbRepository).closeResources(mockConnection, mockPreparedStatement);
     }
 
+    /**
+     * Test for at sikre, at SQLException håndteres korrekt ved sletning af bruger.
+     *
+     * @throws SQLException hvis der opstår en fejl under SQL-udførelse.
+     */
     @Test
     public void testDeleteUserSQLException() throws SQLException {
         int userId = 1;
 
-        // Mock prepareStatement to throw an SQLException
+        // Mock prepareStatement til at kaste en SQLException
         when(mockConnection.prepareStatement(any(String.class))).thenThrow(new SQLException("Test Exception"));
 
         boolean result = dbRepository.deleteUser(userId);

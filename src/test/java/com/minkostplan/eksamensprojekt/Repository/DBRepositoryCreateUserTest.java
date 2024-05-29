@@ -12,6 +12,9 @@ import java.sql.SQLException;
 
 import static org.mockito.Mockito.*;
 
+/**
+ * Testklasse for oprettelse af brugere i DBRepository.
+ */
 public class DBRepositoryCreateUserTest {
 
     private DBRepository dbRepository;
@@ -22,15 +25,25 @@ public class DBRepositoryCreateUserTest {
     @Mock
     private PreparedStatement mockPreparedStatement;
 
+    /**
+     * Opsætning af tests. Initialiserer mocks og spy til DBRepository.
+     *
+     * @throws SQLException hvis der opstår en fejl under opsætning af forbindelse.
+     */
     @BeforeEach
     public void setUp() throws SQLException {
         MockitoAnnotations.initMocks(this);
         dbRepository = spy(DBRepository.class);
 
-        // Mock getConnection to return our mockConnection
+        // Mock getConnection til at returnere mockConnection
         doReturn(mockConnection).when(dbRepository).getConnection();
     }
 
+    /**
+     * Test for at sikre, at en bruger kan oprettes korrekt i databasen.
+     *
+     * @throws SQLException hvis der opstår en fejl under SQL-udførelse.
+     */
     @Test
     public void testCreateUserSuccess() throws SQLException {
         User user = new User();
@@ -47,7 +60,7 @@ public class DBRepositoryCreateUserTest {
         user.setEmployed(1);
         user.setSubscriber(true);
 
-        // Mock prepareStatement to return our mockPreparedStatement
+        // Mock prepareStatement til at returnere mockPreparedStatement
         when(mockConnection.prepareStatement(any(String.class))).thenReturn(mockPreparedStatement);
 
         dbRepository.createUser(user);
@@ -69,6 +82,11 @@ public class DBRepositoryCreateUserTest {
         verify(dbRepository).closeResources(mockConnection, mockPreparedStatement);
     }
 
+    /**
+     * Test for at sikre, at SQLException håndteres korrekt ved oprettelse af bruger.
+     *
+     * @throws SQLException hvis der opstår en fejl under SQL-udførelse.
+     */
     @Test
     public void testCreateUserSQLException() throws SQLException {
         User user = new User();
@@ -85,7 +103,7 @@ public class DBRepositoryCreateUserTest {
         user.setEmployed(1);
         user.setSubscriber(true);
 
-        // Mock prepareStatement to throw an SQLException
+        // Mock prepareStatement til at kaste en SQLException
         when(mockConnection.prepareStatement(any(String.class))).thenThrow(new SQLException("Test Exception"));
 
         dbRepository.createUser(user);

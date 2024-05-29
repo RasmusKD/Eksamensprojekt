@@ -10,6 +10,9 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Testklasse for kalorieudregning for høj aktivitet i UseCase-klassen.
+ */
 public class UseCaseCalculateCaloriesForHighActivityTest {
 
     @InjectMocks
@@ -18,11 +21,17 @@ public class UseCaseCalculateCaloriesForHighActivityTest {
     @Mock
     private DBRepository dbRepository;
 
+    /**
+     * Opsætning af tests. Initialiserer mocks og inject mocks i UseCase.
+     */
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
+    /**
+     * Test for at sikre korrekt kalorieudregning for en bruger med høj aktivitetsniveau.
+     */
     @Test
     public void testCalculateCaloriesForHighActivity() {
         User user = new User();

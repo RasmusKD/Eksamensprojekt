@@ -5,8 +5,14 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ResponsTidsTest {
+/**
+ * Testklasse for at måle responstid for et endpoint.
+ */
+public class ResponseTimeTest {
 
+    /**
+     * Test for at måle responstid for et enkelt GET-forespørgsel.
+     */
     @Test
     public void testResponseTime() {
         // URL til dit endpoint, juster dette til din faktiske URL
@@ -22,6 +28,7 @@ public class ResponsTidsTest {
         assertTrue(responseTime < 2000, "Response time is too high: " + responseTime + "ms");
     }
 }
+
 //Denne test sender en enkelt GET-forespørgsel til et endpoint
 //og måler responstiden for denne forespørgsel.
 //Den asserterer, at responstiden er under 2 sekunder.

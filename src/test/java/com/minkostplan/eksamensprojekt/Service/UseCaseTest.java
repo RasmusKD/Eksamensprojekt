@@ -10,6 +10,9 @@ import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+/**
+ * Generel testklasse for UseCase-klassen.
+ */
 public class UseCaseTest {
 
     @InjectMocks
@@ -18,11 +21,17 @@ public class UseCaseTest {
     @Mock
     private DBRepository dbRepository;
 
+    /**
+     * Opsætning af tests. Initialiserer mocks og inject mocks i UseCase.
+     */
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
+    /**
+     * Test for at sikre korrekt kalorieudregning for en mandlig bruger med moderat aktivitetsniveau.
+     */
     @Test
     public void testCalculateCalories() {
         User user = new User();

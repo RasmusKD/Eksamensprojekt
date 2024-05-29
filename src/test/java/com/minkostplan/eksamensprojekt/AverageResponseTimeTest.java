@@ -5,8 +5,14 @@ import io.restassured.response.Response;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class GennemsnitsResponsTid {
+/**
+ * Testklasse for at måle gennemsnitlig responstid for et endpoint.
+ */
+public class AverageResponseTimeTest {
 
+    /**
+     * Test for at måle gennemsnitlig indlæsningstid for et endpoint.
+     */
     @Test
     public void testAverageLoadingTime() {
         // URL til dit endpoint, juster dette til din faktiske URL
