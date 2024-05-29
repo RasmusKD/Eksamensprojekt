@@ -9,6 +9,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * DatabaseSetup er ansvarlig for initial opsætning af databasen og dens tabeller.
+ */
 @Component
 public class DatabaseSetup {
 
@@ -23,6 +26,9 @@ public class DatabaseSetup {
     @Value("${spring.datasource.password}")
     private String password;
 
+    /**
+     * Metoden kører automatisk efter objektets initialisering og opsætter databasen og dens tabeller.
+     */
     @PostConstruct
     public void setupDatabase() {
         try (Connection connection = DriverManager.getConnection(jdbcUrl, username, password)) {
