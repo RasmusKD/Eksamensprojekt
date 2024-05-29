@@ -15,73 +15,105 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Serviceklasse, der håndterer forretningslogik og interaktion med DBRepository.
+ */
 @Service
 public class UseCase {
 
-    // Injicerer Stripe success URL fra applikationsindstillingerne
     @Value("${stripe.success.url}")
     private String successUrl;
 
-    // Injicerer Stripe cancel URL fra applikationsindstillingerne
     @Value("${stripe.cancel.url}")
     private String cancelUrl;
 
-    // Reference til database repository
     private final DBRepository dBRepository;
     private User currentUser;
 
-    // Konstruktor til dependency injection af repository
     @Autowired
     public UseCase(DBRepository dBRepository) {
         this.dBRepository = dBRepository;
     }
 
-    // Henter alle opskrifter fra databasen
+    /**
+     * Henter alle opskrifter fra databasen.
+     *
+     * @return en liste over alle opskrifter.
+     */
     public List<Recipe> getAllRecipes() {
         return dBRepository.getAllRecipes();
     }
 
-    // Henter en specifik opskrift ved dens ID
+    /**
+     * Henter en specifik opskrift med dens ID.
+     *
+     * @param id opskriftens ID.
+     * @return den fundne opskrift.
+     */
     public Recipe getRecipeById(int id) {
         return dBRepository.getRecipeById(id);
     }
 
-    // Henter opskrifter baseret på dag
+    /**
+     * Henter opskrifter baseret på dag.
+     *
+     * @param day dagen, hvor opskrifterne skal hentes til.
+     * @return en liste over opskrifter for den angivne dag.
+     */
     public List<Recipe> getRecipesByDay(String day) {
         return dBRepository.getRecipesByDay(day);
     }
 
-    // Sætter eller vælger den aktuelle bruger
+    /**
+     * Sætter den aktuelle bruger.
+     *
+     * @param user den bruger, der skal sættes som den aktuelle bruger.
+     */
     public void setCurrentUser(User user) {
         this.currentUser = user;
     }
 
-    // Opretter en ny bruger i databasen
+    /**
+     * Opretter en ny bruger i databasen.
+     *
+     * @param user den bruger, der skal oprettes.
+     */
     public void createUser(User user) {
         dBRepository.createUser(user);
     }
 
-    // Opdaterer en eksisterende bruger i databasen
+    /**
+     * Opdaterer en eksisterende bruger i databasen.
+     *
+     * @param user den bruger, der skal opdateres.
+     */
     public void updateUser(User user) {
         dBRepository.updateUser(user);
     }
 
-    // Henter en bruger ved deres ID
+    /**
+     * Henter en bruger med deres ID.
+     *
+     * @param userId brugerens ID.
+     * @return den fundne bruger.
+     */
     public User getUserById(int userId) {
         return dBRepository.getUserById(userId);
     }
 
-    // Kontrollerer om en bruger er logget ind
-    public boolean isUserLoggedIn() {
-        return this.currentUser != null;
-    }
-
-    // Opdaterer ansættelsesstatus for en bruger baseret på deres email
+    /**
+     * Opdaterer ansættelsesstatus for en bruger baseret på deres email.
+     *
+     * @param email brugerens email.
+     * @param employmentStatus den nye ansættelsesstatus.
+     */
     public void updateEmploymentStatus(String email, int employmentStatus) {
         dBRepository.updateEmploymentStatus(email, employmentStatus);
     }
 
-    // Sletter den aktuelt loggede bruger
+    /**
+     * Sletter den aktuelle bruger.
+     */
     public void deleteUser() {
         if (currentUser != null) {
             if (dBRepository.deleteUser(currentUser.getUserId())) {
@@ -95,38 +127,61 @@ public class UseCase {
         }
     }
 
-    // Opretter en ny ingrediens i databasen
+    /**
+     * Opretter en ny ingrediens i databasen.
+     *
+     * @param ingredient den ingrediens, der skal oprettes.
+     */
     public void createIngredients(Ingredient ingredient) {
         dBRepository.createIngredients(ingredient);
         System.out.println("New ingredient created successfully!");
     }
 
-    // Henter alle ingredienser fra databasen
+    /**
+     * Henter alle ingredienser fra databasen.
+     *
+     * @return en liste over alle ingredienser.
+     */
     public List<Ingredient> getAllIngredients() {
         return dBRepository.getAllIngredients();
     }
 
-    // Henter en specifik ingrediens ved dens ID
+    /**
+     * Henter en specifik ingrediens med dens ID.
+     *
+     * @param ingredientId ingrediensens ID.
+     * @return den fundne ingrediens.
+     */
     public Ingredient getIngredientById(int ingredientId) {
         return dBRepository.getIngredientById(ingredientId);
     }
 
-    // Opretter en ny opskrift med tilhørende ingredienser og mængder
+    /**
+     * Opretter en ny opskrift med tilhørende ingredienser og mængder.
+     *
+     * @param recipe         opskriften, der skal oprettes.
+     * @param ingredientIds  liste over ingrediens IDs.
+     * @param quantities     liste over mængde af hver ingrediens.
+     */
     public void createRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
         dBRepository.createRecipeWithIngredients(recipe, ingredientIds, quantities);
     }
 
-    // Henter den aktuelt loggede bruger
-    public User getCurrentUser() {
-        return currentUser;
-    }
-
-    // Opretter et nyt abonnement i databasen
+    /**
+     * Opretter et nyt abonnement i databasen.
+     *
+     * @param subscription det abonnement, der skal oprettes.
+     */
     public void createSubscription(Subscription subscription) {
         dBRepository.createSubscription(subscription);
     }
 
-    // Opdaterer abonnementsstatus for en bruger baseret på deres ID
+    /**
+     * Opdaterer abonnementsstatus for en bruger baseret på deres ID.
+     *
+     * @param userId          brugerens ID.
+     * @param subscriberStatus den nye abonnementsstatus.
+     */
     public void updateUserSubscriptionStatus(int userId, boolean subscriberStatus) {
         dBRepository.updateUserSubscriptionStatus(userId, subscriberStatus);
 
@@ -136,33 +191,41 @@ public class UseCase {
         }
     }
 
+    /**
+     * Genautentificerer den aktuelle bruger efter opdatering af deres abonnementsstatus.
+     */
     private void reauthenticateCurrentUser() {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 currentUser, currentUser.getPassword(), currentUser.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
-
-    // Opdaterer status for et abonnement baseret på dets ID
+    
+    /**
+     * Opdaterer status for et abonnement baseret på dets ID.
+     *
+     * @param subscriptionId abonnements ID.
+     * @param status         den nye status for abonnementet.
+     */
     public void updateSubscriptionStatus(String subscriptionId, String status) {
         dBRepository.updateSubscriptionStatus(subscriptionId, status);
     }
 
-    // Henter en bruger ved deres email
+    /**
+     * Henter en bruger med deres email.
+     *
+     * @param email brugerens email.
+     * @return den fundne bruger.
+     */
     public User getUserByEmail(String email) {
         return dBRepository.findByEmail(email);
     }
 
-    // Henter Stripe success URL
-    public String getSuccessUrl() {
-        return successUrl;
-    }
-
-    // Henter Stripe cancel URL
-    public String getCancelUrl() {
-        return cancelUrl;
-    }
-
-    // Beregner det daglige kaloriebehov for en bruger
+    /**
+     * Beregner det daglige kaloriebehov for en bruger.
+     *
+     * @param user den bruger kalorierne skal beregnes for.
+     * @return det daglige kaloriebehov.
+     */
     public double calculateCalories(User user) {
         double bmr;
         if (user.getGender() == 'M') {
@@ -190,7 +253,13 @@ public class UseCase {
         return totalCalories;
     }
 
-    // Henter kalorier for et specifikt måltid
+    /**
+     * Henter kalorier for et specifikt måltid.
+     *
+     * @param totalCalories brugerens samlede kaloriebehov.
+     * @param mealTime      måltidstidspunktet.
+     * @return kalorierne for det specifikke måltid.
+     */
     public double getCaloriesForMeal(double totalCalories, String mealTime) {
         return switch (mealTime) {
             case "Breakfast" -> totalCalories * 0.4;
@@ -199,7 +268,13 @@ public class UseCase {
         };
     }
 
-    // Justerer ingrediensmængder baseret på justerede kalorier
+    /**
+     * Justerer ingrediensmængder baseret på justerede kalorier.
+     *
+     * @param recipe           opskriften, der skal justeres.
+     * @param adjustedCalories de justerede kalorier.
+     * @return en liste over justerede ingredienser.
+     */
     public List<Ingredient> getAdjustedIngredients(Recipe recipe, double adjustedCalories) {
         List<Ingredient> adjustedIngredients = new ArrayList<>();
         double totalCalories = recipe.getTotalCalories();
@@ -218,17 +293,13 @@ public class UseCase {
         return adjustedIngredients;
     }
 
-    // Henter en opskrift ved dens ID med justerede kalorier baseret på brugerens behov
-    public Recipe getRecipeByIdWithAdjustedCalories(int id, User user) {
-        Recipe recipe = dBRepository.getRecipeById(id);
-        double userCaloricNeeds = calculateCalories(user);
-        double adjustedCalories = getCaloriesForMeal(userCaloricNeeds, recipe.getMealTime());
-        recipe.setAdjustedCalories((int) adjustedCalories);
-        recipe.setIngredients(getAdjustedIngredients(recipe, adjustedCalories));
-        return recipe;
-    }
-
-    // Henter opskrifter baseret på dag med justerede kalorier baseret på brugerens behov
+    /**
+     * Henter opskrifter baseret på dag med justerede kalorier baseret på brugerens behov.
+     *
+     * @param day  dagen, hvor opskrifterne skal hentes for.
+     * @param user den bruger, hvis behov skal tages i betragtning.
+     * @return en liste over justerede opskrifter.
+     */
     public List<Recipe> getRecipesByDayWithAdjustedCalories(String day, User user) {
         List<Recipe> recipes = getRecipesByDay(day);
         double totalCalories = calculateCalories(user);
@@ -241,33 +312,72 @@ public class UseCase {
         return recipes;
     }
 
-    // Beregner justerede kalorier for et måltid baseret på brugerens kaloribehov og måltidstidspunkt
+    /**
+     * Beregner justerede kalorier for et måltid baseret på brugerens kaloriebehov og måltidstidspunkt.
+     *
+     * @param userCaloricNeeds brugerens samlede kaloriebehov.
+     * @param mealTime         måltidstidspunktet.
+     * @return de justerede kalorier for måltidet.
+     */
     public double calculateAdjustedCalories(double userCaloricNeeds, String mealTime) {
         return getCaloriesForMeal(userCaloricNeeds, mealTime);
     }
 
-    // Henter et abonnement ved bruger ID
+    /**
+     * Henter et abonnement med bruger ID.
+     *
+     * @param userId brugerens ID.
+     * @return det fundne abonnement.
+     */
     public Subscription getLatestSubscriptionByUserId(int userId) {
         return dBRepository.getLatestSubscriptionByUserId(userId);
     }
 
-    // Sletter inaktive abonnementer for en bruger baseret på deres ID
+    /**
+     * Sletter inaktive abonnementer for en bruger baseret på deres ID.
+     *
+     * @param userId brugerens ID.
+     */
     public void deleteInactiveSubscriptionsByUserId(int userId) {
         dBRepository.deleteInactiveSubscriptionsByUserId(userId);
     }
 
+    /**
+     * Opdaterer en opskrift med tilhørende ingredienser og mængder.
+     *
+     * @param recipe         opskriften, der skal opdateres.
+     * @param ingredientIds  liste over ingrediens IDs.
+     * @param quantities     liste over mængder for hver ingrediens.
+     */
     public void updateRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
         dBRepository.updateRecipeWithIngredients(recipe, ingredientIds, quantities);
     }
 
+    /**
+     * Sletter en opskrift med dens ID.
+     *
+     * @param id opskriftens ID.
+     * @return true hvis opskriften blev slettet, ellers false.
+     */
     public boolean deleteRecipeById(int id) {
         return dBRepository.deleteRecipeById(id);
     }
 
+    /**
+     * Opdaterer en ingrediens i databasen.
+     *
+     * @param ingredient den ingrediens, der skal opdateres.
+     */
     public void updateIngredient(Ingredient ingredient) {
         dBRepository.updateIngredient(ingredient);
     }
 
+    /**
+     * Sletter en ingrediens med dens ID.
+     *
+     * @param id ingrediensens ID.
+     * @return true hvis ingrediensen blev slettet, ellers false.
+     */
     public boolean deleteIngredientById(int id) {
         return dBRepository.deleteIngredientById(id);
     }

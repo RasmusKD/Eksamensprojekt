@@ -148,7 +148,7 @@ public class StripeController {
                         stripeSubscription.update(updateParams);
 
                         // Extend end date by 7 days
-                        Subscription subscription = useCase.getSubscriptionByUserId(userId);
+                        Subscription subscription = useCase.getLatestSubscriptionByUserId(userId);
                         subscription.setEndDate(java.sql.Date.valueOf(LocalDate.now().plusDays(7)));
                         useCase.createSubscription(subscription);
 
