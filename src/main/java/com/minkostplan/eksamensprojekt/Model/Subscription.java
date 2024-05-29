@@ -2,18 +2,34 @@ package com.minkostplan.eksamensprojekt.Model;
 
 import java.util.Date;
 
+/**
+ * Repræsenterer et abonnement i systemet.
+ */
 public class Subscription {
-    private String  subscriptionId;
+
+    private String subscriptionId;
     private int userId;
     private Date startDate;
     private Date endDate;
     private double price;
     private String status;
 
-
+    /**
+     * Standardkonstruktør.
+     */
     public Subscription() {
     }
 
+    /**
+     * Konstruktør med parametre til at initialisere alle felter.
+     *
+     * @param subscriptionId abonnements-ID
+     * @param userId         brugerens ID
+     * @param startDate      startdato for abonnementet
+     * @param endDate        slutdato for abonnementet
+     * @param price          pris for abonnementet
+     * @param status         status for abonnementet
+     */
     public Subscription(String subscriptionId, int userId, Date startDate, Date endDate, double price, String status) {
         this.subscriptionId = subscriptionId;
         this.userId = userId;
@@ -22,6 +38,8 @@ public class Subscription {
         this.price = price;
         this.status = status;
     }
+
+    // Getters og setters for alle felter
 
     public String getSubscriptionId() {
         return subscriptionId;
@@ -74,7 +92,7 @@ public class Subscription {
     @Override
     public String toString() {
         return "Subscription{" +
-                "subscriptionId=" + subscriptionId +
+                "subscriptionId='" + subscriptionId + '\'' +
                 ", userId=" + userId +
                 ", startDate=" + startDate +
                 ", endDate=" + endDate +

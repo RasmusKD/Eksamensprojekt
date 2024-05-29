@@ -3,6 +3,9 @@ package com.minkostplan.eksamensprojekt.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repræsenterer en opskrift i systemet.
+ */
 public class Recipe {
 
     private int recipeId;
@@ -11,18 +14,38 @@ public class Recipe {
     private String method;
     private String cookingTime;
     private String imageUrl;
-    private String mealTime; // Added mealTime
-    private int totalCalories; // Added totalCalories
-    private int totalProtein; // Added totalProtein
-    private int totalFat; // Added totalFat
-    private int totalCarbohydrates; // Added totalCarbohydrates
-    private String day; // Added day
+    private String mealTime;
+    private int totalCalories;
+    private int totalProtein;
+    private int totalFat;
+    private int totalCarbohydrates;
+    private String day;
     private int adjustedCalories;
     private List<Ingredient> ingredients = new ArrayList<>();
 
+    /**
+     * Standardkonstruktør.
+     */
     public Recipe() {
     }
 
+    /**
+     * Konstruktør med parametre til at initialisere alle felter.
+     *
+     * @param recipeId          opskriftens ID
+     * @param title             opskriftens titel
+     * @param description       beskrivelse af opskriften
+     * @param ingredients       liste over ingredienser i opskriften
+     * @param method            fremgangsmåden for opskriften
+     * @param cookingTime       tilberedningstid for opskriften
+     * @param imageUrl          URL til billede af opskriften
+     * @param mealTime          måltidstid (f.eks. morgenmad, frokost, aftensmad)
+     * @param totalCalories     totale kalorier i opskriften
+     * @param totalProtein      totale proteiner i opskriften
+     * @param totalFat          totale fedt i opskriften
+     * @param totalCarbohydrates totale kulhydrater i opskriften
+     * @param day               dag hvor opskriften anbefales
+     */
     public Recipe(int recipeId, String title, String description, List<Ingredient> ingredients, String method, String cookingTime, String imageUrl, String mealTime, int totalCalories, int totalProtein, int totalFat, int totalCarbohydrates, String day) {
         this.recipeId = recipeId;
         this.title = title;
@@ -38,23 +61,9 @@ public class Recipe {
         this.totalCarbohydrates = totalCarbohydrates;
         this.day = day;
     }
-    public List<Ingredient> getIngredients() {
-        return ingredients;
-    }
 
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
-    public int getAdjustedCalories() {
-        return adjustedCalories;
-    }
-    public int getCalories() {
-        return this.totalCalories; // Assuming totalCalories represents the calories of the recipe
-    }
+    // Getters og setters for alle felter
 
-    public void setAdjustedCalories(int adjustedCalories) {
-        this.adjustedCalories = adjustedCalories;
-    }
     public int getRecipeId() {
         return recipeId;
     }
@@ -79,7 +88,13 @@ public class Recipe {
         this.description = description;
     }
 
+    public List<Ingredient> getIngredients() {
+        return ingredients;
+    }
 
+    public void setIngredients(List<Ingredient> ingredients) {
+        this.ingredients = ingredients;
+    }
 
     public String getMethod() {
         return method;
@@ -151,6 +166,18 @@ public class Recipe {
 
     public void setDay(String day) {
         this.day = day;
+    }
+
+    public int getAdjustedCalories() {
+        return adjustedCalories;
+    }
+
+    public void setAdjustedCalories(int adjustedCalories) {
+        this.adjustedCalories = adjustedCalories;
+    }
+
+    public int getCalories() {
+        return this.totalCalories;
     }
 
     @Override
