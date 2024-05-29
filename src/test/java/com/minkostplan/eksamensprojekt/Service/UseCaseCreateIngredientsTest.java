@@ -9,6 +9,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.*;
 
+/**
+ * Testklasse for oprettelse af ingredienser i UseCase-klassen.
+ */
 public class UseCaseCreateIngredientsTest {
 
     @InjectMocks
@@ -17,11 +20,17 @@ public class UseCaseCreateIngredientsTest {
     @Mock
     private DBRepository dbRepository;
 
+    /**
+     * Opsætning af tests. Initialiserer mocks og inject mocks i UseCase.
+     */
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
 
+    /**
+     * Test for at sikre, at en ingrediens kan oprettes korrekt i databasen.
+     */
     @Test
     public void testCreateIngredients() {
         Ingredient ingredient = new Ingredient();
@@ -46,6 +55,7 @@ public class UseCaseCreateIngredientsTest {
         ));
     }
 }
+
 
 /* 1: MockitoAnnotations.initMocks(this) initialiserer mocks
    2: Opretter en Ingredient-instans med testdata.
