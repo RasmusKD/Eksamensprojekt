@@ -330,6 +330,7 @@ public class UseCase {
      *
      * @param userId brugerens ID.
      */
+    @Deprecated
     public void deleteInactiveSubscriptionsByUserId(int userId) {
         dBRepository.deleteInactiveSubscriptionsByUserId(userId);
     }
