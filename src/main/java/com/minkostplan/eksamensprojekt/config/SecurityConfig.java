@@ -9,10 +9,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
+/**
+ * Konfigurationsklasse for sikkerhedsindstillinger ved hjælp af Spring Security.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    /**
+     * Konfigurerer sikkerhedsfilterkæden.
+     *
+     * @param http HttpSecurity-objekt til konfiguration af sikkerhedsindstillinger.
+     * @return Et konfigureret SecurityFilterChain-objekt.
+     * @throws Exception Hvis der opstår en fejl under konfigurationen.
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
@@ -20,7 +30,7 @@ public class SecurityConfig {
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico").permitAll()
                         .requestMatchers("/",  "/login", "/register", "/omOs").permitAll()
                         .requestMatchers("/dashboard", "/success", "/cancel").authenticated()
-                        .requestMatchers("/weekly-recipes", "/recipe").hasAnyRole("SUBSCRIBER","EMPLOYEE", "ADMIN")
+                        .requestMatchers("/weekly-recipes", "/recipe").hasAnyRole("SUBSCRIBER", "EMPLOYEE", "ADMIN")
                         .requestMatchers("/recipe-creation", "/edit-recipe", "/recipe-success", "/add-ingredients", "/edit-ingredients").hasAnyRole("EMPLOYEE", "ADMIN")
                         .requestMatchers("/opret-medarbejder").hasRole("ADMIN")
                         .anyRequest().authenticated()
@@ -47,6 +57,11 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Konfigurerer password encoder ved hjælp af BCrypt.
+     *
+     * @return Et konfigureret PasswordEncoder-objekt.
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
