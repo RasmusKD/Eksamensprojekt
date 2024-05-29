@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+/**
+ * Controller-klasse til håndtering af brugerregistrering.
+ */
 @Controller
 public class RegisterController {
 
@@ -21,6 +24,12 @@ public class RegisterController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * Viser registreringsformularen.
+     *
+     * @param model Model-objekt til at tilføje attributter.
+     * @return Navnet på viewet "register".
+     */
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -32,9 +41,14 @@ public class RegisterController {
         return "register";
     }
 
+    /**
+     * Håndterer brugerregistrering.
+     *
+     * @param user Brugerobjektet, der skal registreres.
+     * @return Redirect til login-siden.
+     */
     @PostMapping("/register")
     public String handleRegistration(@ModelAttribute User user) {
-        // Hash the password before saving the user
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         useCase.createUser(user);
         return "redirect:/login";

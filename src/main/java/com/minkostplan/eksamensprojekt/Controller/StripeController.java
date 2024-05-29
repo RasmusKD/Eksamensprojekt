@@ -17,6 +17,9 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Controller-klasse til håndtering af Stripe-betalinger og abonnementer.
+ */
 @RestController
 @RequestMapping("/stripe")
 public class StripeController {
@@ -24,13 +27,19 @@ public class StripeController {
     @Autowired
     private UseCase useCase;
 
+    /**
+     * Opretter en Stripe Checkout Session.
+     *
+     * @param payload Payload med pris-ID og bruger-ID.
+     * @return Map med session ID eller fejlbesked.
+     */
     @PostMapping("/create-checkout-session")
     public Map<String, String> createCheckoutSession(@RequestBody Map<String, Object> payload) {
         Map<String, String> response = new HashMap<>();
         try {
             String priceId = (String) payload.get("priceId");
-            String userIdStr = (String) payload.get("userId"); // User ID received as String
-            int userId = Integer.parseInt(userIdStr); // Convert String to Integer
+            String userIdStr = (String) payload.get("userId");
+            int userId = Integer.parseInt(userIdStr);
 
             String email = useCase.getUserById(userId).getEmail();
 
@@ -38,7 +47,7 @@ public class StripeController {
                     .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
                     .setSuccessUrl("http://localhost:8080/stripe/payment-success?session_id={CHECKOUT_SESSION_ID}")
                     .setCancelUrl("http://localhost:8080/payment-cancel")
-                    .setClientReferenceId(userIdStr) // Set client_reference_id
+                    .setClientReferenceId(userIdStr)
                     .addLineItem(
                             SessionCreateParams.LineItem.builder()
                                     .setPrice(priceId)
@@ -59,7 +68,12 @@ public class StripeController {
         return response;
     }
 
-
+    /**
+     * Håndterer betalingens succes.
+     *
+     * @param sessionId Stripe session ID.
+     * @return ModelAndView med succesmeddelelse.
+     */
     @GetMapping("/payment-success")
     public ModelAndView handlePaymentSuccess(@RequestParam("session_id") String sessionId) {
         ModelAndView modelAndView = new ModelAndView("payment-success");
@@ -72,14 +86,13 @@ public class StripeController {
                 Subscription subscription = new Subscription();
                 subscription.setUserId(userId);
                 subscription.setStartDate(java.sql.Date.valueOf(LocalDate.now()));
-                subscription.setEndDate(java.sql.Date.valueOf(LocalDate.now().plusDays(7))); // Set end date to 7 days from now
+                subscription.setEndDate(java.sql.Date.valueOf(LocalDate.now().plusDays(7)));
                 subscription.setPrice(49);
                 subscription.setStatus("active");
-                subscription.setSubscriptionId(subscriptionId); // Store the Stripe subscription ID
+                subscription.setSubscriptionId(subscriptionId);
 
                 useCase.createSubscription(subscription);
 
-                // Update the user's subscription status and subscription ID
                 useCase.updateUserSubscriptionStatus(userId, true);
 
                 modelAndView.addObject("message", "Betaling gennemført! Tak for din betaling. Dit abonnement er nu aktivt.");
@@ -93,12 +106,18 @@ public class StripeController {
         return modelAndView;
     }
 
+    /**
+     * Annullerer et abonnement.
+     *
+     * @param payload Payload med abonnement-ID.
+     * @return Map med status eller fejlbesked.
+     */
     @PostMapping("/cancel-subscription")
     public Map<String, String> cancelSubscription(@RequestBody Map<String, Object> payload) {
         Map<String, String> response = new HashMap<>();
         try {
             String subscriptionId = (String) payload.get("subscriptionId");
-            System.out.println("Received subscriptionId: " + subscriptionId); // Add this line for debugging
+            System.out.println("Received subscriptionId: " + subscriptionId);
             com.stripe.model.Subscription subscription = com.stripe.model.Subscription.retrieve(subscriptionId);
 
             if (subscription == null) {
@@ -112,7 +131,6 @@ public class StripeController {
 
             subscription.update(params);
 
-            // Update the subscription status to inactive in your database
             useCase.updateSubscriptionStatus(subscriptionId, "inactive");
 
             response.put("status", "subscription_cancelled");
@@ -124,11 +142,14 @@ public class StripeController {
         return response;
     }
 
-    @Scheduled(cron = "0 0 0 * * ?") // Runs every day at midnight
+    /**
+     * Opdaterer abonnementsstatus dagligt.
+     */
+    @Scheduled(cron = "0 0 0 * * ?")
     public void updateSubscriptionStatus() {
         try {
             com.stripe.param.SubscriptionListParams params = com.stripe.param.SubscriptionListParams.builder()
-                    .setLimit(100L) // Cast the limit to Long
+                    .setLimit(100L)
                     .build();
 
             SubscriptionCollection subscriptions = com.stripe.model.Subscription.list(params);
@@ -141,18 +162,15 @@ public class StripeController {
                     if (stripeSubscription.getCancelAtPeriodEnd() && stripeSubscription.getCurrentPeriodEnd() <= Instant.now().getEpochSecond()) {
                         useCase.updateUserSubscriptionStatus(userId, false);
                     } else if (stripeSubscription.getCurrentPeriodEnd() <= Instant.now().getEpochSecond()) {
-                        // Renew subscription
                         SubscriptionUpdateParams updateParams = SubscriptionUpdateParams.builder()
                                 .setCancelAtPeriodEnd(false)
                                 .build();
                         stripeSubscription.update(updateParams);
 
-                        // Extend end date by 7 days
                         Subscription subscription = useCase.getLatestSubscriptionByUserId(userId);
                         subscription.setEndDate(java.sql.Date.valueOf(LocalDate.now().plusDays(7)));
                         useCase.createSubscription(subscription);
 
-                        // Update the user's subscription status
                         useCase.updateUserSubscriptionStatus(userId, true);
                     }
                 } else {
@@ -163,5 +181,4 @@ public class StripeController {
             e.printStackTrace();
         }
     }
-
 }

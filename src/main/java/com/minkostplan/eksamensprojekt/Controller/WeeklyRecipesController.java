@@ -17,6 +17,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Controller-klasse til håndtering af forespørgsler relateret til ugentlige opskrifter.
+ */
 @Controller
 public class WeeklyRecipesController {
 
@@ -28,14 +31,19 @@ public class WeeklyRecipesController {
         this.useCase = useCase;
     }
 
+    /**
+     * Henter opskrifter for en given dag i ugen.
+     *
+     * @param model     Model-objekt til at tilføje attributter.
+     * @param dayOffset Offset for dagen i ugen.
+     * @return Navnet på viewet "weekly-recipes".
+     */
     @GetMapping("/weekly-recipes")
     public String getWeeklyRecipes(Model model, @RequestParam(value = "day", required = false) Integer dayOffset) {
         if (dayOffset == null) {
-            // Default to current day of the week
             dayOffset = LocalDate.now().getDayOfWeek().getValue() - DayOfWeek.MONDAY.getValue();
         }
 
-        // Wrap-around logic for dayOffset
         if (dayOffset < 0) {
             dayOffset = 6;
         } else if (dayOffset > 6) {
@@ -70,8 +78,8 @@ public class WeeklyRecipesController {
         model.addAttribute("nextDayOffset", dayOffset + 1);
 
         model.addAttribute("dayOffset", dayOffset);
-        model.addAttribute("weekNumber", weekNumber); // Add week number to model
-        model.addAttribute("page", "weekly-recipes"); // Indicate the current page
+        model.addAttribute("weekNumber", weekNumber);
+        model.addAttribute("page", "weekly-recipes");
 
         return "weekly-recipes";
     }
