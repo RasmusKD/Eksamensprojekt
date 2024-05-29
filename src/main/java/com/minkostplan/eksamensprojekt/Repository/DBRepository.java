@@ -540,9 +540,7 @@ public class DBRepository {
         return recipe;
     }
 
-
-
-    public Subscription getSubscriptionByUserId(int userId) {
+    public Subscription getLatestSubscriptionByUserId(int userId) {
         Subscription subscription = null;
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -550,7 +548,7 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "SELECT * FROM Subscription WHERE userId = ?";
+            String sql = "SELECT * FROM Subscription WHERE userId = ? ORDER BY endDate DESC LIMIT 1";
             pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1, userId);
             rs = pstmt.executeQuery();
@@ -572,6 +570,7 @@ public class DBRepository {
         return subscription;
     }
 
+    @Deprecated
     public void deleteInactiveSubscriptionsByUserId(int userId) {
         Connection conn = null;
         PreparedStatement pstmt = null;
