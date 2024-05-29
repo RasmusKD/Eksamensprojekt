@@ -14,6 +14,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Repository klasse, der håndterer databaseoperationer for applikationen.
+ */
 @Repository
 public class DBRepository {
 
@@ -28,10 +31,23 @@ public class DBRepository {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Henter en forbindelse til databasen.
+     *
+     * @return en {@link Connection} til databasen.
+     * @throws SQLException hvis der opstår en SQL-fejl under hentning af forbindelsen.
+     */
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
 
+    /**
+     * Lukker ressourcerne til databaseforbindelse, PreparedStatement og ResultSet.
+     *
+     * @param conn   {@link Connection} til databasen.
+     * @param pstmt  {@link PreparedStatement} der skal lukkes.
+     * @param rs     {@link ResultSet} der skal lukkes.
+     */
     public void closeResources(Connection conn, PreparedStatement pstmt, ResultSet rs) {
         try {
             if (rs != null) {
@@ -49,10 +65,22 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Lukker ressourcerne til databaseforbindelse og PreparedStatement.
+     *
+     * @param conn  {@link Connection} til databasen.
+     * @param pstmt {@link PreparedStatement} der skal lukkes.
+     */
     public void closeResources(Connection conn, PreparedStatement pstmt) {
         closeResources(conn, pstmt, null);
     }
 
+    /**
+     * Henter en liste af opskrifter baseret på dag.
+     *
+     * @param day dagen opskrifterne skal hentes for.
+     * @return en liste af {@link Recipe} objekter.
+     */
     public List<Recipe> getRecipesByDay(String day) {
         List<Recipe> recipes = new ArrayList<>();
         Connection conn = null;
@@ -89,6 +117,12 @@ public class DBRepository {
         return recipes;
     }
 
+    /**
+     * Opdaterer ansættelsesstatus for en bruger baseret på deres email.
+     *
+     * @param email            brugerens email.
+     * @param employmentStatus den nye ansættelsesstatus.
+     */
     public void updateEmploymentStatus(String email, int employmentStatus) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -107,6 +141,11 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Opretter en ny bruger i databasen.
+     *
+     * @param user brugeren der skal oprettes.
+     */
     public void createUser(User user) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -136,6 +175,12 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Finder en bruger baseret på deres email.
+     *
+     * @param email brugerens email.
+     * @return den fundne bruger eller null hvis ingen bruger blev fundet.
+     */
     public User findByEmail(String email) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -174,6 +219,11 @@ public class DBRepository {
         return user;
     }
 
+    /**
+     * Opdaterer en bruger i databasen.
+     *
+     * @param user den bruger der skal opdateres.
+     */
     public void updateUser(User user) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -202,6 +252,12 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Sletter en bruger fra databasen.
+     *
+     * @param userId brugerens ID.
+     * @return true hvis brugeren blev slettet, ellers false.
+     */
     public boolean deleteUser(int userId) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -222,6 +278,12 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Henter en bruger baseret på deres ID.
+     *
+     * @param userId brugerens ID.
+     * @return den fundne bruger eller null hvis ingen bruger blev fundet.
+     */
     public User getUserById(int userId) {
         User user = null;
         try (Connection conn = getConnection();
@@ -252,6 +314,11 @@ public class DBRepository {
         return user;
     }
 
+    /**
+     * Opretter en ingrediens i databasen.
+     *
+     * @param ingredient den ingrediens der skal oprettes.
+     */
     public void createIngredients(Ingredient ingredient) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -274,6 +341,12 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Henter en ingrediens baseret på dens ID.
+     *
+     * @param ingredientId ingrediensens ID.
+     * @return den fundne ingrediens eller null hvis ingen ingrediens blev fundet.
+     */
     public Ingredient getIngredientById(int ingredientId) {
         Ingredient ingredient = null;
         Connection conn = null;
@@ -303,6 +376,13 @@ public class DBRepository {
         return ingredient;
     }
 
+    /**
+     * Opretter en opskrift med tilhørende ingredienser i databasen.
+     *
+     * @param recipe         opskriften der skal oprettes.
+     * @param ingredientIds  liste over ingrediens IDs.
+     * @param quantities     liste over mængder af hver ingrediens.
+     */
     public void createRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -357,6 +437,11 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Henter alle ingredienser fra databasen.
+     *
+     * @return en liste over alle ingredienser.
+     */
     public List<Ingredient> getAllIngredients() {
         List<Ingredient> ingredientList = new ArrayList<>();
         Connection conn = null;
@@ -386,6 +471,11 @@ public class DBRepository {
         return ingredientList;
     }
 
+    /**
+     * Opretter et nyt abonnement i databasen.
+     *
+     * @param subscription det abonnement der skal oprettes.
+     */
     public void createSubscription(Subscription subscription) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -408,6 +498,12 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Opdaterer abonnementsstatus for en bruger baseret på deres ID.
+     *
+     * @param userId       brugerens ID.
+     * @param isSubscriber den nye abonnementsstatus.
+     */
     public void updateUserSubscriptionStatus(int userId, boolean isSubscriber) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -427,6 +523,12 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Opdaterer status for et abonnement baseret på dets ID.
+     *
+     * @param subscriptionId abonnementets ID.
+     * @param status         den nye status.
+     */
     public void updateSubscriptionStatus(String subscriptionId, String status) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -446,6 +548,11 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Henter alle opskrifter fra databasen.
+     *
+     * @return en liste over alle opskrifter.
+     */
     public List<Recipe> getAllRecipes() {
         List<Recipe> recipes = new ArrayList<>();
         Connection conn = null;
@@ -481,6 +588,12 @@ public class DBRepository {
         return recipes;
     }
 
+    /**
+     * Henter en opskrift baseret på dens ID.
+     *
+     * @param id opskriftens ID.
+     * @return den fundne opskrift eller null hvis ingen opskrift blev fundet.
+     */
     public Recipe getRecipeById(int id) {
         Recipe recipe = null;
         Connection conn = null;
@@ -508,10 +621,10 @@ public class DBRepository {
                 recipe.setTotalCarbohydrates(rs.getInt("total_carbohydrates"));
                 recipe.setDay(rs.getString("day"));
 
-                // Initialize ingredients list
+                // Initialiser ingredienslisten
                 recipe.setIngredients(new ArrayList<>());
 
-                // Retrieve and add ingredients to the recipe
+                // Hent og tilføj ingredienser til opskriften
                 String ingredientSql = "SELECT i.*, ri.quantity FROM Ingredient i " +
                         "JOIN Recipe_Ingredients ri ON i.ingredientId = ri.ingredient_id " +
                         "WHERE ri.recipe_id = ?";
@@ -540,6 +653,12 @@ public class DBRepository {
         return recipe;
     }
 
+    /**
+     * Henter det seneste abonnement baseret på brugerens ID.
+     *
+     * @param userId brugerens ID.
+     * @return det seneste abonnement eller null hvis ingen abonnement blev fundet.
+     */
     public Subscription getLatestSubscriptionByUserId(int userId) {
         Subscription subscription = null;
         Connection conn = null;
@@ -570,6 +689,11 @@ public class DBRepository {
         return subscription;
     }
 
+    /**
+     * Sletter inaktive abonnementer baseret på brugerens ID.
+     *
+     * @param userId brugerens ID.
+     */
     @Deprecated
     public void deleteInactiveSubscriptionsByUserId(int userId) {
         Connection conn = null;
@@ -588,6 +712,13 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Opdaterer en opskrift og dens ingredienser i databasen.
+     *
+     * @param recipe        opskriften der skal opdateres.
+     * @param ingredientIds liste over ingrediens IDs.
+     * @param quantities    liste over mængder for hver ingrediens.
+     */
     public void updateRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -642,6 +773,12 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Sletter en opskrift baseret på dens ID.
+     *
+     * @param id opskriftens ID.
+     * @return true hvis opskriften blev slettet, ellers false.
+     */
     public boolean deleteRecipeById(int id) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -650,14 +787,14 @@ public class DBRepository {
             conn = getConnection();
             conn.setAutoCommit(false);
 
-            // First, delete from Recipe_Ingredients
+            // Først, slet fra Recipe_Ingredients
             String deleteRecipeIngredientsSql = "DELETE FROM Recipe_Ingredients WHERE recipe_id = ?";
             pstmt = conn.prepareStatement(deleteRecipeIngredientsSql);
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
             pstmt.close();
 
-            // Then, delete from Recipe
+            // Derefter, slet fra Recipe
             String deleteRecipeSql = "DELETE FROM Recipe WHERE recipeId = ?";
             pstmt = conn.prepareStatement(deleteRecipeSql);
             pstmt.setInt(1, id);
@@ -680,6 +817,11 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Opdaterer en ingrediens i databasen.
+     *
+     * @param ingredient den ingrediens der skal opdateres.
+     */
     public void updateIngredient(Ingredient ingredient) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -702,6 +844,12 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Sletter en ingrediens baseret på dens ID.
+     *
+     * @param id ingrediensens ID.
+     * @return true hvis ingrediensen blev slettet, ellers false.
+     */
     public boolean deleteIngredientById(int id) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -710,14 +858,14 @@ public class DBRepository {
             conn = getConnection();
             conn.setAutoCommit(false);
 
-            // First, delete from Recipe_Ingredients where this ingredient is used
+            // Først, slet fra Recipe_Ingredients hvor denne ingrediens bruges
             String deleteRecipeIngredientsSql = "DELETE FROM Recipe_Ingredients WHERE ingredient_id = ?";
             pstmt = conn.prepareStatement(deleteRecipeIngredientsSql);
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
             pstmt.close();
 
-            // Then, delete from Ingredient
+            // Derefter, slet fra Ingredient
             String deleteIngredientSql = "DELETE FROM Ingredient WHERE ingredientId = ?";
             pstmt = conn.prepareStatement(deleteIngredientSql);
             pstmt.setInt(1, id);
