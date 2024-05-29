@@ -57,7 +57,7 @@ public class StripeControllerTest {
             Subscription dbSubscription1 = new Subscription();
             dbSubscription1.setUserId(1);
             dbSubscription1.setEndDate(java.sql.Date.valueOf(LocalDate.now().plusDays(7)));
-            when(useCase.getSubscriptionByUserId(1)).thenReturn(dbSubscription1);
+            when(useCase.getLatestSubscriptionByUserId(1)).thenReturn(dbSubscription1);
 
             // Execute the method
             stripeController.updateSubscriptionStatus();
