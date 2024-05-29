@@ -21,7 +21,7 @@
                     <!-- User Info Display -->
                     <p><i class="material-icons">email</i> <strong>Email:</strong> <span th:text="${user.email}"></span></p>
                     <p><i class="material-icons">cake</i> <strong>Alder:</strong> <span th:text="${user.age}"></span></p>
-                    <p><i class="material-icons">wc</i> <strong>Køn:</strong> <span th:text="${user.gender == 'M' ? 'Mand' : 'Kvinde'}"></span></p>
+                    <p><i class="material-icons">wc</i> <strong>Køn:</strong> <span th:text="${user.gender} == 'M' ? 'Mand' : 'Kvinde'"></span></p>
                     <p><i class="material-icons">fitness_center</i> <strong>Vægt:</strong> <span th:text="${user.weight}"></span> kg</p>
                     <p><i class="material-icons">height</i> <strong>Højde:</strong> <span th:text="${user.height}"></span> cm</p>
                     <p><i class="material-icons">directions_run</i> <strong>Aktivitetsniveau:</strong> <span th:text="${activityLevelMap[user.activityLevel]}"></span></p>
@@ -37,8 +37,8 @@
                     <p><i class="material-icons">cake</i> <strong>Alder:</strong> <input type="number" name="age" th:value="${user.age}" required/></p>
                     <p><i class="material-icons">wc</i> <strong>Køn:</strong>
                         <select name="gender">
-                            <option value="M" th:selected="${user.gender == 'M'}">Mand</option>
-                            <option value="F" th:selected="${user.gender == 'F'}">Kvinde</option>
+                            <option value="M" th:selected="${user.gender} == 'M'">Mand</option>
+                            <option value="F" th:selected="${user.gender} == 'F'">Kvinde</option>
                         </select>
                     </p>
                     <p><i class="material-icons">fitness_center</i> <strong>Vægt:</strong>

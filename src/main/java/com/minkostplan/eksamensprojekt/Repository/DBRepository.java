@@ -28,11 +28,11 @@ public class DBRepository {
         this.passwordEncoder = passwordEncoder;
     }
 
-    private Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
 
-    private void closeResources(Connection conn, PreparedStatement pstmt, ResultSet rs) {
+    public void closeResources(Connection conn, PreparedStatement pstmt, ResultSet rs) {
         try {
             if (rs != null) {
                 rs.close();
@@ -47,6 +47,10 @@ public class DBRepository {
             System.out.println("Error closing the connection or statement.");
             e.printStackTrace();
         }
+    }
+
+    public void closeResources(Connection conn, PreparedStatement pstmt) {
+        closeResources(conn, pstmt, null);
     }
 
     public List<Recipe> getRecipesByDay(String day) {
@@ -101,10 +105,6 @@ public class DBRepository {
         } finally {
             closeResources(conn, pstmt);
         }
-    }
-
-    private void closeResources(Connection conn, PreparedStatement pstmt) {
-        closeResources(conn, pstmt, null);
     }
 
     public void createUser(User user) {

@@ -47,13 +47,5 @@
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 
-<script>
-    document.getElementById("add-ingredients-form").addEventListener("submit", function(event) {
-        event.preventDefault();
-        if (confirm("Ingrediens tilføjet")) {
-            this.submit();
-        }
-    });
-</script>
 </body>
 </html>

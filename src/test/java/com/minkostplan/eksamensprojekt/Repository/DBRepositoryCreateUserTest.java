@@ -12,7 +12,7 @@ import java.sql.SQLException;
 
 import static org.mockito.Mockito.*;
 
-/*public class DBRepositoryCreateUserTest {
+public class DBRepositoryCreateUserTest {
 
     private DBRepository dbRepository;
 
