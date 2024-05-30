@@ -1,10 +1,11 @@
 @font-face {
     font-family: 'Ubuntu';
-    src: url('/fonts/4iCs6KVjbNBYlgoKfw72.woff2') format('woff2');
+    src: url('../fonts/4iCs6KVjbNBYlgoKfw72.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
 }
 
+/* Generelle indstillinger for HTML-elementer */
 html {
     height: 100%;
     box-sizing: border-box;
@@ -14,6 +15,7 @@ html {
     box-sizing: inherit;
 }
 
+/* Grundlæggende styling for body-elementet */
 body {
     display: flex;
     flex-direction: column;
@@ -24,19 +26,22 @@ body {
     font-family: Ubuntu, sans-serif!important;
 }
 
-input, label {
+/* Font-styling for input, label og textarea */
+input, label, textarea {
     font-family: Ubuntu, sans-serif!important;
 }
 
+/* Fjern mulighed for at ændre størrelse på textarea */
 textarea {
-    font-family: Ubuntu, sans-serif!important;
     resize: none;
 }
 
+/* Specifik højde for store tekstområder  */
 textarea.large, .input-field.large {
     height: 100px;
 }
 
+/* Styling af navigationsbjælken */
 .top-bar {
     background-color: #fdfdfd;
     color: #3c3f40;
@@ -50,6 +55,7 @@ textarea.large, .input-field.large {
     z-index: 1;
 }
 
+/* Container til centrering af indhold på siden */
 .container {
     display: flex;
     justify-content: space-between;
@@ -58,15 +64,18 @@ textarea.large, .input-field.large {
     align-items: center;
 }
 
+/* Justering af overskrifter i top-baren */
 .top-bar h1 {
     margin: 0;
     font-size: 24px;
 }
 
+/* Classname for fed tekst */
 .bold {
     font-weight: bold;
 }
 
+/* Knappers farver og hover-effekter, bruges sammen med btn-primary for at ændre farven på knappen */
 .color-red {
     background-color: #e25c5c !important;
 }
@@ -84,6 +93,7 @@ textarea.large, .input-field.large {
     background-color: #4f99d5 !important;
 }
 
+/* Primære knapper med hover-effekter */
 .btn-primary {
     text-decoration: none;
     color: white;
@@ -104,11 +114,12 @@ textarea.large, .input-field.large {
     background-color: #4eb74e;
 }
 
+/* Styling af hero-sektionen */
 .hero {
     position: relative;
     background-color: #ebf5ed;
     color: #333;
-    padding: 50px 0px 0px 0px;
+    padding: 50px 0 0 0;
     text-align: center;
     overflow: hidden;
 }
@@ -139,6 +150,7 @@ textarea.large, .input-field.large {
     margin-bottom: 20px;
 }
 
+/* Bølgeeffekt container */
 .wave-container {
     width: 100%;
     overflow: hidden;
@@ -149,9 +161,10 @@ textarea.large, .input-field.large {
     position: relative;
     display: block;
     width: 100%;
-    height: 160px; /* Adjust the height for a taller wave */
+    height: 160px;
 }
 
+/* Funktionsafsnit styling */
 .features-section {
     display: flex;
     justify-content: space-around;
@@ -176,6 +189,7 @@ textarea.large, .input-field.large {
     margin: 20px 0 10px;
 }
 
+/* Testimonials sektion styling */
 .testimonials-section {
     background: #e9f3eb;
     text-align: center;
@@ -200,6 +214,7 @@ textarea.large, .input-field.large {
     transform: rotateX(180deg);
 }
 
+/* Store primære knapper med hover-effekter */
 .btn-primary-large {
     text-decoration: none;
     color: white;
@@ -212,7 +227,6 @@ textarea.large, .input-field.large {
     box-shadow: 0 0.25rem 0.5rem rgba(0,0,0,0.18)!important;
     cursor: pointer;
     transition: background-color 0.3s ease-in-out, transform 0.4s;
-
 }
 
 .btn-primary-large:hover {
@@ -220,6 +234,10 @@ textarea.large, .input-field.large {
     transform: translateY(-5px);
 }
 
+/*
+    Fjern transition på redigeringsknappen
+    bruges når vi ændrer en knap på dashboard under bruger redigering
+*/
 #edit-button {
     transition: none !important;
 }
@@ -228,6 +246,7 @@ textarea.large, .input-field.large {
     transition: background-color 0.3s ease-in-out !important;
 }
 
+/* Content styling */
 .content {
     flex: 1;
     display: flex;
@@ -244,6 +263,7 @@ textarea.large, .input-field.large {
     filter: drop-shadow(2px 2px 6px #363636);
 }
 
+/* Layout for content bokse */
 .content-box {
     display: flex;
     height: fit-content;
@@ -277,28 +297,18 @@ textarea.large, .input-field.large {
     width: 100%;
 }
 
-.text-box3 {
-    padding: 35px;
-    box-sizing: border-box;
-    background-color: white;
-    border-radius: .25rem;
-    height: fit-content;
-    box-shadow: 0 .125rem .25rem rgba(0,0,0,.09)!important;
-    width: 100%;
-    gap: 1em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    z-index: 1;
+/* Minimum bredde på text-box for at den forbliver samme bredde */
+.user-box {
     min-width: 465px;
 }
 
-.text-box3 form {
+.user-box form {
     display: flex;
     flex-direction: column;
     width: 100%;
 }
 
+/* Grid layout til registrerings formen */
 .form-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -306,6 +316,7 @@ textarea.large, .input-field.large {
     width: 100%;
 }
 
+/* Kolonneinddeling */
 .left-column, .right-column {
     display: flex;
     flex-direction: column;
@@ -318,6 +329,7 @@ textarea.large, .input-field.large {
     gap: 1em;
 }
 
+/* Radio knap grupper */
 .radio-group, .goal-options, .activity-options {
     display: flex;
     flex-direction: column;
@@ -360,16 +372,7 @@ textarea.large, .input-field.large {
     margin: 3px;
 }
 
-.text-box2 {
-    padding: 20px;
-    box-sizing: border-box;
-    border-radius: 10px;
-    height: fit-content;
-    gap: 1em;
-    display: flex;
-    flex-direction: column;
-}
-
+/* Footer styling */
 .footer {
     background-color: #ffffff;
     color: black;
@@ -382,6 +385,7 @@ textarea.large, .input-field.large {
     align-items: center;
 }
 
+/* Diverse tekststørrelser og farver */
 .headline {
     font-size: 2.5em;
     color: forestgreen;
@@ -407,11 +411,12 @@ textarea.large, .input-field.large {
 .center {
     justify-content: center;
 }
-
+/* Tilføj til element for at få det til at optage 100% bredde i en div */
 .w-100 {
     width: 100%;
 }
 
+/* Login side overskrift */
 .login-headline {
     background: #ededed;
     border: 1px solid #e0e0e0;
@@ -427,6 +432,7 @@ textarea.large, .input-field.large {
     width: 100%;
 }
 
+/* Ikoner og input-felter */
 .input-icon {
     position: relative;
     display: flex;
@@ -435,7 +441,7 @@ textarea.large, .input-field.large {
     border-radius: 0.5em;
     border-color: #78d578;
     border-style: solid;
-    padding: 0em 0.5em 0 0;
+    padding: 0 0.5em 0 0;
 }
 
 .input-icon .material-icons {
@@ -458,6 +464,7 @@ textarea.large, .input-field.large {
     left: -331px;
 }
 
+/* Styling for at logo ikke ligner et link */
 .logo-link {
     text-decoration: none;
     color: inherit;
@@ -469,16 +476,11 @@ textarea.large, .input-field.large {
     color: inherit;
 }
 
-.goal-activity-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2em;
-    width: 100%;
-}
-
 .goal-options, .activity-options {
     flex-direction: column;
 }
+
+/* Brugeroplysninger sektion */
 .user-info {
     display: flex;
     flex-direction: column;
@@ -497,12 +499,14 @@ textarea.large, .input-field.large {
     color: #89cdf0;
 }
 
+/* Info-linje styling */
 .info-line {
     font-size: 1.5em;
     text-align: center;
     line-height: 1.6;
 }
 
+/* Ryk dashboard content i midten af siden */
 .login-content {
     justify-content: center;
 }
@@ -512,6 +516,7 @@ textarea.large, .input-field.large {
     width: 33%;
 }
 
+/* Dagvisning container */
 .day-wrapper {
     display: flex;
     justify-content: center;
@@ -520,6 +525,7 @@ textarea.large, .input-field.large {
     overflow: hidden;
 }
 
+/* Dag container styling */
 .day-container {
     display: flex;
     flex-direction: column;
@@ -554,14 +560,14 @@ textarea.large, .input-field.large {
     font-size: 2em;
 }
 
+/* Ugentlige opskrifter sektion */
 .weekly-recipes-page .day-wrapper, .weekly-recipes-page .content {
     display: flex;
     justify-content: center;
-    padding: 0 2em;
     max-width: 1200px;
     margin: auto;
     gap: 1em;
-    padding-bottom: 2em;
+    padding: 0 2em 2em;
 }
 
 .weekly-recipes-page .meal-box {
@@ -598,7 +604,6 @@ textarea.large, .input-field.large {
     z-index: 10;
 }
 
-
 .meal-box img {
     width: 100%;
     height: 75%;
@@ -616,6 +621,7 @@ textarea.large, .input-field.large {
     padding: 0 10px 20px;
 }
 
+/* Navigation pile */
 .weekly-recipes-page .navigation {
     display: flex;
     align-items: center;
@@ -640,7 +646,7 @@ textarea.large, .input-field.large {
     opacity: 1;
 }
 
-
+/* Responsiv styling for mindre skærme */
 @media (max-width: 768px) {
     .meal-box {
         max-width: 100%;
@@ -656,6 +662,7 @@ textarea.large, .input-field.large {
     }
 }
 
+/* Ingrediens resultat styling */
 .ingredient-result {
     display: inline-block;
     padding: 10px;
@@ -675,6 +682,7 @@ textarea.large, .input-field.large {
     gap: 0.5em;
 }
 
+/* Udvalgte ingredienser styling */
 .selected-ingredient {
     display: flex;
     align-items: center;
@@ -709,12 +717,14 @@ textarea.large, .input-field.large {
     color: red;
 }
 
+/* Succes besked */
 .success-message {
     text-align: center;
     margin-top: 20px;
     color: green;
 }
 
+/* Specifik bredde for opskrift kort */
 .recipe-card-size {
     width: 800px;
 }
@@ -723,6 +733,7 @@ textarea.large, .input-field.large {
     max-width: 130px;
 }
 
+/* Paddings container */
 .padding-container {
     display: flex;
     flex-direction: column;
@@ -730,6 +741,8 @@ textarea.large, .input-field.large {
     gap: 0.5em;
     padding: 0 10px 10px 10px;
 }
+
+/* Confirmation box styling */
 .modal {
     display: none;
     position: fixed;
@@ -771,6 +784,7 @@ textarea.large, .input-field.large {
 .modal-content .close-button:hover {
     color: black;
 }
+
 .modal-content .button-container {
     display: flex;
     justify-content: space-between;
@@ -789,6 +803,8 @@ textarea.large, .input-field.large {
 .modal-content p {
     line-height: 1.5;
 }
+
+/* Opskrift indhold styling */
 .recipe-content {
     display: flex;
     flex-direction: column;
@@ -866,6 +882,7 @@ textarea.large, .input-field.large {
     line-height: 1.6;
 }
 
+/* Overskrift styling */
 .headline {
     margin: 0 0 20px;
     font-weight: bold;
@@ -879,6 +896,8 @@ textarea.large, .input-field.large {
     color: #3c3f40;
     font-weight: bold;
 }
+
+/* Tilbage-knap styling */
 .back-button {
     display: flex;
     align-items: center;
@@ -905,6 +924,7 @@ textarea.large, .input-field.large {
     color: forestgreen;
 }
 
+/* Flex-container til overskrift på recipe */
 .header-flex-container {
     display: flex;
     justify-content: center;
@@ -919,6 +939,7 @@ textarea.large, .input-field.large {
     text-align: center;
 }
 
+/* Opskrift indhold */
 .recipe-content {
     display: flex;
     flex-direction: column;
@@ -927,5 +948,5 @@ textarea.large, .input-field.large {
 
 .recipe-container {
     display: flex;
-    gap: 2em; /* Adjust gap as needed */
+    gap: 2em;
 }
