@@ -22,6 +22,12 @@
                 <div class="radio-group">
                     <p>
                         <label class="radio-group-inline">
+                            <input name="employmentStatus" type="radio" value="0" required />
+                            <span>Fjern ansættelse</span>
+                        </label>
+                    </p>
+                    <p>
+                        <label class="radio-group-inline">
                             <input name="employmentStatus" type="radio" value="1" required />
                             <span>Employee</span>
                         </label>
@@ -33,7 +39,7 @@
                         </label>
                     </p>
                 </div>
-                <input class="btn-primary w-100" type="submit" value="Update"/>
+                <input class="btn-primary w-100" type="submit" value="Opdater"/>
             </form>
             <div th:if="${message}" class="message-container">
                 <span th:text="${message}" style="color:green"></span>

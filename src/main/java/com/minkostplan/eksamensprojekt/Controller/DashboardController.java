@@ -73,6 +73,7 @@ public class DashboardController {
         model.addAttribute("userId", user.getUserId());
         model.addAttribute("daysLeft", daysLeft);
         model.addAttribute("subscription", subscription);
+        model.addAttribute("page", "dashboard");
 
         return "dashboard";
     }

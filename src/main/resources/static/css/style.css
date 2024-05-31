@@ -24,6 +24,8 @@ body {
     padding: 0;
     background-color: #ebf5ed;
     font-family: Ubuntu, sans-serif!important;
+    font-size: .9rem;
+    line-height: 1.6;
 }
 
 /* Font-styling for input, label og textarea */
@@ -55,6 +57,33 @@ textarea.large, .input-field.large {
     z-index: 1;
 }
 
+.top-bar .link-container {
+    display: flex;
+    gap: 2em;
+}
+
+.top-bar .link {
+    text-decoration: none;
+    border: none;
+    place-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    color: #383838!important;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: .5px!important;
+    text-transform: uppercase;
+    background-color: transparent;
+}
+
+.top-bar .link:hover {
+    color: #89cdf0!important;
+}
+
+.top-bar .link.active {
+    color: #89cdf0 !important;
+}
+
 /* Container til centrering af indhold på siden */
 .container {
     display: flex;
@@ -68,11 +97,16 @@ textarea.large, .input-field.large {
 .top-bar h1 {
     margin: 0;
     font-size: 24px;
+    letter-spacing: .15em;
 }
 
 /* Classname for fed tekst */
 .bold {
     font-weight: bold;
+}
+
+.footer .bold {
+    letter-spacing: .15em;
 }
 
 /* Knappers farver og hover-effekter, bruges sammen med btn-primary for at ændre farven på knappen */
@@ -385,12 +419,6 @@ textarea.large, .input-field.large {
     align-items: center;
 }
 
-/* Diverse tekststørrelser og farver */
-.headline {
-    font-size: 2.5em;
-    color: forestgreen;
-}
-
 .sub-headline {
     font-size: 1.5em;
 }
@@ -467,8 +495,8 @@ textarea.large, .input-field.large {
 /* Styling for at logo ikke ligner et link */
 .logo-link {
     text-decoration: none;
-    color: inherit;
     display: inline;
+    color: #383838;
 }
 
 .logo-link:hover, .logo-link:focus {
@@ -884,7 +912,8 @@ textarea.large, .input-field.large {
 
 /* Overskrift styling */
 .headline {
-    margin: 0 0 20px;
+    font-size: 2.5em;
+    color: forestgreen;
     font-weight: bold;
 }
 
@@ -946,7 +975,7 @@ textarea.large, .input-field.large {
     gap: 1em;
 }
 
-.recipe-container {
-    display: flex;
-    gap: 2em;
+/* Spacing under headline */
+.omos .headline {
+    margin-bottom: 20px;
 }
