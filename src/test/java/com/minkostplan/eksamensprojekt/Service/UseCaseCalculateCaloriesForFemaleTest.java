@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -38,7 +40,7 @@ public class UseCaseCalculateCaloriesForFemaleTest {
         user.setGender('F');
         user.setWeight(60.0);
         user.setHeight(165.0);
-        user.setAge(30);
+        user.setBirthday(LocalDate.of(1996, 5, 2));
         user.setActivityLevel(1);
         user.setGoal(0);
 

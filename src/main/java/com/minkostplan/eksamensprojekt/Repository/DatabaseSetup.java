@@ -146,7 +146,7 @@ public class DatabaseSetup {
                   `lastName` varchar(255) DEFAULT NULL,
                   `email` varchar(255) DEFAULT NULL,
                   `password` varchar(255) DEFAULT NULL,
-                  `age` int DEFAULT NULL,
+                  `birthday` date DEFAULT NULL,
                   `gender` char(1) DEFAULT NULL,
                   `weight` double DEFAULT NULL,
                   `height` double DEFAULT NULL,

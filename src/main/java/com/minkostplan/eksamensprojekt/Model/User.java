@@ -4,6 +4,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -18,7 +20,7 @@ public class User implements UserDetails {
     private String lastName;
     private String email;
     private String password;
-    private int age;
+    private LocalDate birthday;
     private char gender;
     private double weight;
     private double height;
@@ -41,7 +43,7 @@ public class User implements UserDetails {
      * @param lastName      brugerens efternavn
      * @param email         brugerens email
      * @param password      brugerens kodeord
-     * @param age           brugerens alder
+     * @param birthday      brugerens fødselsdag
      * @param gender        brugerens køn
      * @param weight        brugerens vægt
      * @param height        brugerens højde
@@ -50,13 +52,13 @@ public class User implements UserDetails {
      * @param employed      brugerens ansættelsesstatus
      * @param subscriber    om brugeren er abonnent
      */
-    public User(int userId, String firstName, String lastName, String email, String password, int age, char gender, double weight, double height, int activityLevel, int goal, int employed, boolean subscriber) {
+    public User(int userId, String firstName, String lastName, String email, String password, LocalDate birthday, char gender, double weight, double height, int activityLevel, int goal, int employed, boolean subscriber) {
         this.userId = userId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.age = age;
+        this.birthday = birthday;
         this.gender = gender;
         this.weight = weight;
         this.height = height;
@@ -187,12 +189,16 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    public int getAge() {
-        return age;
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public int getAge() {
+        return Period.between(this.birthday, LocalDate.now()).getYears();
     }
 
     public char getGender() {

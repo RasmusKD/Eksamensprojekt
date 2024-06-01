@@ -152,13 +152,13 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "INSERT INTO User (firstName, lastName, email, password, age, gender, weight, height, activityLevel, goal, employed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO User (firstName, lastName, email, password, birthday, gender, weight, height, activityLevel, goal, employed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
             pstmt.setString(3, user.getEmail());
             pstmt.setString(4, user.getPassword());
-            pstmt.setInt(5, user.getAge());
+            pstmt.setDate(5, java.sql.Date.valueOf(user.getBirthday()));
             pstmt.setString(6, String.valueOf(user.getGender()));
             pstmt.setDouble(7, user.getWeight());
             pstmt.setDouble(8, user.getHeight());
@@ -201,7 +201,7 @@ public class DBRepository {
                 user.setLastName(rs.getString("lastName"));
                 user.setEmail(rs.getString("email"));
                 user.setPassword(rs.getString("password"));
-                user.setAge(rs.getInt("age"));
+                user.setBirthday(rs.getDate("birthday").toLocalDate());
                 user.setGender(rs.getString("gender").charAt(0));
                 user.setWeight(rs.getDouble("weight"));
                 user.setHeight(rs.getDouble("height"));
@@ -230,11 +230,11 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "UPDATE User SET firstName=?, lastName=?, age=?, gender=?, weight=?, height=?, activityLevel=?, goal=?, employed=?, subscriber=? WHERE userId=?";
+            String sql = "UPDATE User SET firstName=?, lastName=?, birthday=?, gender=?, weight=?, height=?, activityLevel=?, goal=?, employed=?, subscriber=? WHERE userId=?";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
-            pstmt.setInt(3, user.getAge());
+            pstmt.setDate(3, java.sql.Date.valueOf(user.getBirthday()));
             pstmt.setString(4, String.valueOf(user.getGender()));
             pstmt.setDouble(5, user.getWeight());
             pstmt.setDouble(6, user.getHeight());
@@ -297,7 +297,7 @@ public class DBRepository {
                             rs.getString("lastName"),
                             rs.getString("email"),
                             rs.getString("password"),
-                            rs.getInt("age"),
+                            rs.getDate("birthday").toLocalDate(),
                             rs.getString("gender").charAt(0),
                             rs.getDouble("weight"),
                             rs.getDouble("height"),

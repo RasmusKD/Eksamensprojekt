@@ -20,7 +20,7 @@
                 <div id="user-info-view">
                     <!-- User Info Display -->
                     <p><i class="material-icons">email</i> <text class="highlighted-text">Email:</text> <span th:text="${user.email}"></span></p>
-                    <p><i class="material-icons">cake</i> <text class="highlighted-text">Alder:</text> <span th:text="${user.age}"></span></p>
+                    <p><i class="material-icons">cake</i> <text class="highlighted-text">Fødselsdag:</text> <span th:text="${user.birthday}"></span></p>
                     <p><i class="material-icons">wc</i> <text class="highlighted-text">Køn:</text> <span th:text="${user.gender} == 'M' ? 'Mand' : 'Kvinde'"></span></p>
                     <p><i class="material-icons">fitness_center</i> <text class="highlighted-text">Vægt:</text> <span th:text="${user.weight}"></span> kg</p>
                     <p><i class="material-icons">height</i> <text class="highlighted-text">Højde:</text> <span th:text="${user.height}"></span> cm</p>
@@ -34,7 +34,7 @@
                     <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                     <!-- Form Inputs for User Information -->
                     <p><i class="material-icons">email</i> <text class="highlighted-text">Email:</text> <span th:text="${user.email}"></span></p>
-                    <p><i class="material-icons">cake</i> <text class="highlighted-text">Alder:</text> <input type="number" name="age" th:value="${user.age}" required/></p>
+                    <p><i class="material-icons">cake</i> <text class="highlighted-text">Fødselsdag:</text> <input type="date" name="birthday" th:value="${user.birthday}" required/></p>
                     <p><i class="material-icons">wc</i> <text class="highlighted-text">Køn:</text>
                         <select name="gender">
                             <option value="M" th:selected="${user.gender} == 'M'">Mand</option>

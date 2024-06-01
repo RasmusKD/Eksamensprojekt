@@ -9,6 +9,7 @@ import org.mockito.MockitoAnnotations;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import static org.mockito.Mockito.*;
 
@@ -51,7 +52,7 @@ public class DBRepositoryCreateUserTest {
         user.setLastName("Doe");
         user.setEmail("john.doe@example.com");
         user.setPassword("password");
-        user.setAge(30);
+        user.setBirthday(LocalDate.of(1994, 1, 1));
         user.setGender('M');
         user.setWeight(70.0);
         user.setHeight(175.0);
@@ -94,7 +95,7 @@ public class DBRepositoryCreateUserTest {
         user.setLastName("Doe");
         user.setEmail("john.doe@example.com");
         user.setPassword("password");
-        user.setAge(30);
+        user.setBirthday(LocalDate.of(1996, 5, 2));
         user.setGender('M');
         user.setWeight(70.0);
         user.setHeight(175.0);

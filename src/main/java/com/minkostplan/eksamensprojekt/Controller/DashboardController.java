@@ -4,6 +4,7 @@ import com.minkostplan.eksamensprojekt.Model.Subscription;
 import com.minkostplan.eksamensprojekt.Model.User;
 import com.minkostplan.eksamensprojekt.Service.UseCase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -98,7 +99,7 @@ public class DashboardController {
     /**
      * Opdaterer brugerens oplysninger.
      *
-     * @param age            Brugerens alder.
+     * @param birthday       Brugerens fødselsdag.
      * @param gender         Brugerens køn.
      * @param weight         Brugerens vægt.
      * @param height         Brugerens højde.
@@ -109,7 +110,7 @@ public class DashboardController {
      */
     @PostMapping("/update-user")
     public String updateUser(
-            @RequestParam("age") int age,
+            @RequestParam("birthday") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate birthday,
             @RequestParam("gender") char gender,
             @RequestParam("weight") double weight,
             @RequestParam("height") double height,
@@ -120,7 +121,7 @@ public class DashboardController {
         String email = authentication.getName();
         User user = useCase.getUserByEmail(email);
 
-        user.setAge(age);
+        user.setBirthday(birthday);
         user.setGender(gender);
         user.setWeight(weight);
         user.setHeight(height);

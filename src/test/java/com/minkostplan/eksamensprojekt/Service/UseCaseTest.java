@@ -8,6 +8,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -38,7 +40,7 @@ public class UseCaseTest {
         user.setGender('M');
         user.setWeight(75.0);
         user.setHeight(180.0);
-        user.setAge(25);
+        user.setBirthday(LocalDate.of(1998, 10, 14));
         user.setActivityLevel(2);
         user.setGoal(0);
 
