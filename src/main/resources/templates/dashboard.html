@@ -19,35 +19,35 @@
             <div class="user-info">
                 <div id="user-info-view">
                     <!-- User Info Display -->
-                    <p><i class="material-icons">email</i> <strong>Email:</strong> <span th:text="${user.email}"></span></p>
-                    <p><i class="material-icons">cake</i> <strong>Alder:</strong> <span th:text="${user.age}"></span></p>
-                    <p><i class="material-icons">wc</i> <strong>Køn:</strong> <span th:text="${user.gender} == 'M' ? 'Mand' : 'Kvinde'"></span></p>
-                    <p><i class="material-icons">fitness_center</i> <strong>Vægt:</strong> <span th:text="${user.weight}"></span> kg</p>
-                    <p><i class="material-icons">height</i> <strong>Højde:</strong> <span th:text="${user.height}"></span> cm</p>
-                    <p><i class="material-icons">directions_run</i> <strong>Aktivitetsniveau:</strong> <span th:text="${activityLevelMap[user.activityLevel]}"></span></p>
-                    <p><i class="material-icons">flag</i> <strong>Mål:</strong> <span th:text="${goalMap[user.goal]}"></span></p>
-                    <p><i class="material-icons">check_circle</i> <strong>Abonnent:</strong> <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span></p>
-                    <p th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}"><i class="material-icons">local_dining</i> <strong>Kaloriebehov:</strong> <span th:text="${#numbers.formatDecimal(calorieNeeds, 0, 0)} + ' kcal'"></span></p>
+                    <p><i class="material-icons">email</i> <text class="highlighted-text">Email:</text> <span th:text="${user.email}"></span></p>
+                    <p><i class="material-icons">cake</i> <text class="highlighted-text">Alder:</text> <span th:text="${user.age}"></span></p>
+                    <p><i class="material-icons">wc</i> <text class="highlighted-text">Køn:</text> <span th:text="${user.gender} == 'M' ? 'Mand' : 'Kvinde'"></span></p>
+                    <p><i class="material-icons">fitness_center</i> <text class="highlighted-text">Vægt:</text> <span th:text="${user.weight}"></span> kg</p>
+                    <p><i class="material-icons">height</i> <text class="highlighted-text">Højde:</text> <span th:text="${user.height}"></span> cm</p>
+                    <p><i class="material-icons">directions_run</i> <text class="highlighted-text">Aktivitetsniveau:</text> <span th:text="${activityLevelMap[user.activityLevel]}"></span></p>
+                    <p><i class="material-icons">flag</i> <text class="highlighted-text">Mål:</text> <span th:text="${goalMap[user.goal]}"></span></p>
+                    <p><i class="material-icons">check_circle</i> <text class="highlighted-text">Abonnent:</text> <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span></p>
+                    <p th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}"><i class="material-icons">local_dining</i> <text class="highlighted-text">Kaloriebehov:</text> <span th:text="${#numbers.formatDecimal(calorieNeeds, 0, 0)} + ' kcal'"></span></p>
                 </div>
                 <!-- Edit Form -->
                 <form id="user-form" th:action="@{/update-user}" method="post" style="display:none;">
                     <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                     <!-- Form Inputs for User Information -->
-                    <p><i class="material-icons">email</i> <strong>Email:</strong> <span th:text="${user.email}"></span></p>
-                    <p><i class="material-icons">cake</i> <strong>Alder:</strong> <input type="number" name="age" th:value="${user.age}" required/></p>
-                    <p><i class="material-icons">wc</i> <strong>Køn:</strong>
+                    <p><i class="material-icons">email</i> <text class="highlighted-text">Email:</text> <span th:text="${user.email}"></span></p>
+                    <p><i class="material-icons">cake</i> <text class="highlighted-text">Alder:</text> <input type="number" name="age" th:value="${user.age}" required/></p>
+                    <p><i class="material-icons">wc</i> <text class="highlighted-text">Køn:</text>
                         <select name="gender">
                             <option value="M" th:selected="${user.gender} == 'M'">Mand</option>
                             <option value="F" th:selected="${user.gender} == 'F'">Kvinde</option>
                         </select>
                     </p>
-                    <p><i class="material-icons">fitness_center</i> <strong>Vægt:</strong>
+                    <p><i class="material-icons">fitness_center</i> <text class="highlighted-text">Vægt:</text>
                         <input type="number" step="0.1" name="weight" th:value="${user.weight}" required/> kg
                     </p>
-                    <p><i class="material-icons">height</i> <strong>Højde:</strong>
+                    <p><i class="material-icons">height</i> <text class="highlighted-text">Højde:</text>
                         <input type="number" step="0.1" name="height" th:value="${user.height}" required/> cm
                     </p>
-                    <p><i class="material-icons">directions_run</i> <strong>Aktivitetsniveau:</strong>
+                    <p><i class="material-icons">directions_run</i> <text class="highlighted-text">Aktivitetsniveau:</text>
                         <select name="activityLevel">
                             <option value="0" th:selected="${user.activityLevel == 0}">Ingen eller meget lidt aktiv</option>
                             <option value="1" th:selected="${user.activityLevel == 1}">1-2 gange om ugen</option>
@@ -56,7 +56,7 @@
                             <option value="4" th:selected="${user.activityLevel == 4}">To gange om dagen</option>
                         </select>
                     </p>
-                    <p><i class="material-icons">flag</i> <strong>Mål:</strong>
+                    <p><i class="material-icons">flag</i> <text class="highlighted-text">Mål:</text>
                         <select name="goal">
                             <option value="0" th:selected="${user.goal == 0}">Vægttab</option>
                             <option value="1" th:selected="${user.goal == 1}">Vægtøgning</option>
@@ -64,8 +64,8 @@
                             <option value="3" th:selected="${user.goal == 3}">Vedligehold vægt</option>
                         </select>
                     </p>
-                    <p><i class="material-icons">check_circle</i> <strong>Abonnent:</strong> <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span></p>
-                    <p><i class="material-icons">local_dining</i> <strong>Kaloriebehov:</strong> <span th:text="${#numbers.formatDecimal(calorieNeeds, 0, 0)} + ' kcal'"></span></p>
+                    <p><i class="material-icons">check_circle</i> <text class="highlighted-text">Abonnent:</text> <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span></p>
+                    <p th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}"><i class="material-icons">local_dining</i> <text class="highlighted-text">Kaloriebehov:</text> <span th:text="${#numbers.formatDecimal(calorieNeeds, 0, 0)} + ' kcal'"></span></p>
                     <button type="submit" class="btn-primary w-100 button-spacing">Opdater Information</button>
                 </form>
                 <button id="edit-button" class="btn-primary w-100">Rediger</button>
@@ -116,8 +116,6 @@
         </div>
     </div>
 </div>
-
-
 <script>
     document.getElementById('edit-button').addEventListener('click', function () {
         var form = document.getElementById('user-form');

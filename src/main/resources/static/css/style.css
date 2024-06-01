@@ -62,25 +62,24 @@ textarea.large, .input-field.large {
     gap: 2em;
 }
 
-.top-bar .link {
+.highlighted-text {
     text-decoration: none;
     border: none;
     place-items: center;
-    cursor: pointer;
     transition: background-color 0.3s ease-in-out;
     color: #383838!important;
     font-size: 14px;
     font-weight: 700;
-    letter-spacing: .5px!important;
+    letter-spacing: .035em!important;
     text-transform: uppercase;
     background-color: transparent;
 }
 
-.top-bar .link:hover {
+.top-bar .highlighted-text:hover {
     color: #89cdf0!important;
 }
 
-.top-bar .link.active {
+.top-bar .highlighted-text.active {
     color: #89cdf0 !important;
 }
 
@@ -104,7 +103,10 @@ textarea.large, .input-field.large {
 .bold {
     font-weight: bold;
 }
-
+/* Classname for pointer cursor */
+.pointer {
+    cursor: pointer;
+}
 .footer .bold {
     letter-spacing: .15em;
 }
@@ -514,6 +516,7 @@ textarea.large, .input-field.large {
     flex-direction: column;
     align-items: flex-start;
     width: 100%;
+    gap: 0.5em;
 }
 
 .user-info p {
@@ -521,6 +524,7 @@ textarea.large, .input-field.large {
     align-items: center;
     gap: 0.5em;
     font-size: 1.1em;
+    height: 26px;
 }
 
 .user-info i.material-icons {
@@ -978,4 +982,30 @@ textarea.large, .input-field.large {
 /* Spacing under headline */
 .omos .headline {
     margin-bottom: 20px;
+}
+
+/* Styling for input with unit */
+.input-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid #78d578;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #fff;
+}
+
+.input-group input {
+    border: none;
+    outline: none;
+    padding: 10px;
+    flex: 1;
+    font-size: 16px;
+}
+
+.input-group .input-unit {
+    padding: 0 10px;
+    background-color: #f3f3f3;
+    border-left: 1px solid #78d578;
+    color: #666;
+    font-size: 16px;
 }

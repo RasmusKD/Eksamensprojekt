@@ -4,14 +4,14 @@
             <a th:href="${#authorization.expression('isAuthenticated()') ? '/dashboard' : '/'}" class="logo-link">
                 <h1>MINKOSTPLAN</h1>
             </a>
-            <button th:if="${#authorization.expression('isAuthenticated()')}" class="link"
+            <button th:if="${#authorization.expression('isAuthenticated()')}" class="highlighted-text pointer"
                     th:classappend="${page == 'dashboard' ? 'active' : ''}"
                     onclick="window.location.href='/dashboard'">Dashboard</button>
             <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}"
-                    class="link"
+                    class="highlighted-text pointer"
                     th:classappend="${page == 'weekly-recipes' ? 'active' : ''}"
                     th:onclick="|window.location.href='@{/weekly-recipes}'|">Ugens Opskrifter</button>
-            <button class="link"
+            <button class="highlighted-text pointer"
                     th:classappend="${page == 'omOs' ? 'active' : ''}"
                     onclick="window.location.href='/omOs'">Om Os</button>
         </div>
