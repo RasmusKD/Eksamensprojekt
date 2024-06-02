@@ -375,6 +375,7 @@ textarea.large, .input-field.large {
 .radio-group-inline {
     display: flex;
     gap: 1em;
+    line-height: 0;
 }
 
 .radio-group label, .radio-group-inline label, .goal-options label, .activity-options label {
@@ -456,7 +457,7 @@ textarea.large, .input-field.large {
     color: #868686;
     font-size: 15px;
     font-weight: 600;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     padding: 10px 15px;
     text-shadow: #fff 0 1px;
     width: 100%;
@@ -469,9 +470,22 @@ textarea.large, .input-field.large {
     align-items: center;
     background-color: white;
     border-radius: 0.5em;
-    border-color: #78d578;
-    border-style: solid;
+    border: solid #78d578;
     padding: 0 0.5em 0 0;
+}
+
+.input-icon::before {
+    content: attr(data-placeholder);
+    position: absolute;
+    top: -11px;
+    left: 10px;
+    background: white;
+    padding: 0 3px 0 5px;
+    color: forestgreen;
+    font-size: 0.8em;
+    font-weight: bold;
+    letter-spacing: 0.075em;
+    text-transform: uppercase;
 }
 
 .input-icon .material-icons {
@@ -836,6 +850,10 @@ textarea.large, .input-field.large {
     line-height: 1.5;
 }
 
+form#deleteForm {
+    width: 100%;
+}
+
 /* Opskrift indhold styling */
 .recipe-content {
     display: flex;
@@ -980,32 +998,24 @@ textarea.large, .input-field.large {
 }
 
 /* Spacing under headline */
-.omos .headline {
+.about-us .headline {
     margin-bottom: 20px;
 }
 
-/* Styling for input with unit */
-.input-group {
-    display: flex;
-    align-items: center;
-    border: 1px solid #78d578;
+.alert {
+    border: 0;
     border-radius: 5px;
-    overflow: hidden;
-    background-color: #fff;
+    color: #fff;
+    box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .09);
+    padding: .75rem 1.25rem;
+    position: relative;
+    width: 100%;
 }
 
-.input-group input {
-    border: none;
-    outline: none;
-    padding: 10px;
-    flex: 1;
-    font-size: 16px;
+.alert-danger {
+    background-color: #d9534f;
 }
 
-.input-group .input-unit {
-    padding: 0 10px;
-    background-color: #f3f3f3;
-    border-left: 1px solid #78d578;
-    color: #666;
-    font-size: 16px;
+.alert-success {
+    background-color: #5cb85c;
 }

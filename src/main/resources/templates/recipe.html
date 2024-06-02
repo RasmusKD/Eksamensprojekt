@@ -22,7 +22,7 @@
     </div>
     <div class="recipe-container">
         <div class="recipe-image">
-            <img th:src="@{${recipe.imageUrl}}" alt="Recipe Image">
+            <img draggable="false"th:src="@{${recipe.imageUrl}}" alt="Recipe Image">
             <p class="cooking-time"><strong>Madlavningstid:</strong> <span th:text="${recipe.cookingTime}">Cooking Time</span></p>
         </div>
         <div class="recipe-details-box">

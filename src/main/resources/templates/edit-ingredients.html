@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Ingredients</title>
+    <title>Rediger Ingredienser</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta name="_csrf" th:content="${_csrf.token}"/>
@@ -14,7 +14,10 @@
     <div class="content-box">
         <div class="text-box">
             <div class="login-headline">Rediger Ingredienser</div>
-            <div class="input-icon">
+            <div id="message-container" class="alert" style="display: none;">
+                <span id="message-text"></span>
+            </div>
+            <div class="input-icon" data-placeholder="Vælg en ingrediens:">
                 <i class="material-icons">search</i>
                 <select class="input-field" id="ingredientSelect" name="ingredientSelect" required>
                     <option value="" disabled selected>Vælg en ingrediens</option>
@@ -24,41 +27,35 @@
             <form id="ingredientForm" th:action="@{/edit-ingredients}" method="post" style="display: none;">
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                 <input type="hidden" id="ingredientId" name="ingredientId"/>
-                <div class="input-icon">
-                    <i class="material-icons">label</i>
+                <div class="input-icon" data-placeholder="Navn:">
+                    <i class="material-icons">title</i>
                     <input class="input-field" type="text" id="name" name="name" placeholder="Navn" required>
                 </div>
-                <div class="input-icon">
+                <div class="input-icon" data-placeholder="Fedt (g):">
                     <i class="material-icons">local_dining</i>
                     <input class="input-field" type="number" step="0.01" id="fat" name="fat" placeholder="Fedt (g)" required>
                 </div>
-                <div class="input-icon">
+                <div class="input-icon" data-placeholder="Kulhydrater (g):">
                     <i class="material-icons">restaurant</i>
                     <input class="input-field" type="number" step="0.01" id="carbohydrate" name="carbohydrate" placeholder="Kulhydrater (g)" required>
                 </div>
-                <div class="input-icon">
+                <div class="input-icon" data-placeholder="Protein (g):">
                     <i class="material-icons">fitness_center</i>
                     <input class="input-field" type="number" step="0.01" id="protein" name="protein" placeholder="Protein (g)" required>
                 </div>
-                <div class="input-icon">
+                <div class="input-icon" data-placeholder="Kalorier (g):">
                     <i class="material-icons">local_fire_department</i>
                     <input class="input-field" type="number" step="0.01" id="calories" name="calories" placeholder="Kalorier (g)" required>
                 </div>
                 <input class="btn-primary w-100" type="submit" value="Opdater Ingrediens"/>
                 <button type="button" id="deleteButton" class="btn-primary color-red w-100" style="display: none;">Slet Ingrediens</button>
             </form>
-            <div th:if="${message}" class="message-container">
-                <span th:text="${message}" style="color:green"></span>
-            </div>
-            <div th:if="${error}" class="error-container">
-                <span th:text="${error}" style="color:red"></span>
-            </div>
         </div>
     </div>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
 
-<!-- Confirmation Modal -->
+<!-- Bekræftelsesmodal -->
 <div id="confirmation-modal" class="modal">
     <div class="modal-content">
         <span class="close-button">&times;</span>
@@ -70,13 +67,31 @@
         </div>
     </div>
 </div>
+
 <script th:inline="javascript">
     document.addEventListener('DOMContentLoaded', function() {
         const ingredientSelect = document.getElementById('ingredientSelect');
         const ingredientForm = document.getElementById('ingredientForm');
         const deleteButton = document.getElementById('deleteButton');
+        const messageContainer = document.getElementById('message-container');
+        const messageText = document.getElementById('message-text');
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        // Håndter visning af beskeder ved siden indlæsning
+        const message = sessionStorage.getItem('message');
+        const messageType = sessionStorage.getItem('messageType');
+        if (message) {
+            messageText.textContent = message;
+            messageContainer.classList.add(messageType === 'success' ? 'alert-success' : 'alert-danger');
+            messageContainer.style.display = 'block';
+            sessionStorage.removeItem('message');
+            sessionStorage.removeItem('messageType');
+            // Fjern beskeden efter 3 sekunder
+            setTimeout(() => {
+                messageContainer.style.display = 'none';
+            }, 3000);
+        }
 
         if (ingredientSelect) {
             ingredientSelect.addEventListener('change', function() {
@@ -98,6 +113,9 @@
                             ingredientForm.style.width = '100%';
 
                             deleteButton.style.display = 'block';
+
+                            // Opdater slet knap data med korrekt ID
+                            deleteButton.dataset.ingredientId = ingredientId;
                         })
                         .catch(error => {
                             console.error('Error fetching ingredient details:', error);
@@ -125,14 +143,25 @@
                 })
                     .then(response => response.json())
                     .then(data => {
-                        const messageContainer = document.querySelector('.message-container');
-                        if (messageContainer) {
-                            messageContainer.querySelector('span').textContent = data.message;
-                            messageContainer.style.display = 'block';
-                        }
+                        messageText.textContent = data.message;
+                        messageContainer.classList.add('alert-success');
+                        messageContainer.classList.remove('alert-danger');
+                        messageContainer.style.display = 'block';
+                        // Fjern beskeden efter 3 sekunder
+                        setTimeout(() => {
+                            messageContainer.style.display = 'none';
+                        }, 3000);
                     })
                     .catch(error => {
                         console.error('Error:', error);
+                        messageContainer.classList.add('alert-danger');
+                        messageContainer.classList.remove('alert-success');
+                        messageText.textContent = 'Kunne ikke opdatere ingrediensen.';
+                        messageContainer.style.display = 'block';
+                        // Fjern beskeden efter 3 sekunder
+                        setTimeout(() => {
+                            messageContainer.style.display = 'none';
+                        }, 3000);
                     });
             });
         }
@@ -141,6 +170,38 @@
             deleteButton.addEventListener('click', function() {
                 const modal = document.getElementById('confirmation-modal');
                 modal.style.display = 'block';
+            });
+        }
+
+        const confirmDeleteButton = document.getElementById('confirm-delete');
+        if (confirmDeleteButton) {
+            confirmDeleteButton.addEventListener('click', function() {
+                const ingredientId = deleteButton.dataset.ingredientId;
+
+                fetch(`/delete-ingredient/${ingredientId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        [csrfHeader]: csrfToken
+                    },
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.message === 'Ingrediensen blev slettet!') {
+                            sessionStorage.setItem('message', data.message);
+                            sessionStorage.setItem('messageType', 'success');
+                        } else {
+                            sessionStorage.setItem('message', data.message);
+                            sessionStorage.setItem('messageType', 'danger');
+                        }
+                        window.location.href = '/edit-ingredients';
+                    })
+                    .catch(error => {
+                        console.error('Error deleting ingredient:', error);
+                        sessionStorage.setItem('message', 'Kunne ikke slette ingrediensen.');
+                        sessionStorage.setItem('messageType', 'danger');
+                        window.location.href = '/edit-ingredients';
+                    });
             });
         }
 
@@ -157,32 +218,6 @@
             cancelDeleteButton.addEventListener('click', function() {
                 const modal = document.getElementById('confirmation-modal');
                 modal.style.display = 'none';
-            });
-        }
-
-        const confirmDeleteButton = document.getElementById('confirm-delete');
-        if (confirmDeleteButton) {
-            confirmDeleteButton.addEventListener('click', function() {
-                const ingredientId = document.getElementById('ingredientId').value;
-
-                fetch(`/delete-ingredient/${ingredientId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        [csrfHeader]: csrfToken
-                    },
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.message === 'Ingredient deleted successfully') {
-                            window.location.href = '/edit-ingredients';
-                        } else {
-                            alert('Failed to delete ingredient');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error deleting ingredient:', error);
-                    });
             });
         }
     });

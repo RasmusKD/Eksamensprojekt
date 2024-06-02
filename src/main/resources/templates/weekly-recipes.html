@@ -19,14 +19,14 @@
             <h2 th:text="${previousDayName}"></h2>
             <div th:each="recipe, stat : ${previousDayRecipes}">
                 <div th:if="${recipe != null}" class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId}, dayOffset=${previousDayOffset})}'|">
-                    <img th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
+                    <img draggable="false"th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
                     <div class="padding-container">
                         <div class="bold" th:text="${recipe.mealTime == 'Breakfast' ? 'Morgenmad' : recipe.mealTime == 'Lunch' ? 'Frokost' : 'Aftensmad'}"></div>
                         <div th:text="${recipe.description}"></div>
                     </div>
                 </div>
                 <div th:if="${recipe == null}" class="meal-box">
-                    <img src="/images/placeholder.png" alt="Placeholder billede">
+                    <img draggable="false"src="/images/placeholder.png" alt="Placeholder billede">
                     <div class="padding-container">
                         <div class="bold" th:text="${stat.index == 0 ? 'Morgenmad' : stat.index == 1 ? 'Frokost' : 'Aftensmad'}"></div>
                         <div>Ingen opskrift tilgængelig</div>
@@ -38,14 +38,14 @@
             <h2 th:text="${currentDayName}"></h2>
             <div th:each="recipe, stat : ${currentDayRecipes}">
                 <div th:if="${recipe != null}" class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId}, dayOffset=${dayOffset})}'|">
-                    <img th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
+                    <img draggable="false"th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
                     <div class="padding-container">
                         <div class="bold" th:text="${recipe.mealTime == 'Breakfast' ? 'Morgenmad' : recipe.mealTime == 'Lunch' ? 'Frokost' : 'Aftensmad'}"></div>
                         <div th:text="${recipe.description}"></div>
                     </div>
                 </div>
                 <div th:if="${recipe == null}" class="meal-box">
-                    <img src="/images/placeholder.png" alt="Placeholder billede">
+                    <img draggable="false"src="/images/placeholder.png" alt="Placeholder billede">
                     <div class="padding-container">
                         <div class="bold" th:text="${stat.index == 0 ? 'Morgenmad' : stat.index == 1 ? 'Frokost' : 'Aftensmad'}"></div>
                         <div>Ingen opskrift tilgængelig</div>
@@ -57,14 +57,14 @@
             <h2 th:text="${nextDayName}"></h2>
             <div th:each="recipe, stat : ${nextDayRecipes}">
                 <div th:if="${recipe != null}" class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId}, dayOffset=${nextDayOffset})}'|">
-                    <img th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
+                    <img draggable="false"th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
                     <div class="padding-container">
                         <div class="bold" th:text="${recipe.mealTime == 'Breakfast' ? 'Morgenmad' : recipe.mealTime == 'Lunch' ? 'Frokost' : 'Aftensmad'}"></div>
                         <div th:text="${recipe.description}"></div>
                     </div>
                 </div>
                 <div th:if="${recipe == null}" class="meal-box">
-                    <img src="/images/placeholder.png" alt="Placeholder billede">
+                    <img draggable="false"src="/images/placeholder.png" alt="Placeholder billede">
                     <div class="padding-container">
                         <div class="bold" th:text="${stat.index == 0 ? 'Morgenmad' : stat.index == 1 ? 'Frokost' : 'Aftensmad'}"></div>
                         <div>Ingen opskrift tilgængelig</div>

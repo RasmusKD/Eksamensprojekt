@@ -28,7 +28,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico").permitAll()
-                        .requestMatchers("/",  "/login", "/register", "/omOs").permitAll()
+                        .requestMatchers("/",  "/login", "/register", "/about-us").permitAll()
                         .requestMatchers("/dashboard", "/success", "/cancel").authenticated()
                         .requestMatchers("/weekly-recipes", "/recipe").hasAnyRole("SUBSCRIBER", "EMPLOYEE", "ADMIN")
                         .requestMatchers("/recipe-creation", "/edit-recipe", "/recipe-success", "/add-ingredients", "/edit-ingredients").hasAnyRole("EMPLOYEE", "ADMIN")

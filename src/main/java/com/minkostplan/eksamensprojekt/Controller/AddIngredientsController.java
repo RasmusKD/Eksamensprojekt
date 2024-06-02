@@ -3,9 +3,12 @@ package com.minkostplan.eksamensprojekt.Controller;
 import com.minkostplan.eksamensprojekt.Model.Ingredient;
 import com.minkostplan.eksamensprojekt.Service.UseCase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -79,7 +82,7 @@ public class AddIngredientsController {
      * Henter detaljer om en specifik ingrediens.
      *
      * @param id Ingrediensens ID.
-     * @return En Ingredient-objekt med detaljerne om ingrediensen.
+     * @return Et Ingredient-objekt med detaljerne om ingrediensen.
      */
     @GetMapping("/ingredient-details/{id}")
     @ResponseBody
@@ -96,16 +99,16 @@ public class AddIngredientsController {
      * @param carbohydrate  Mængden af kulhydrater i ingrediensen.
      * @param protein       Mængden af protein i ingrediensen.
      * @param calories      Antallet af kalorier i ingrediensen.
-     * @return Et map med en succesmeddelelse.
+     * @return JSON-respons med succesmeddelelse.
      */
     @PostMapping("/edit-ingredients")
     @ResponseBody
-    public Map<String, String> editIngredient(@RequestParam("ingredientId") int id,
-                                              @RequestParam("name") String name,
-                                              @RequestParam("fat") double fat,
-                                              @RequestParam("carbohydrate") double carbohydrate,
-                                              @RequestParam("protein") double protein,
-                                              @RequestParam("calories") int calories) {
+    public ResponseEntity<Map<String, String>> editIngredient(@RequestParam("ingredientId") int id,
+                                                              @RequestParam("name") String name,
+                                                              @RequestParam("fat") double fat,
+                                                              @RequestParam("carbohydrate") double carbohydrate,
+                                                              @RequestParam("protein") double protein,
+                                                              @RequestParam("calories") int calories) {
         Ingredient ingredient = useCase.getIngredientById(id);
         ingredient.setName(name);
         ingredient.setFat(fat);
@@ -116,25 +119,27 @@ public class AddIngredientsController {
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "Ingrediensen blev opdateret!");
-        return response;
+        return ResponseEntity.ok(response);
     }
+
 
     /**
      * Håndterer sletning af en ingrediens.
      *
      * @param id Ingrediensens ID.
-     * @return Et map med en succes- eller fejmeddelelse.
+     * @return JSON-respons med succes- eller fejlmeddelelse.
      */
     @DeleteMapping("/delete-ingredient/{id}")
     @ResponseBody
-    public Map<String, String> deleteIngredient(@PathVariable("id") int id) {
+    public ResponseEntity<Map<String, String>> deleteIngredient(@PathVariable("id") int id) {
         boolean isDeleted = useCase.deleteIngredientById(id);
         Map<String, String> response = new HashMap<>();
         if (isDeleted) {
-            response.put("message", "Ingredient deleted successfully");
+            response.put("message", "Ingrediensen blev slettet!");
+            return ResponseEntity.ok(response);
         } else {
-            response.put("message", "Failed to delete ingredient");
+            response.put("message", "Kunne ikke slette ingrediensen.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
-        return response;
     }
 }

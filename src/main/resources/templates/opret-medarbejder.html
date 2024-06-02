@@ -15,15 +15,21 @@
             <div class="login-headline">Opdater Ansættelses Status</div>
             <form action="/update-employment-status" method="POST">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <div class="input-icon">
+                <div th:if="${error}" class="alert alert-danger">
+                    <span th:text="${error}"></span>
+                </div>
+                <div th:if="${message}" class="alert alert-success">
+                    <span th:text="${message}"></span>
+                </div>
+                <div class="input-icon" data-placeholder="E-mail:">
                     <i class="material-icons">email</i>
-                    <input class="input-field" type="email" id="email" name="email" placeholder="Indtast email addresse" required>
+                    <input class="input-field" type="email" id="email" name="email" placeholder="E-mail" required>
                 </div>
                 <div class="radio-group">
                     <p>
                         <label class="radio-group-inline">
                             <input name="employmentStatus" type="radio" value="0" required />
-                            <span>Fjern ansættelse</span>
+                            <span>Ikke ansat</span>
                         </label>
                     </p>
                     <p>
@@ -41,12 +47,6 @@
                 </div>
                 <input class="btn-primary w-100" type="submit" value="Opdater"/>
             </form>
-            <div th:if="${message}" class="message-container">
-                <span th:text="${message}" style="color:green"></span>
-            </div>
-            <div th:if="${error}" class="error-container">
-                <span th:text="${error}" style="color:red"></span>
-            </div>
         </div>
     </div>
 </div>

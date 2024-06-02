@@ -15,27 +15,28 @@
     <div class="content-box">
         <div class="text-box recipe-card-size">
             <div class="login-headline">Rediger Opskrift</div>
-
-            <div class="input-icon">
+            <div id="message-container" class="alert" style="display: none;">
+                <span id="message-text"></span>
+            </div>
+            <div class="input-icon" data-placeholder="Vælg en opskrift:">
                 <i class="material-icons">search</i>
                 <select class="input-field" id="recipeSelect" name="recipeSelect" required>
                     <option value="" disabled selected>Vælg en opskrift</option>
                     <option th:each="recipe : ${recipes}" th:value="${recipe.recipeId}" th:text="${recipe.title}"></option>
                 </select>
             </div>
-
             <form id="recipeForm" method="post" enctype="multipart/form-data" style="display: none;" th:action="@{/edit-recipe}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                 <input type="hidden" id="recipeId" name="recipeId"/>
-                <div class="input-icon">
+                <div class="input-icon" data-placeholder="Navn:">
                     <i class="material-icons">title</i>
                     <input class="input-field" type="text" id="title" name="title" placeholder="Navn" required/>
                 </div>
-                <div class="input-icon">
+                <div class="input-icon" data-placeholder="Beskrivelse:">
                     <i class="material-icons">description</i>
                     <textarea class="input-field large" id="description" name="description" placeholder="Beskrivelse" required></textarea>
                 </div>
-                <div class="input-icon">
+                <div class="input-icon" data-placeholder="Tidspunkt:">
                     <i class="material-icons">schedule</i>
                     <select class="input-field" id="mealTime" name="mealTime" required>
                         <option value="" disabled selected>Måltid</option>
@@ -44,11 +45,11 @@
                         <option value="Dinner">Aftensmad</option>
                     </select>
                 </div>
-                <div class="input-icon">
+                <div class="input-icon" data-placeholder="Dato: (skiftes til uge)">
                     <i class="material-icons">calendar_today</i>
                     <input class="input-field" type="date" id="day" name="day" required/>
                 </div>
-                <div class="input-icon">
+                <div class="input-icon" data-placeholder="Tilberedningstid:">
                     <i class="material-icons">timer</i>
                     <select class="input-field" id="cookingTime" name="cookingTime" required>
                         <option value="" disabled selected>Tilberedningstid</option>
@@ -66,18 +67,18 @@
                         <option value="60 min">60 min</option>
                     </select>
                 </div>
-                <div class="input-icon">
+                <div class="input-icon" data-placeholder="Søg ingredienser:">
                     <i class="material-icons">search</i>
                     <input class="input-field" type="text" id="ingredientsSearch" placeholder="Søg ingredienser..."/>
                 </div>
                 <div id="ingredientsResults" class="ingredient-results"></div>
                 <div id="selectedIngredients" class="selected-ingredients"></div>
                 <div class="full-width">
-                    <div class="input-icon">
+                    <div class="input-icon" data-placeholder="Instruktioner:">
                         <i class="material-icons">menu_book</i>
                         <textarea class="input-field large" id="instructions" name="instructions" placeholder="Instruktioner" required></textarea>
                     </div>
-                    <div class="input-icon">
+                    <div class="input-icon" data-placeholder="Billede:">
                         <i class="material-icons">image</i>
                         <input class="input-field" type="file" id="imageFile" name="imageFile"/>
                         <p>Nuværende billede: <span id="currentImage"></span></p>
@@ -89,11 +90,6 @@
                     <button class="btn-primary color-blue w-100" type="button" onclick="window.location.href='/weekly-recipes'">Se Alle Opskrifter</button>
                 </div>
             </form>
-
-            <!-- Success Message -->
-            <div id="successMessage" class="success-message" style="display:none;">
-                <p></p>
-            </div>
         </div>
     </div>
 </div>
@@ -116,6 +112,7 @@
     var ingredientsList = /*[[${ingredientsList}]]*/ [];
     ingredientsList.sort((a, b) => a.name.localeCompare(b.name));
 
+    // Søgefunktion for ingredienser
     document.getElementById('ingredientsSearch').addEventListener('input', function() {
         const searchQuery = this.value.toLowerCase();
         const resultsDiv = document.getElementById('ingredientsResults');
@@ -142,6 +139,7 @@
         });
     });
 
+    // Tilføj valgte ingredienser
     document.getElementById('ingredientsResults').addEventListener('click', function(e) {
         if (e.target && e.target.matches('div.ingredient-result')) {
             const selectedDiv = document.getElementById('selectedIngredients');
@@ -161,20 +159,22 @@
         }
     });
 
+    // Fjern valgte ingredienser
     document.getElementById('selectedIngredients').addEventListener('click', function(e) {
         if (e.target && e.target.matches('button.remove-ingredient')) {
             const ingredientId = e.target.parentElement.querySelector('input[name="ingredients"]').value;
             e.target.parentElement.remove();
 
-            // Re-run the search to include the removed ingredient
+            // Genkør søgningen for at inkludere den fjernede ingrediens
             document.getElementById('ingredientsSearch').dispatchEvent(new Event('input'));
         }
     });
 
+    // Hent og vis opskriftens detaljer ved valg
     document.getElementById('recipeSelect').addEventListener('change', function() {
         const recipeId = this.value;
         if (recipeId) {
-            fetch(`/recipe-edit/${recipeId}`)
+            fetch(`/edit-recipe/${recipeId}`)
                 .then(response => response.json())
                 .then(recipe => {
                     document.getElementById('recipeId').value = recipe.recipeId;
@@ -215,8 +215,26 @@
         }
     });
 
+    // Håndter opdatering af opskrift
     document.getElementById('recipeForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Prevent the form from submitting the default way
+        e.preventDefault(); // Forhindrer standardformularindsendelsen
+
+        const selectedIngredients = document.querySelectorAll('#selectedIngredients .selected-ingredient');
+        const messageContainer = document.getElementById('message-container');
+        const messageText = document.getElementById('message-text');
+
+        // Tjek om der er valgt ingredienser
+        if (selectedIngredients.length === 0) {
+            messageContainer.classList.add('alert-danger');
+            messageContainer.classList.remove('alert-success');
+            messageText.textContent = 'Du skal tilføje mindst én ingrediens.';
+            messageContainer.style.display = 'block';
+            // Fjern beskeden efter 3 sekunder
+            setTimeout(() => {
+                messageContainer.style.display = 'none';
+            }, 3000);
+            return; // Forhinder formularindsendelsen
+        }
 
         const formData = new FormData(this);
 
@@ -226,15 +244,29 @@
         })
             .then(response => response.json())
             .then(data => {
-                // Handle response data
-                document.getElementById('successMessage').style.display = 'block';
-                document.getElementById('successMessage').querySelector('p').textContent = data.message;
+                messageText.textContent = data.message || 'Opskriften blev opdateret!';
+                messageContainer.classList.add('alert-success');
+                messageContainer.classList.remove('alert-danger');
+                messageContainer.style.display = 'block';
+                // Fjern beskeden efter 3 sekunder
+                setTimeout(() => {
+                    messageContainer.style.display = 'none';
+                }, 3000);
             })
             .catch(error => {
                 console.error('Error:', error);
+                messageContainer.classList.add('alert-danger');
+                messageContainer.classList.remove('alert-success');
+                messageText.textContent = 'Kunne ikke opdatere opskriften.';
+                messageContainer.style.display = 'block';
+                // Fjern beskeden efter 3 sekunder
+                setTimeout(() => {
+                    messageContainer.style.display = 'none';
+                }, 3000);
             });
     });
 
+    // Håndter visning af sletningsbekræftelsesmodal
     document.getElementById('deleteButton').addEventListener('click', function() {
         const modal = document.getElementById('confirmation-modal');
         modal.style.display = 'block';
@@ -250,6 +282,7 @@
         modal.style.display = 'none';
     });
 
+    // Håndter sletning af opskrift
     document.getElementById('confirm-delete').addEventListener('click', function() {
         const recipeId = document.getElementById('recipeId').value;
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
@@ -264,15 +297,40 @@
         })
             .then(response => response.json())
             .then(data => {
-                if (data.message === 'Recipe deleted successfully') {
-                    window.location.href = '/dashboard';
+                if (data.message === 'Opskriften blev slettet!') {
+                    sessionStorage.setItem('message', data.message);
+                    sessionStorage.setItem('messageType', 'success');
                 } else {
-                    alert('Failed to delete recipe');
+                    sessionStorage.setItem('message', data.message);
+                    sessionStorage.setItem('messageType', 'danger');
                 }
+                window.location.href = '/edit-recipe';
             })
             .catch(error => {
                 console.error('Error deleting recipe:', error);
+                sessionStorage.setItem('message', 'Kunne ikke slette opskriften.');
+                sessionStorage.setItem('messageType', 'danger');
+                window.location.href = '/edit-recipe';
             });
+    });
+
+    // Vis beskeder fra sessionStorage ved genindlæsning
+    document.addEventListener('DOMContentLoaded', function() {
+        const message = sessionStorage.getItem('message');
+        const messageType = sessionStorage.getItem('messageType');
+        if (message) {
+            const messageContainer = document.getElementById('message-container');
+            const messageText = document.getElementById('message-text');
+            messageText.textContent = message;
+            messageContainer.classList.add(messageType === 'success' ? 'alert-success' : 'alert-danger');
+            messageContainer.style.display = 'block';
+            sessionStorage.removeItem('message');
+            sessionStorage.removeItem('messageType');
+            // Fjern beskeden efter 3 sekunder
+            setTimeout(() => {
+                messageContainer.style.display = 'none';
+            }, 3000);
+        }
     });
 </script>
 </body>

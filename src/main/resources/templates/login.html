@@ -13,24 +13,24 @@
         <div class="text-box">
             <div class="login-headline">Login</div>
             <form th:action="@{/login}" method="post">
-                <div class="input-icon">
-                    <i class="material-icons">email</i>
-                    <input class="input-field" type="text" name="username" placeholder="Indtast Email Adresse" required/>
+                <div class="alert alert-danger" th:if="${param.error}">
+                    Ugyldig Email eller Adgangskode.
                 </div>
-                <div class="input-icon">
+                <div class="input-icon" data-placeholder="E-mail:">
+                    <i class="material-icons">email</i>
+                    <input class="input-field" type="text" name="username" placeholder="Indtast E-mail" required/>
+                </div>
+                <div class="input-icon" data-placeholder="Adgangskode:">
                     <i class="material-icons">lock</i>
                     <input class="input-field" type="password" name="password" placeholder="Adgangskode" required/>
                 </div>
                 <input class="btn-primary w-100" type="submit" value="Log ind"/>
                 <button class="btn-primary color-blue w-100" onclick="window.location.href='/register'">Registrer</button>
-                <div th:if="${param.error}">
-                    Ugyldig Email eller Adgangskode.
-                </div>
             </form>
         </div>
     </div>
 </div>
-<img class="image1" src="/images/image.png" alt="Beskrivende billede tekst">
+<img draggable="false"class="image1" src="/images/image.png" alt="Beskrivende billede tekst">
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

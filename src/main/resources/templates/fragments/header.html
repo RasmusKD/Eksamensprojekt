@@ -12,8 +12,8 @@
                     th:classappend="${page == 'weekly-recipes' ? 'active' : ''}"
                     th:onclick="|window.location.href='@{/weekly-recipes}'|">Ugens Opskrifter</button>
             <button class="highlighted-text pointer"
-                    th:classappend="${page == 'omOs' ? 'active' : ''}"
-                    onclick="window.location.href='/omOs'">Om Os</button>
+                    th:classappend="${page == 'about-us' ? 'active' : ''}"
+                    onclick="window.location.href='/about-us'">Om Os</button>
         </div>
         <div th:if="${#authorization.expression('isAuthenticated()')}">
             <form th:action="@{/perform_logout}" method="post" style="display: inline;">

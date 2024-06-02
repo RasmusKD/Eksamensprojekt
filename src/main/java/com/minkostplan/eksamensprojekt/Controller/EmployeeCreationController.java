@@ -13,7 +13,7 @@ import org.springframework.ui.Model;
  * Controller-klasse til håndtering af forespørgsler relateret til oprettelse og opdatering af medarbejdere.
  */
 @Controller
-public class OpretMedarbejderController {
+public class EmployeeCreationController {
 
     @Autowired
     private UseCase useCase;

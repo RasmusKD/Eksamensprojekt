@@ -13,7 +13,7 @@
 <p th:text="'Method: ' + ${recipe.method}"></p>
 <p th:text="'Cooking Time: ' + ${recipe.cookingTime}"></p>
 <p th:if="${recipe.imageUrl}">
-    <img th:src="${recipe.imageUrl}" alt="Recipe Image"/>
+    <img draggable="false"th:src="${recipe.imageUrl}" alt="Recipe Image"/>
 </p>
 </form>
 <button onclick="window.location.href='/all-recipes'">Tag mig til alle opskrifter</button>

@@ -60,7 +60,7 @@ public class SecurityConfigTest {
         mockMvc.perform(get("/")).andExpect(status().isOk());  // Test home page access
         mockMvc.perform(get("/login")).andExpect(status().isOk());  // Test login page access
         mockMvc.perform(get("/register")).andExpect(status().isOk());  // Test registration page access
-        mockMvc.perform(get("/omOs")).andExpect(status().isOk());  // Test "about us" page access
+        mockMvc.perform(get("/about-us")).andExpect(status().isOk());  // Test "about us" page access
     }
 
     @Test  // Tester opret-medarbejder, kun admin rollen kan se den

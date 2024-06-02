@@ -31,7 +31,7 @@ public class StripeController {
      * Opretter en Stripe Checkout Session.
      *
      * @param payload Payload med pris-ID og bruger-ID.
-     * @return Map med session ID eller fejlbesked.
+     * @return Map med session ID eller fejlmeddelelse.
      */
     @PostMapping("/create-checkout-session")
     public Map<String, String> createCheckoutSession(@RequestBody Map<String, Object> payload) {
@@ -86,8 +86,8 @@ public class StripeController {
                 Subscription subscription = new Subscription();
                 subscription.setUserId(userId);
                 subscription.setStartDate(java.sql.Date.valueOf(LocalDate.now()));
-                subscription.setEndDate(java.sql.Date.valueOf(LocalDate.now().plusDays(7)));
-                subscription.setPrice(49);
+                subscription.setEndDate(java.sql.Date.valueOf(LocalDate.now().plusDays(31)));
+                subscription.setPrice(196);
                 subscription.setStatus("active");
                 subscription.setSubscriptionId(subscriptionId);
 
@@ -110,7 +110,7 @@ public class StripeController {
      * Annullerer et abonnement.
      *
      * @param payload Payload med abonnement-ID.
-     * @return Map med status eller fejlbesked.
+     * @return Map med status eller fejlmeddelelse.
      */
     @PostMapping("/cancel-subscription")
     public Map<String, String> cancelSubscription(@RequestBody Map<String, Object> payload) {

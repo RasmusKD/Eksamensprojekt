@@ -4,12 +4,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.minkostplan.eksamensprojekt.Model.Ingredient;
 import com.minkostplan.eksamensprojekt.Model.Recipe;
 import com.minkostplan.eksamensprojekt.Service.UseCase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -47,7 +50,7 @@ public class RecipeCreationController {
      * @param model Model-objekt til at tilføje attributter.
      * @return Navnet på viewet "edit-recipe".
      */
-    @GetMapping("/recipe-edit")
+    @GetMapping("/edit-recipe")
     public String showEditRecipeForm(Model model) {
         List<Recipe> recipes = useCase.getAllRecipes();
         List<Ingredient> ingredientList = useCase.getAllIngredients();
@@ -60,9 +63,9 @@ public class RecipeCreationController {
      * Henter detaljer om en specifik opskrift.
      *
      * @param id Opskriftens ID.
-     * @return En Recipe-objekt med detaljerne om opskriften.
+     * @return Et Recipe-objekt med detaljerne om opskriften.
      */
-    @GetMapping("/recipe-edit/{id}")
+    @GetMapping("/edit-recipe/{id}")
     @ResponseBody
     public Recipe getRecipeDetails(@PathVariable("id") int id) {
         return useCase.getRecipeById(id);
@@ -80,7 +83,6 @@ public class RecipeCreationController {
      * @param mealTime     Opskriftens måltidstid.
      * @param day          Dagen opskriften er tilknyttet.
      * @param imageFile    Billedfil af opskriften.
-     * @param model        Model-objekt til at tilføje attributter.
      * @return JSON-respons med succesmeddelelse.
      */
     @PostMapping("/recipe-creation")
@@ -93,10 +95,9 @@ public class RecipeCreationController {
                                           @RequestParam("cookingTime") String cookingTime,
                                           @RequestParam("mealTime") String mealTime,
                                           @RequestParam("day") String day,
-                                          @RequestParam("imageFile") MultipartFile imageFile,
-                                          Model model) {
+                                          @RequestParam("imageFile") MultipartFile imageFile) {
 
-        // Gem den uploadede fil
+        // Gemmer den uploadede fil
         String imageUrl = null;
         if (!imageFile.isEmpty()) {
             try {
@@ -106,7 +107,7 @@ public class RecipeCreationController {
                 imageUrl = "/images/" + imageFile.getOriginalFilename();
             } catch (IOException e) {
                 e.printStackTrace();
-                return ResponseEntity.status(500).body("Fejl ved upload af billede");
+                return ResponseEntity.status(500).body("{\"error\": \"Fejl ved upload af billede.\"}");
             }
         }
 
@@ -119,7 +120,7 @@ public class RecipeCreationController {
         recipe.setMealTime(mealTime);
         recipe.setDay(day);
 
-        // Beregn de totale ernæringsværdier
+        // Beregn samlede næringsværdier
         int totalCalories = 0;
         int totalProtein = 0;
         int totalFat = 0;
@@ -128,10 +129,10 @@ public class RecipeCreationController {
         for (int i = 0; i < ingredientIds.size(); i++) {
             Ingredient ingredient = useCase.getIngredientById(ingredientIds.get(i));
             double quantity = quantities.get(i);
-            totalCalories += ingredient.getCalories() * quantity / 100;
-            totalProtein += ingredient.getProtein() * quantity / 100;
-            totalFat += ingredient.getFat() * quantity / 100;
-            totalCarbohydrates += ingredient.getCarbohydrate() * quantity / 100;
+            totalCalories += (int) (ingredient.getCalories() * quantity / 100);
+            totalProtein += (int) (ingredient.getProtein() * quantity / 100);
+            totalFat += (int) (ingredient.getFat() * quantity / 100);
+            totalCarbohydrates += (int) (ingredient.getCarbohydrate() * quantity / 100);
         }
 
         recipe.setTotalCalories(totalCalories);
@@ -141,7 +142,6 @@ public class RecipeCreationController {
 
         useCase.createRecipeWithIngredients(recipe, ingredientIds, quantities);
 
-        // Returner succesmeddelelse som JSON-respons
         return ResponseEntity.ok().body("{\"message\": \"Opskriften blev oprettet!\"}");
     }
 
@@ -158,26 +158,23 @@ public class RecipeCreationController {
      * @param mealTime     Opskriftens måltidstid.
      * @param day          Dagen opskriften er tilknyttet.
      * @param imageFile    Valgfri billedfil af opskriften.
-     * @param model        Model-objekt til at tilføje attributter.
      * @return JSON-respons med succesmeddelelse.
      */
     @PostMapping("/edit-recipe")
     @ResponseBody
-    public ResponseEntity<?> editRecipe(@RequestParam("recipeId") int id,
-                                        @RequestParam("title") String title,
-                                        @RequestParam("description") String description,
-                                        @RequestParam("ingredients") List<Integer> ingredientIds,
-                                        @RequestParam("quantities") List<Double> quantities,
-                                        @RequestParam("instructions") String instructions,
-                                        @RequestParam("cookingTime") String cookingTime,
-                                        @RequestParam("mealTime") String mealTime,
-                                        @RequestParam("day") String day,
-                                        @RequestParam(value = "imageFile", required = false) MultipartFile imageFile,
-                                        Model model) {
+    public ResponseEntity<Map<String, String>> editRecipe(@RequestParam("recipeId") int id,
+                                                          @RequestParam("title") String title,
+                                                          @RequestParam("description") String description,
+                                                          @RequestParam("ingredients") List<Integer> ingredientIds,
+                                                          @RequestParam("quantities") List<Double> quantities,
+                                                          @RequestParam("instructions") String instructions,
+                                                          @RequestParam("cookingTime") String cookingTime,
+                                                          @RequestParam("mealTime") String mealTime,
+                                                          @RequestParam("day") String day,
+                                                          @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
 
         Recipe recipe = useCase.getRecipeById(id);
 
-        // Gem den uploadede fil, hvis den er til stede
         if (imageFile != null && !imageFile.isEmpty()) {
             try {
                 byte[] bytes = imageFile.getBytes();
@@ -186,7 +183,9 @@ public class RecipeCreationController {
                 recipe.setImageUrl("/images/" + imageFile.getOriginalFilename());
             } catch (IOException e) {
                 e.printStackTrace();
-                return ResponseEntity.status(500).body("Fejl ved upload af billede");
+                Map<String, String> response = new HashMap<>();
+                response.put("message", "Fejl ved upload af billede");
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
             }
         }
 
@@ -197,7 +196,6 @@ public class RecipeCreationController {
         recipe.setMealTime(mealTime);
         recipe.setDay(day);
 
-        // Beregn de totale ernæringsværdier
         int totalCalories = 0;
         int totalProtein = 0;
         int totalFat = 0;
@@ -206,10 +204,10 @@ public class RecipeCreationController {
         for (int i = 0; i < ingredientIds.size(); i++) {
             Ingredient ingredient = useCase.getIngredientById(ingredientIds.get(i));
             double quantity = quantities.get(i);
-            totalCalories += ingredient.getCalories() * quantity / 100;
-            totalProtein += ingredient.getProtein() * quantity / 100;
-            totalFat += ingredient.getFat() * quantity / 100;
-            totalCarbohydrates += ingredient.getCarbohydrate() * quantity / 100;
+            totalCalories += (int) (ingredient.getCalories() * quantity / 100);
+            totalProtein += (int) (ingredient.getProtein() * quantity / 100);
+            totalFat += (int) (ingredient.getFat() * quantity / 100);
+            totalCarbohydrates += (int) (ingredient.getCarbohydrate() * quantity / 100);
         }
 
         recipe.setTotalCalories(totalCalories);
@@ -219,24 +217,28 @@ public class RecipeCreationController {
 
         useCase.updateRecipeWithIngredients(recipe, ingredientIds, quantities);
 
-        // Returner succesmeddelelse som JSON-respons
-        return ResponseEntity.ok().body("{\"message\": \"Opskriften blev opdateret!\"}");
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Opskriften blev opdateret!");
+        return ResponseEntity.ok(response);
     }
 
     /**
      * Sletter en opskrift baseret på ID.
      *
      * @param id Opskriftens ID.
-     * @return JSON-respons med succes- eller fejlfunktion.
+     * @return JSON-respons med succes- eller fejlmeddelelse.
      */
     @DeleteMapping("/delete-recipe/{id}")
     @ResponseBody
-    public ResponseEntity<?> deleteRecipe(@PathVariable("id") int id) {
+    public ResponseEntity<Map<String, String>> deleteRecipe(@PathVariable("id") int id) {
         boolean isDeleted = useCase.deleteRecipeById(id);
+        Map<String, String> response = new HashMap<>();
         if (isDeleted) {
-            return ResponseEntity.ok().body("{\"message\": \"Recipe deleted successfully\"}");
+            response.put("message", "Opskriften blev slettet!");
+            return ResponseEntity.ok(response);
         } else {
-            return ResponseEntity.status(500).body("{\"message\": \"Failed to delete recipe\"}");
+            response.put("message", "Kunne ikke slette opskriften.");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
 }
