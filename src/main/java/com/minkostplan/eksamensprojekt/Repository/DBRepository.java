@@ -367,6 +367,7 @@ public class DBRepository {
                 ingredient.setCarbohydrate(rs.getDouble("carbohydrate"));
                 ingredient.setProtein(rs.getDouble("protein"));
                 ingredient.setCalories(rs.getInt("calories"));
+                // Add this if you have a quantity field in your database for ingredients
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -375,6 +376,7 @@ public class DBRepository {
         }
         return ingredient;
     }
+
 
     /**
      * Opretter en opskrift med tilhørende ingredienser i databasen.
@@ -460,16 +462,18 @@ public class DBRepository {
                 ingredient.setFat(rs.getDouble("fat"));
                 ingredient.setCarbohydrate(rs.getDouble("carbohydrate"));
                 ingredient.setProtein(rs.getDouble("protein"));
+                ingredient.setCalories(rs.getInt("calories"));
+                ingredient.setQuantity(rs.getDouble("quantity"));
                 ingredientList.add(ingredient);
             }
         } catch (SQLException e) {
-            System.out.println("Error connecting to the database or executing the query.");
             e.printStackTrace();
         } finally {
             closeResources(conn, pstmt, rs);
         }
         return ingredientList;
     }
+
 
     /**
      * Opretter et nyt abonnement i databasen.
@@ -888,9 +892,17 @@ public class DBRepository {
         }
     }
     public void addIngredientToShoppingList(int userId, Ingredient ingredient) {
+        // Check if the ingredient exists in the Ingredient table
+        Ingredient existingIngredient = getIngredientById(ingredient.getIngredientId());
+        if (existingIngredient == null) {
+            System.out.println("Ingredient with ID " + ingredient.getIngredientId() + " does not exist.");
+            return; // Exit the method if the ingredient does not exist
+        }
+
         String sql = "INSERT INTO ShoppingList (user_id, ingredient_id, quantity) VALUES (?, ?, ?)";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            System.out.println("Adding ingredient to shopping list: userId=" + userId + ", ingredientId=" + ingredient.getIngredientId() + ", quantity=" + ingredient.getQuantity());
             pstmt.setInt(1, userId);
             pstmt.setInt(2, ingredient.getIngredientId());
             pstmt.setDouble(3, ingredient.getQuantity());
@@ -899,6 +911,8 @@ public class DBRepository {
             e.printStackTrace();
         }
     }
+
+
 
     public List<Ingredient> getShoppingListByUserId(int userId) {
         List<Ingredient> shoppingList = new ArrayList<>();

@@ -79,17 +79,21 @@ public class RecipeController {
     @PostMapping("/add-to-shopping-list/{recipeId}")
     @ResponseBody
     public String addToShoppingList(@PathVariable int recipeId, Principal principal) {
+        User user = useCase.getUserByEmail(principal.getName());
         Recipe recipe = useCase.getRecipeById(recipeId);
         if (recipe == null) {
             return "Recipe not found";
         }
 
-        User user = useCase.getUserByEmail(principal.getName());
-        List<Ingredient> ingredients = recipe.getIngredients();
-        useCase.addIngredientsToShoppingList(user, ingredients);
+        double userCaloricNeeds = useCase.calculateCalories(user);
+        double adjustedCalories = useCase.calculateAdjustedCalories(userCaloricNeeds, recipe.getMealTime());
+        List<Ingredient> adjustedIngredients = useCase.getAdjustedIngredients(recipe, adjustedCalories);
+
+        useCase.addIngredientsToShoppingList(user, adjustedIngredients);
 
         return "Ingredienser tilføjet til indkøbslisten!";
     }
+
 
 
     @PostMapping("/favorite-recipe/{recipeId}")

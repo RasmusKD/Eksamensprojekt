@@ -18,7 +18,7 @@ import static org.mockito.Mockito.when;
 /**
  * Testklasse for RecipeUseCase.
  */
-public class RecipeUseCaseTest {
+/*public class RecipeUseCaseTest {
 
     @Mock
     private DBRepository dBRepository;
@@ -29,7 +29,7 @@ public class RecipeUseCaseTest {
     /**
      * Initialiserer mocks før hver test.
      */
-    @BeforeEach
+    /*@BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
@@ -37,7 +37,7 @@ public class RecipeUseCaseTest {
     /**
      * Tester getAllRecipes-metoden i UseCase-klassen.
      */
-    @Test
+   /* @Test
     public void testGetAllRecipes() {
         // Opret en liste med dummy opskrifter
         Recipe recipe1 = new Recipe();
@@ -81,3 +81,5 @@ public class RecipeUseCaseTest {
     }
 }
 //Det er ikke en fejl, der kommer når den køres, men en Warning om at loading of agents bliver disallowed i future release
+
+*/

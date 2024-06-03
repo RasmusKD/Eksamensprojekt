@@ -276,16 +276,19 @@ public class UseCase {
 
         for (Ingredient ingredient : recipe.getIngredients()) {
             Ingredient adjustedIngredient = new Ingredient();
+            adjustedIngredient.setIngredientId(ingredient.getIngredientId()); // Ensure ID is copied
             adjustedIngredient.setName(ingredient.getName());
             adjustedIngredient.setFat(ingredient.getFat() * adjustmentFactor);
             adjustedIngredient.setProtein(ingredient.getProtein() * adjustmentFactor);
             adjustedIngredient.setCarbohydrate(ingredient.getCarbohydrate() * adjustmentFactor);
             adjustedIngredient.setCalories((int) (ingredient.getCalories() * adjustmentFactor));
-            adjustedIngredient.setQuantity(ingredient.getQuantity() * adjustmentFactor); // Justerer mængden
+            adjustedIngredient.setQuantity(ingredient.getQuantity() * adjustmentFactor); // Adjust quantity
             adjustedIngredients.add(adjustedIngredient);
         }
         return adjustedIngredients;
     }
+
+
 
     /**
      * Henter opskrifter baseret på dag med justerede kalorier baseret på brugerens behov.
@@ -378,11 +381,13 @@ public class UseCase {
     }
 
     public void addIngredientsToShoppingList(User user, List<Ingredient> ingredients) {
-        // Logikken for at tilføje ingredienser til indkøbslisten
         for (Ingredient ingredient : ingredients) {
+            System.out.println("Ingredient ID: " + ingredient.getIngredientId() + ", Name: " + ingredient.getName());
             dBRepository.addIngredientToShoppingList(user.getUserId(), ingredient);
         }
     }
+
+
 
     public List<Ingredient> getShoppingList(int userId) {
         return dBRepository.getShoppingListByUserId(userId);
