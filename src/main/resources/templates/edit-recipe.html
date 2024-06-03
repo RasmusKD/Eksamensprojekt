@@ -11,90 +11,93 @@
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<div class="content center">
-    <div class="content-box">
-        <div class="text-box recipe-card-size">
-            <div class="login-headline">Rediger Opskrift</div>
-            <div id="message-container" class="alert" style="display: none;">
-                <span id="message-text"></span>
-            </div>
-            <div class="input-icon" data-placeholder="Vælg en opskrift:">
-                <i class="material-icons">search</i>
-                <select class="input-field" id="recipeSelect" name="recipeSelect" required>
-                    <option value="" disabled selected>Vælg en opskrift</option>
-                    <option th:each="recipe : ${recipes}" th:value="${recipe.recipeId}" th:text="${recipe.title}"></option>
-                </select>
-            </div>
-            <form id="recipeForm" method="post" enctype="multipart/form-data" style="display: none;" th:action="@{/edit-recipe}">
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
-                <input type="hidden" id="recipeId" name="recipeId"/>
-                <div class="input-icon" data-placeholder="Navn:">
-                    <i class="material-icons">title</i>
-                    <input class="input-field" type="text" id="title" name="title" placeholder="Navn" required/>
-                </div>
-                <div class="input-icon" data-placeholder="Beskrivelse:">
-                    <i class="material-icons">description</i>
-                    <textarea class="input-field large" id="description" name="description" placeholder="Beskrivelse" required></textarea>
-                </div>
-                <div class="input-icon" data-placeholder="Tidspunkt:">
-                    <i class="material-icons">schedule</i>
-                    <select class="input-field" id="mealTime" name="mealTime" required>
-                        <option value="" disabled selected>Måltid</option>
-                        <option value="Breakfast">Morgenmad</option>
-                        <option value="Lunch">Frokost</option>
-                        <option value="Dinner">Aftensmad</option>
-                    </select>
-                </div>
-                <div class="input-icon" data-placeholder="Dato: (skiftes til uge)">
-                    <i class="material-icons">calendar_today</i>
-                    <input class="input-field" type="date" id="day" name="day" required/>
-                </div>
-                <div class="input-icon" data-placeholder="Tilberedningstid:">
-                    <i class="material-icons">timer</i>
-                    <select class="input-field" id="cookingTime" name="cookingTime" required>
-                        <option value="" disabled selected>Tilberedningstid</option>
-                        <option value="5 min">5 min</option>
-                        <option value="10 min">10 min</option>
-                        <option value="15 min">15 min</option>
-                        <option value="20 min">20 min</option>
-                        <option value="25 min">25 min</option>
-                        <option value="30 min">30 min</option>
-                        <option value="35 min">35 min</option>
-                        <option value="40 min">40 min</option>
-                        <option value="45 min">45 min</option>
-                        <option value="50 min">50 min</option>
-                        <option value="55 min">55 min</option>
-                        <option value="60 min">60 min</option>
-                    </select>
-                </div>
-                <div class="input-icon" data-placeholder="Søg ingredienser:">
-                    <i class="material-icons">search</i>
-                    <input class="input-field" type="text" id="ingredientsSearch" placeholder="Søg ingredienser..."/>
-                </div>
-                <div id="ingredientsResults" class="ingredient-results"></div>
-                <div id="selectedIngredients" class="selected-ingredients"></div>
-                <div class="full-width">
-                    <div class="input-icon" data-placeholder="Instruktioner:">
-                        <i class="material-icons">menu_book</i>
-                        <textarea class="input-field large" id="instructions" name="instructions" placeholder="Instruktioner" required></textarea>
+<div class="scrollable-content">
+    <div class="content-wrapper">
+        <div class="content center">
+            <div class="content-box">
+                <div class="text-box recipe-card-size">
+                    <div class="login-headline">Rediger Opskrift</div>
+                    <div id="message-container" class="alert" style="display: none;">
+                        <span id="message-text"></span>
                     </div>
-                    <div class="input-icon" data-placeholder="Billede:">
-                        <i class="material-icons">image</i>
-                        <input class="input-field" type="file" id="imageFile" name="imageFile"/>
-                        <p>Nuværende billede: <span id="currentImage"></span></p>
+                    <div class="input-icon" data-placeholder="Vælg en opskrift:">
+                        <i class="material-icons">search</i>
+                        <select class="input-field" id="recipeSelect" name="recipeSelect" required>
+                            <option value="" disabled selected>Vælg en opskrift</option>
+                            <option th:each="recipe : ${recipes}" th:value="${recipe.recipeId}" th:text="${recipe.title}"></option>
+                        </select>
                     </div>
+                    <form id="recipeForm" method="post" enctype="multipart/form-data" style="display: none;" th:action="@{/edit-recipe}">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <input type="hidden" id="recipeId" name="recipeId"/>
+                        <div class="input-icon" data-placeholder="Navn:">
+                            <i class="material-icons">title</i>
+                            <input class="input-field" type="text" id="title" name="title" placeholder="Navn" required/>
+                        </div>
+                        <div class="input-icon" data-placeholder="Beskrivelse:">
+                            <i class="material-icons">description</i>
+                            <textarea class="input-field large" id="description" name="description" placeholder="Beskrivelse" required></textarea>
+                        </div>
+                        <div class="input-icon" data-placeholder="Tidspunkt:">
+                            <i class="material-icons">schedule</i>
+                            <select class="input-field" id="mealTime" name="mealTime" required>
+                                <option value="" disabled selected>Måltid</option>
+                                <option value="Breakfast">Morgenmad</option>
+                                <option value="Lunch">Frokost</option>
+                                <option value="Dinner">Aftensmad</option>
+                            </select>
+                        </div>
+                        <div class="input-icon" data-placeholder="Dato: (skiftes til uge)">
+                            <i class="material-icons">calendar_today</i>
+                            <input class="input-field" type="date" id="day" name="day" required/>
+                        </div>
+                        <div class="input-icon" data-placeholder="Tilberedningstid:">
+                            <i class="material-icons">timer</i>
+                            <select class="input-field" id="cookingTime" name="cookingTime" required>
+                                <option value="" disabled selected>Tilberedningstid</option>
+                                <option value="5 min">5 min</option>
+                                <option value="10 min">10 min</option>
+                                <option value="15 min">15 min</option>
+                                <option value="20 min">20 min</option>
+                                <option value="25 min">25 min</option>
+                                <option value="30 min">30 min</option>
+                                <option value="35 min">35 min</option>
+                                <option value="40 min">40 min</option>
+                                <option value="45 min">45 min</option>
+                                <option value="50 min">50 min</option>
+                                <option value="55 min">55 min</option>
+                                <option value="60 min">60 min</option>
+                            </select>
+                        </div>
+                        <div class="input-icon" data-placeholder="Søg ingredienser:">
+                            <i class="material-icons">search</i>
+                            <input class="input-field" type="text" id="ingredientsSearch" placeholder="Søg ingredienser..."/>
+                        </div>
+                        <div id="ingredientsResults" class="ingredient-results"></div>
+                        <div id="selectedIngredients" class="selected-ingredients"></div>
+                        <div class="full-width">
+                            <div class="input-icon" data-placeholder="Instruktioner:">
+                                <i class="material-icons">menu_book</i>
+                                <textarea class="input-field large" id="instructions" name="instructions" placeholder="Instruktioner" required></textarea>
+                            </div>
+                            <div class="input-icon" data-placeholder="Billede:">
+                                <i class="material-icons">image</i>
+                                <input class="input-field" type="file" id="imageFile" name="imageFile"/>
+                                <p>Nuværende billede: <span id="currentImage"></span></p>
+                            </div>
+                        </div>
+                        <div class="full-width">
+                            <input class="btn-primary w-100" type="submit" value="Opdater Opskrift"/>
+                            <button type="button" id="deleteButton" class="btn-primary color-red w-100" style="display: none;">Slet Opskrift</button>
+                            <button class="btn-primary color-blue w-100" type="button" onclick="window.location.href='/weekly-recipes'">Se Alle Opskrifter</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="full-width">
-                    <input class="btn-primary w-100" type="submit" value="Opdater Opskrift"/>
-                    <button type="button" id="deleteButton" class="btn-primary color-red w-100" style="display: none;">Slet Opskrift</button>
-                    <button class="btn-primary color-blue w-100" type="button" onclick="window.location.href='/weekly-recipes'">Se Alle Opskrifter</button>
-                </div>
-            </form>
+            </div>
         </div>
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-<div th:replace="~{fragments/footer :: footer}"></div>
-
 <!-- Confirmation Modal -->
 <div id="confirmation-modal" class="modal">
     <div class="modal-content">

@@ -21,16 +21,17 @@ body {
     flex-direction: column;
     min-height: 100vh;
     margin: 0;
-    padding: 0;
+    padding-top: 75px;
     background-color: #ebf5ed;
     font-family: Ubuntu, sans-serif!important;
     font-size: .9rem;
     line-height: 1.6;
+    overflow: hidden;
 }
 
 /* Font-styling for input, label og textarea */
-input, label, textarea {
-    font-family: Ubuntu, sans-serif!important;
+input, label, textarea, button {
+    font-family: Ubuntu, sans-serif;
 }
 
 /* Fjern mulighed for at ændre størrelse på textarea */
@@ -45,6 +46,9 @@ textarea.large, .input-field.large {
 
 /* Styling af navigationsbjælken */
 .top-bar {
+    position: fixed;
+    top: 0;
+    z-index: 3;
     background-color: #fdfdfd;
     color: #3c3f40;
     padding: 20px;
@@ -54,7 +58,7 @@ textarea.large, .input-field.large {
     box-shadow: 0 .125rem .25rem rgba(0,0,0,.09)!important;
     place-content: center;
     height: 75px;
-    z-index: 1;
+    width: 100%;
 }
 
 .top-bar .link-container {
@@ -158,6 +162,7 @@ textarea.large, .input-field.large {
     padding: 50px 0 0 0;
     text-align: center;
     overflow: hidden;
+    flex: 1;
 }
 
 .hero .content-box {
@@ -506,6 +511,7 @@ textarea.large, .input-field.large {
     position: absolute;
     height: 700px;
     left: -331px;
+    top: -75px;
 }
 
 /* Styling for at logo ikke ligner et link */
@@ -649,6 +655,16 @@ textarea.large, .input-field.large {
 .meal-box p {
     font-size: 1.1em;
     padding: 0 10px 20px;
+}
+/* deaktiver meal box for ikke abonnenter ved at fjerne klik, hover og gøre den mere utydelig */
+.meal-box-disabled {
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.meal-box-disabled:hover {
+    transform: none;
 }
 
 /* Navigation pile */
@@ -1061,6 +1077,7 @@ form#deleteForm {
     grid-template-columns: repeat(3, 1fr);
     gap: 1em;
     height: fit-content;
+    width: 100%;
 }
 
 @media (max-width: 1200px) {
@@ -1148,4 +1165,111 @@ form#deleteForm {
 
 .badge {
     flex-shrink: 0;
+}
+/* En boks der vises hvis man ikke er subscribet, kan ikke lukkes.*/
+.payment-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 2;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3px);
+}
+
+.payment-modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.09);
+    width: 80%;
+    display: flex;
+    max-width: 600px;
+    flex-direction: column;
+}
+
+.payment-modal-content h2 {
+    margin: 0;
+    font-size: 2em;
+    color: #333;
+}
+
+.payment-modal-content p {
+    font-size: 1.2em;
+    color: #666;
+    margin: 20px 0;
+}
+
+.payment-modal-content button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1.2em;
+}
+/* Scrollable content container */
+.scrollable-content {
+    overflow-y: auto;
+    height: calc(100vh - 75px);
+}
+
+/* Sørg for, at footer forbliver i bunden */
+.content-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}
+/* Scrollbar styling */
+::-webkit-scrollbar {
+    width: .75rem;
+
+    &:horizontal {
+        height: .75rem;
+    }
+
+    &:not(:horizontal) {
+        width: .75rem;
+    }
+}
+
+::-webkit-scrollbar-track {
+    background: none;
+}
+
+::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    border: 0.1rem solid transparent;
+    background-color: #b8b8b8;
+    border-radius: 0.5rem;
+
+    &:horizontal {
+        border-bottom: none;
+
+        &:hover {
+            background-color: #999999;
+        }
+
+        &:active {
+            background-color: #999999;
+        }
+    }
+
+    &:not(:horizontal) {
+        border-right: none;
+
+        &:hover {
+            background-color: #999999;
+        }
+
+        &:active {
+            background-color: #999999;
+        }
+    }
+}
+
+::-webkit-scrollbar-corner {
+    background: none;
 }

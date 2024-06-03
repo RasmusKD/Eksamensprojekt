@@ -10,51 +10,54 @@
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<div class="content login-content center">
-    <div class="content-box">
-        <div class="text-box">
-            <div class="login-headline">Rediger Ingredienser</div>
-            <div id="message-container" class="alert" style="display: none;">
-                <span id="message-text"></span>
+<div class="scrollable-content">
+    <div class="content-wrapper">
+        <div class="content login-content center">
+            <div class="content-box">
+                <div class="text-box">
+                    <div class="login-headline">Rediger Ingredienser</div>
+                    <div id="message-container" class="alert" style="display: none;">
+                        <span id="message-text"></span>
+                    </div>
+                    <div class="input-icon" data-placeholder="Vælg en ingrediens:">
+                        <i class="material-icons">search</i>
+                        <select class="input-field" id="ingredientSelect" name="ingredientSelect" required>
+                            <option value="" disabled selected>Vælg en ingrediens</option>
+                            <option th:each="ingredient : ${ingredients}" th:value="${ingredient.ingredientId}" th:text="${ingredient.name}"></option>
+                        </select>
+                    </div>
+                    <form id="ingredientForm" th:action="@{/edit-ingredients}" method="post" style="display: none;">
+                        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+                        <input type="hidden" id="ingredientId" name="ingredientId"/>
+                        <div class="input-icon" data-placeholder="Navn:">
+                            <i class="material-icons">title</i>
+                            <input class="input-field" type="text" id="name" name="name" placeholder="Navn" required>
+                        </div>
+                        <div class="input-icon" data-placeholder="Fedt (g):">
+                            <i class="material-icons">local_dining</i>
+                            <input class="input-field" type="number" step="0.01" id="fat" name="fat" placeholder="Fedt (g)" required>
+                        </div>
+                        <div class="input-icon" data-placeholder="Kulhydrater (g):">
+                            <i class="material-icons">restaurant</i>
+                            <input class="input-field" type="number" step="0.01" id="carbohydrate" name="carbohydrate" placeholder="Kulhydrater (g)" required>
+                        </div>
+                        <div class="input-icon" data-placeholder="Protein (g):">
+                            <i class="material-icons">fitness_center</i>
+                            <input class="input-field" type="number" step="0.01" id="protein" name="protein" placeholder="Protein (g)" required>
+                        </div>
+                        <div class="input-icon" data-placeholder="Kalorier (g):">
+                            <i class="material-icons">local_fire_department</i>
+                            <input class="input-field" type="number" step="0.01" id="calories" name="calories" placeholder="Kalorier (g)" required>
+                        </div>
+                        <input class="btn-primary w-100" type="submit" value="Opdater Ingrediens"/>
+                        <button type="button" id="deleteButton" class="btn-primary color-red w-100" style="display: none;">Slet Ingrediens</button>
+                    </form>
+                </div>
             </div>
-            <div class="input-icon" data-placeholder="Vælg en ingrediens:">
-                <i class="material-icons">search</i>
-                <select class="input-field" id="ingredientSelect" name="ingredientSelect" required>
-                    <option value="" disabled selected>Vælg en ingrediens</option>
-                    <option th:each="ingredient : ${ingredients}" th:value="${ingredient.ingredientId}" th:text="${ingredient.name}"></option>
-                </select>
-            </div>
-            <form id="ingredientForm" th:action="@{/edit-ingredients}" method="post" style="display: none;">
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
-                <input type="hidden" id="ingredientId" name="ingredientId"/>
-                <div class="input-icon" data-placeholder="Navn:">
-                    <i class="material-icons">title</i>
-                    <input class="input-field" type="text" id="name" name="name" placeholder="Navn" required>
-                </div>
-                <div class="input-icon" data-placeholder="Fedt (g):">
-                    <i class="material-icons">local_dining</i>
-                    <input class="input-field" type="number" step="0.01" id="fat" name="fat" placeholder="Fedt (g)" required>
-                </div>
-                <div class="input-icon" data-placeholder="Kulhydrater (g):">
-                    <i class="material-icons">restaurant</i>
-                    <input class="input-field" type="number" step="0.01" id="carbohydrate" name="carbohydrate" placeholder="Kulhydrater (g)" required>
-                </div>
-                <div class="input-icon" data-placeholder="Protein (g):">
-                    <i class="material-icons">fitness_center</i>
-                    <input class="input-field" type="number" step="0.01" id="protein" name="protein" placeholder="Protein (g)" required>
-                </div>
-                <div class="input-icon" data-placeholder="Kalorier (g):">
-                    <i class="material-icons">local_fire_department</i>
-                    <input class="input-field" type="number" step="0.01" id="calories" name="calories" placeholder="Kalorier (g)" required>
-                </div>
-                <input class="btn-primary w-100" type="submit" value="Opdater Ingrediens"/>
-                <button type="button" id="deleteButton" class="btn-primary color-red w-100" style="display: none;">Slet Ingrediens</button>
-            </form>
         </div>
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-<div th:replace="~{fragments/footer :: footer}"></div>
-
 <!-- Bekræftelsesmodal -->
 <div id="confirmation-modal" class="modal">
     <div class="modal-content">

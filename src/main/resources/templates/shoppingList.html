@@ -10,29 +10,32 @@
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
-<div class="content center">
-    <div class="content-box">
-        <div class="text-box">
-            <h1 class="headline">Indkøbsliste</h1>
-            <ul class="list-group" id="shopping-list">
-                <!-- Shopping list items will be injected here by Thymeleaf -->
-                <th:block th:each="ingredient : ${shoppingList}">
-                    <li class="list-group-item d-flex justify-content-between align-items-center" th:id="'ingredient-' + ${ingredient.ingredientId}">
-                        <div class="custom-control custom-checkbox">
-                            <input type="checkbox" class="custom-control-input" th:id="'checkbox-' + ${ingredient.ingredientId}" th:checked="${ingredient.bought}" th:onclick="'updateBoughtStatus(' + ${ingredient.ingredientId} + ', this.checked)'">
-                            <label class="custom-control-label" th:for="'checkbox-' + ${ingredient.ingredientId}" th:text="${ingredient.name}" th:classappend="${ingredient.bought ? ' bought' : ''}"></label>
-                        </div>
-                        <span class="badge badge-primary badge-pill" th:text="${#numbers.formatDecimal(ingredient.quantity, 0, 0)} + ' g'"></span>
-                    </li>
-                </th:block>
-            </ul>
-            <button class="btn-primary w-100 button-spacing" onclick="clearMarked()">Clear Marked</button>
-            <button class="btn-primary w-100 button-spacing color-red" onclick="clearAll()">Clear All</button>
+<div class="scrollable-content">
+    <div class="content-wrapper">
+        <div class="content center">
+            <div class="content-box">
+                <div class="text-box">
+                    <h1 class="headline">Indkøbsliste</h1>
+                    <ul class="list-group" id="shopping-list">
+                        <!-- Shopping list items will be injected here by Thymeleaf -->
+                        <th:block th:each="ingredient : ${shoppingList}">
+                            <li class="list-group-item d-flex justify-content-between align-items-center" th:id="'ingredient-' + ${ingredient.ingredientId}">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" th:id="'checkbox-' + ${ingredient.ingredientId}" th:checked="${ingredient.bought}" th:onclick="'updateBoughtStatus(' + ${ingredient.ingredientId} + ', this.checked)'">
+                                    <label class="custom-control-label" th:for="'checkbox-' + ${ingredient.ingredientId}" th:text="${ingredient.name}" th:classappend="${ingredient.bought ? ' bought' : ''}"></label>
+                                </div>
+                                <span class="badge badge-primary badge-pill" th:text="${#numbers.formatDecimal(ingredient.quantity, 0, 0)} + ' g'"></span>
+                            </li>
+                        </th:block>
+                    </ul>
+                    <button class="btn-primary w-100 button-spacing" onclick="clearMarked()">Clear Marked</button>
+                    <button class="btn-primary w-100 button-spacing color-red" onclick="clearAll()">Clear All</button>
+                </div>
+            </div>
         </div>
+        <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-<div th:replace="~{fragments/footer :: footer}"></div>
-
 <script>
     function updateBoughtStatus(ingredientId, bought) {
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');

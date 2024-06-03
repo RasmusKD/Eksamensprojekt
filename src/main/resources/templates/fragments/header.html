@@ -1,19 +1,19 @@
 <div class="top-bar" th:fragment="header">
     <div class="container">
         <div class="link-container">
-            <a th:href="${#authorization.expression('isAuthenticated()') ? '/dashboard' : '/'}" class="logo-link">
+            <a th:href="${#authorization.expression('isAuthenticated()') ? '/weekly-recipes' : '/'}" class="logo-link">
                 <h1>MINKOSTPLAN</h1>
             </a>
-            <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}"
-                    class="highlighted-text pointer"
+            <button th:if="${#authorization.expression('isAuthenticated()')}" class="highlighted-text pointer"
                     th:classappend="${page == 'weekly-recipes' ? 'active' : ''}"
                     th:onclick="|window.location.href='@{/weekly-recipes}'|">Ugens Opskrifter</button>
-            <button th:if="${#authorization.expression('isAuthenticated()')}" class="highlighted-text pointer"
+            <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}"
+                    class="highlighted-text pointer"
                     th:classappend="${page == 'shopping-list' ? 'active' : ''}"
                     onclick="window.location.href='/shopping-list'">Indkøbsliste</button>
             <button th:if="${#authorization.expression('isAuthenticated()')}" class="highlighted-text pointer"
                     th:classappend="${page == 'dashboard' ? 'active' : ''}"
-                    onclick="window.location.href='/dashboard'">Dashboard</button>
+                    onclick="window.location.href='/dashboard'">Din Profil</button>
             <button class="highlighted-text pointer"
                     th:classappend="${page == 'about-us' ? 'active' : ''}"
                     onclick="window.location.href='/about-us'">Om Os</button>

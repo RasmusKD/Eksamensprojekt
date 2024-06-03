@@ -463,7 +463,6 @@ public class DBRepository {
                 ingredient.setCarbohydrate(rs.getDouble("carbohydrate"));
                 ingredient.setProtein(rs.getDouble("protein"));
                 ingredient.setCalories(rs.getInt("calories"));
-                ingredient.setQuantity(rs.getDouble("quantity"));
                 ingredientList.add(ingredient);
             }
         } catch (SQLException e) {

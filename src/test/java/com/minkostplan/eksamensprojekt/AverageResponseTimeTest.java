@@ -16,7 +16,7 @@ public class AverageResponseTimeTest {
     @Test
     public void testAverageLoadingTime() {
         // URL til dit endpoint, juster dette til din faktiske URL
-        String url = "http://localhost:8080/dashboard";
+        String url = "http://localhost:8080/weekly-recipes";
 
         int numberOfRequests = 10; // Antal forespørgsler for at beregne gennemsnit
         long totalResponseTime = 0;

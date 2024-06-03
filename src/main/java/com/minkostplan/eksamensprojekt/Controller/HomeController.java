@@ -21,7 +21,7 @@ public class HomeController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && auth.getAuthorities().stream()
                 .noneMatch(a -> a.getAuthority().equals("ROLE_ANONYMOUS"))) {
-            return "redirect:/dashboard";
+            return "redirect:/weekly-recipes";
         }
         return "home";
     }
@@ -36,7 +36,7 @@ public class HomeController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.isAuthenticated() && auth.getAuthorities().stream()
                 .noneMatch(a -> a.getAuthority().equals("ROLE_ANONYMOUS"))) {
-            return "redirect:/dashboard";
+            return "redirect:/weekly-recipes";
         }
         return "login";
     }
