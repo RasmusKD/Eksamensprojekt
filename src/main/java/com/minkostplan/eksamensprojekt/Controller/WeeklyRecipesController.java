@@ -44,6 +44,7 @@ public class WeeklyRecipesController {
         model.addAttribute("breakfastRecipes", organizedRecipes.get(0));
         model.addAttribute("lunchRecipes", organizedRecipes.get(1));
         model.addAttribute("dinnerRecipes", organizedRecipes.get(2));
+        model.addAttribute("page", "weekly-recipes");
 
         return "weekly-recipes";
     }
