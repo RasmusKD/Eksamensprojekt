@@ -382,7 +382,6 @@ public class UseCase {
 
     public void addIngredientsToShoppingList(User user, List<Ingredient> ingredients) {
         for (Ingredient ingredient : ingredients) {
-            System.out.println("Ingredient ID: " + ingredient.getIngredientId() + ", Name: " + ingredient.getName());
             dBRepository.addIngredientToShoppingList(user.getUserId(), ingredient);
         }
     }
