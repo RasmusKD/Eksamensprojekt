@@ -892,25 +892,47 @@ public class DBRepository {
         }
     }
     public void addIngredientToShoppingList(int userId, Ingredient ingredient) {
-        // Check if the ingredient exists in the Ingredient table
-        Ingredient existingIngredient = getIngredientById(ingredient.getIngredientId());
-        if (existingIngredient == null) {
-            System.out.println("Ingredient with ID " + ingredient.getIngredientId() + " does not exist.");
-            return; // Exit the method if the ingredient does not exist
-        }
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
 
-        String sql = "INSERT INTO ShoppingList (user_id, ingredient_id, quantity) VALUES (?, ?, ?)";
-        try (Connection conn = getConnection();
-             PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            System.out.println("Adding ingredient to shopping list: userId=" + userId + ", ingredientId=" + ingredient.getIngredientId() + ", quantity=" + ingredient.getQuantity());
+        try {
+            conn = getConnection();
+
+            // Check if the ingredient already exists in the shopping list
+            String checkSql = "SELECT quantity FROM ShoppingList WHERE user_id = ? AND ingredient_id = ?";
+            pstmt = conn.prepareStatement(checkSql);
             pstmt.setInt(1, userId);
             pstmt.setInt(2, ingredient.getIngredientId());
-            pstmt.setDouble(3, ingredient.getQuantity());
-            pstmt.executeUpdate();
+            rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                // If the ingredient exists, update the quantity
+                double existingQuantity = rs.getDouble("quantity");
+                double newQuantity = existingQuantity + ingredient.getQuantity();
+
+                String updateSql = "UPDATE ShoppingList SET quantity = ? WHERE user_id = ? AND ingredient_id = ?";
+                pstmt = conn.prepareStatement(updateSql);
+                pstmt.setDouble(1, newQuantity);
+                pstmt.setInt(2, userId);
+                pstmt.setInt(3, ingredient.getIngredientId());
+                pstmt.executeUpdate();
+            } else {
+                // If the ingredient does not exist, insert a new record
+                String insertSql = "INSERT INTO ShoppingList (user_id, ingredient_id, quantity) VALUES (?, ?, ?)";
+                pstmt = conn.prepareStatement(insertSql);
+                pstmt.setInt(1, userId);
+                pstmt.setInt(2, ingredient.getIngredientId());
+                pstmt.setDouble(3, ingredient.getQuantity());
+                pstmt.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt, rs);
         }
     }
+
 
 
 
