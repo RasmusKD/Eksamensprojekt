@@ -89,8 +89,9 @@
             <div>Dage tilbage: <span th:text="${daysLeft}"></span></div>
         </div>
         <!-- Subscriber Buttons -->
-        <div class="text-box"  th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}">
+        <div class="text-box" th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}">
             <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}" th:onclick="|window.location.href='@{/weekly-recipes}'|" class="btn-primary color-blue w-100">Ugens Opskrifter</button>
+            <button th:onclick="|window.location.href='@{/shopping-list}'|" class="btn-primary color-blue w-100">Indkøbsliste</button>
         </div>
         <!-- Admin and Employee Buttons -->
         <div class="text-box" th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}">

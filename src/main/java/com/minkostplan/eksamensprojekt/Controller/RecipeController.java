@@ -69,6 +69,15 @@ public class RecipeController {
         model.addAttribute("methodSentences", methodSentences);
         return "recipe";
     }
+
+    @GetMapping("/shopping-list")
+    public String getShoppingList(Model model, Principal principal) {
+        User user = useCase.getUserByEmail(principal.getName());
+        List<Ingredient> shoppingList = useCase.getShoppingList(user.getUserId());
+        model.addAttribute("shoppingList", shoppingList);
+        return "shoppingList";
+    }
+
     @PostMapping("/add-to-shopping-list/{recipeId}")
     @ResponseBody
     public String addToShoppingList(@PathVariable int recipeId, Principal principal) {
@@ -77,13 +86,8 @@ public class RecipeController {
             return "Recipe not found";
         }
 
-        // Hent den aktuelle bruger
         User user = useCase.getUserByEmail(principal.getName());
-
-        // Hent ingredienserne fra opskriften
         List<Ingredient> ingredients = recipe.getIngredients();
-
-        // Tilføj ingredienserne til indkøbslisten (du skal implementere logikken i UseCase)
         useCase.addIngredientsToShoppingList(user, ingredients);
 
         return "Ingredienser tilføjet til indkøbslisten!";

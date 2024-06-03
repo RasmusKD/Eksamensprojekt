@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <title>Indkøbsliste</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="content shopping-list-content">
+    <h1>Indkøbsliste</h1>
+    <ul>
+        <li th:each="ingredient : ${shoppingList}">
+            <span th:text="${ingredient.quantity} + 'g - ' + ${ingredient.name}">Ingredient Name</span>
+        </li>
+    </ul>
+    <a href="/recipes" class="back-button">Tilbage til opskrifter</a>
+</div>
+<div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

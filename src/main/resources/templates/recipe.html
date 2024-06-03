@@ -5,6 +5,8 @@
     <title th:text="${recipe.title}">Recipe Title</title>
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
@@ -57,12 +59,15 @@
 
 <script>
     function addToShoppingList() {
-        const recipeId = /* Insert method to get recipe ID */;
+        const recipeId = [[${recipe.recipeId}]];
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
         fetch(`/add-to-shopping-list/${recipeId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': /* CSRF token if needed */
+                [csrfHeader]: csrfToken
             }
         }).then(response => {
             if (response.ok) {

@@ -899,4 +899,26 @@ public class DBRepository {
             e.printStackTrace();
         }
     }
+
+    public List<Ingredient> getShoppingListByUserId(int userId) {
+        List<Ingredient> shoppingList = new ArrayList<>();
+        String sql = "SELECT i.ingredientId, i.name, sl.quantity FROM ShoppingList sl " +
+                "JOIN Ingredient i ON sl.ingredient_id = i.ingredientId WHERE sl.user_id = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    Ingredient ingredient = new Ingredient();
+                    ingredient.setIngredientId(rs.getInt("ingredientId"));
+                    ingredient.setName(rs.getString("name"));
+                    ingredient.setQuantity(rs.getDouble("quantity"));
+                    shoppingList.add(ingredient);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return shoppingList;
+    }
 }

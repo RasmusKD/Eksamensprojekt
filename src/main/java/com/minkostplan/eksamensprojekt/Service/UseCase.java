@@ -382,4 +382,7 @@ public class UseCase {
         }
     }
 
+    public List<Ingredient> getShoppingList(int userId) {
+        return dBRepository.getShoppingListByUserId(userId);
+    }
 }
