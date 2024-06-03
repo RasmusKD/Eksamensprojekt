@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -69,44 +68,6 @@ public class RecipeController {
         return "recipe";
     }
 
-    @GetMapping("/shopping-list")
-    public String getShoppingList(Model model, Principal principal) {
-        User user = useCase.getUserByEmail(principal.getName());
-        List<Ingredient> shoppingList = useCase.getShoppingList(user.getUserId());
-        model.addAttribute("shoppingList", shoppingList);
-        model.addAttribute("page", "shopping-list");
-        return "shoppingList";
-    }
-
-    @PostMapping("/add-to-shopping-list/{recipeId}")
-    @ResponseBody
-    public String addToShoppingList(@PathVariable int recipeId, Principal principal) {
-        User user = useCase.getUserByEmail(principal.getName());
-        Recipe recipe = useCase.getRecipeById(recipeId);
-        if (recipe == null) {
-            return "Recipe not found";
-        }
-
-        double userCaloricNeeds = useCase.calculateCalories(user);
-        double adjustedCalories = useCase.calculateAdjustedCalories(userCaloricNeeds, recipe.getMealTime());
-        List<Ingredient> adjustedIngredients = useCase.getAdjustedIngredients(recipe, adjustedCalories);
-
-        useCase.addIngredientsToShoppingList(user, adjustedIngredients);
-
-        return "Ingredienser tilføjet til indkøbslisten!";
-    }
-
-    @PostMapping("/update-bought-status")
-    @ResponseBody
-    public String updateBoughtStatus(@RequestBody Map<String, Object> payload, Principal principal) {
-        User user = useCase.getUserByEmail(principal.getName());
-        int ingredientId = (int) payload.get("ingredientId");
-        boolean bought = (boolean) payload.get("bought");
-        useCase.updateBoughtStatus(user.getUserId(), ingredientId, bought);
-        return "Status opdateret!";
-    }
-
-
     @PostMapping("/favorite-recipe/{recipeId}")
     @ResponseBody
     public String favoriteRecipe(@PathVariable int recipeId, Principal principal) {
@@ -115,5 +76,3 @@ public class RecipeController {
         return "Recipe favorited successfully.";
     }
 }
-
-

@@ -29,6 +29,8 @@
             </li>
         </th:block>
     </ul>
+    <button class="btn btn-danger mt-3" onclick="clearMarked()">Clear Marked</button>
+    <button class="btn btn-danger mt-3" onclick="clearAll()">Clear All</button>
 </div>
 
 <script>
@@ -36,11 +38,11 @@
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-        fetch('/update-bought-status', {
+        fetch('/shopping-list/update-bought-status', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                [csrfHeader]: csrfToken // Add the CSRF token header
+                [csrfHeader]: csrfToken
             },
             body: JSON.stringify({
                 ingredientId: ingredientId,
@@ -59,7 +61,44 @@
             })
             .catch(error => console.error('Error:', error));
     }
-</script>
 
+    function clearMarked() {
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        fetch('/shopping-list/clear-marked', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            }
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                location.reload();
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function clearAll() {
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        fetch('/shopping-list/clear-all', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            }
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                location.reload();
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
 </body>
 </html>

@@ -392,7 +392,13 @@ public class UseCase {
     public void updateBoughtStatus(int userId, int ingredientId, boolean bought) {
         dBRepository.updateBoughtStatus(userId, ingredientId, bought);
     }
+    public void clearAll(int userId) {
+        dBRepository.clearAll(userId);
+    }
 
+    public void clearMarked(int userId) {
+        dBRepository.clearMarked(userId);
+    }
 
     public void addFavoriteRecipe(int userId, int recipeId) {
         // Call the method in your DBRepository to add the favorite recipe to the database

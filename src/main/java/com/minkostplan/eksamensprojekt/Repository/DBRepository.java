@@ -978,6 +978,40 @@ public class DBRepository {
         }
     }
 
+    public void clearAll(int userId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "DELETE FROM ShoppingList WHERE user_id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
+    }
+
+    public void clearMarked(int userId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "DELETE FROM ShoppingList WHERE user_id = ? AND bought = true";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
+    }
+
     public void addFavoriteRecipe(int userId, int recipeId) {
         Connection conn = null;
         PreparedStatement pstmt = null;
