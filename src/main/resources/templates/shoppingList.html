@@ -1,37 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="da" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indkøbsliste</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta name="_csrf" th:content="${_csrf.token}"/>
     <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
-
-    <title>Shopping List</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <style>
-        .bought {
-            text-decoration: line-through;
-        }
-    </style>
 </head>
 <body>
-<div class="container mt-5">
-    <h1 class="mb-4">Shopping List</h1>
-    <ul class="list-group" id="shopping-list">
-        <!-- Shopping list items will be injected here by Thymeleaf -->
-        <th:block th:each="ingredient : ${shoppingList}">
-            <li class="list-group-item d-flex justify-content-between align-items-center" th:id="'ingredient-' + ${ingredient.ingredientId}">
-                <div class="custom-control custom-checkbox">
-                    <input type="checkbox" class="custom-control-input" th:id="'checkbox-' + ${ingredient.ingredientId}" th:checked="${ingredient.bought}" th:onclick="'updateBoughtStatus(' + ${ingredient.ingredientId} + ', this.checked)'">
-                    <label class="custom-control-label" th:for="'checkbox-' + ${ingredient.ingredientId}" th:text="${ingredient.name}" th:classappend="${ingredient.bought ? ' bought' : ''}"></label>
-                </div>
-                <span class="badge badge-primary badge-pill" th:text="${#numbers.formatDecimal(ingredient.quantity, 0, 0)}"></span>
-            </li>
-        </th:block>
-    </ul>
-    <button class="btn btn-danger mt-3" onclick="clearMarked()">Clear Marked</button>
-    <button class="btn btn-danger mt-3" onclick="clearAll()">Clear All</button>
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="content center">
+    <div class="content-box">
+        <div class="text-box">
+            <h1 class="headline">Indkøbsliste</h1>
+            <ul class="list-group" id="shopping-list">
+                <!-- Shopping list items will be injected here by Thymeleaf -->
+                <th:block th:each="ingredient : ${shoppingList}">
+                    <li class="list-group-item d-flex justify-content-between align-items-center" th:id="'ingredient-' + ${ingredient.ingredientId}">
+                        <div class="custom-control custom-checkbox">
+                            <input type="checkbox" class="custom-control-input" th:id="'checkbox-' + ${ingredient.ingredientId}" th:checked="${ingredient.bought}" th:onclick="'updateBoughtStatus(' + ${ingredient.ingredientId} + ', this.checked)'">
+                            <label class="custom-control-label" th:for="'checkbox-' + ${ingredient.ingredientId}" th:text="${ingredient.name}" th:classappend="${ingredient.bought ? ' bought' : ''}"></label>
+                        </div>
+                        <span class="badge badge-primary badge-pill" th:text="${#numbers.formatDecimal(ingredient.quantity, 0, 0)} + ' g'"></span>
+                    </li>
+                </th:block>
+            </ul>
+            <button class="btn-primary w-100 button-spacing" onclick="clearMarked()">Clear Marked</button>
+            <button class="btn-primary w-100 button-spacing color-red" onclick="clearAll()">Clear All</button>
+        </div>
+    </div>
 </div>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 <script>
     function updateBoughtStatus(ingredientId, bought) {
