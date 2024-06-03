@@ -375,4 +375,11 @@ public class UseCase {
         return dBRepository.deleteIngredientById(id);
     }
 
+    public void addIngredientsToShoppingList(User user, List<Ingredient> ingredients) {
+        // Logikken for at tilføje ingredienser til indkøbslisten
+        for (Ingredient ingredient : ingredients) {
+            dBRepository.addIngredientToShoppingList(user.getUserId(), ingredient);
+        }
+    }
+
 }

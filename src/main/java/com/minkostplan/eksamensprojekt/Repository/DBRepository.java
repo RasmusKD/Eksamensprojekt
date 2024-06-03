@@ -887,4 +887,16 @@ public class DBRepository {
             closeResources(conn, pstmt);
         }
     }
+    public void addIngredientToShoppingList(int userId, Ingredient ingredient) {
+        String sql = "INSERT INTO ShoppingList (user_id, ingredient_id, quantity) VALUES (?, ?, ?)";
+        try (Connection conn = getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, ingredient.getIngredientId());
+            pstmt.setDouble(3, ingredient.getQuantity());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -7,9 +7,7 @@ import com.minkostplan.eksamensprojekt.Service.UseCase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.Arrays;
@@ -70,5 +68,24 @@ public class RecipeController {
         model.addAttribute("recipe", recipe);
         model.addAttribute("methodSentences", methodSentences);
         return "recipe";
+    }
+    @PostMapping("/add-to-shopping-list/{recipeId}")
+    @ResponseBody
+    public String addToShoppingList(@PathVariable int recipeId, Principal principal) {
+        Recipe recipe = useCase.getRecipeById(recipeId);
+        if (recipe == null) {
+            return "Recipe not found";
+        }
+
+        // Hent den aktuelle bruger
+        User user = useCase.getUserByEmail(principal.getName());
+
+        // Hent ingredienserne fra opskriften
+        List<Ingredient> ingredients = recipe.getIngredients();
+
+        // Tilføj ingredienserne til indkøbslisten (du skal implementere logikken i UseCase)
+        useCase.addIngredientsToShoppingList(user, ingredients);
+
+        return "Ingredienser tilføjet til indkøbslisten!";
     }
 }

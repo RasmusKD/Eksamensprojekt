@@ -22,7 +22,7 @@
     </div>
     <div class="recipe-container">
         <div class="recipe-image">
-            <img draggable="false"th:src="@{${recipe.imageUrl}}" alt="Recipe Image">
+            <img draggable="false" th:src="@{${recipe.imageUrl}}" alt="Recipe Image">
             <p class="cooking-time"><strong>Madlavningstid:</strong> <span th:text="${recipe.cookingTime}">Cooking Time</span></p>
         </div>
         <div class="recipe-details-box">
@@ -33,6 +33,9 @@
                         <span th:utext="${#numbers.formatDecimal(ingredient.quantity, 0, 0)} + 'g - &nbsp;&nbsp;' + ${ingredient.name}">Ingredient Name</span>
                     </li>
                 </ul>
+                <!-- Add button to add ingredients to shopping list -->
+                <button onclick="addToShoppingList()" class="add-to-list-button">Tilføj ingredienser til indkøbsliste</button>
+
                 <h3>Fremgangsmåde:</h3>
                 <ul class="method-list">
                     <li th:each="sentence : ${methodSentences}">
@@ -51,5 +54,25 @@
     </div>
 </div>
 <div th:replace="~{fragments/footer :: footer}"></div>
+
+<script>
+    function addToShoppingList() {
+        const recipeId = /* Insert method to get recipe ID */;
+        fetch(`/add-to-shopping-list/${recipeId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': /* CSRF token if needed */
+            }
+        }).then(response => {
+            if (response.ok) {
+                alert('Ingredienser tilføjet til indkøbslisten!');
+            } else {
+                alert('Fejl ved tilføjelse af ingredienser til indkøbslisten.');
+            }
+        });
+    }
+</script>
+
 </body>
 </html>
