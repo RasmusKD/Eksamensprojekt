@@ -63,7 +63,7 @@
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-        fetch(`/add-to-shopping-list/${recipeId}`, {
+        fetch(`/shopping-list/add-to-shopping-list/${recipeId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -78,6 +78,7 @@
         });
     }
 </script>
+
 
 </body>
 </html>
