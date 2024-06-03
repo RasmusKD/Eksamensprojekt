@@ -96,7 +96,7 @@ public class UseCase {
     /**
      * Opdaterer ansættelsesstatus for en bruger baseret på deres email.
      *
-     * @param email brugerens email.
+     * @param email            brugerens email.
      * @param employmentStatus den nye ansættelsesstatus.
      */
     public void updateEmploymentStatus(String email, int employmentStatus) {
@@ -151,9 +151,9 @@ public class UseCase {
     /**
      * Opretter en ny opskrift med tilhørende ingredienser og mængder.
      *
-     * @param recipe         opskriften, der skal oprettes.
-     * @param ingredientIds  liste over ingrediens IDs.
-     * @param quantities     liste over mængde af hver ingrediens.
+     * @param recipe        opskriften, der skal oprettes.
+     * @param ingredientIds liste over ingrediens IDs.
+     * @param quantities    liste over mængde af hver ingrediens.
      */
     public void createRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
         dBRepository.createRecipeWithIngredients(recipe, ingredientIds, quantities);
@@ -171,7 +171,7 @@ public class UseCase {
     /**
      * Opdaterer abonnementsstatus for en bruger baseret på deres ID.
      *
-     * @param userId          brugerens ID.
+     * @param userId           brugerens ID.
      * @param subscriberStatus den nye abonnementsstatus.
      */
     public void updateUserSubscriptionStatus(int userId, boolean subscriberStatus) {
@@ -338,9 +338,9 @@ public class UseCase {
     /**
      * Opdaterer en opskrift med tilhørende ingredienser og mængder.
      *
-     * @param recipe         opskriften, der skal opdateres.
-     * @param ingredientIds  liste over ingrediens IDs.
-     * @param quantities     liste over mængder for hver ingrediens.
+     * @param recipe        opskriften, der skal opdateres.
+     * @param ingredientIds liste over ingrediens IDs.
+     * @param quantities    liste over mængder for hver ingrediens.
      */
     public void updateRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
         dBRepository.updateRecipeWithIngredients(recipe, ingredientIds, quantities);
@@ -384,5 +384,10 @@ public class UseCase {
 
     public List<Ingredient> getShoppingList(int userId) {
         return dBRepository.getShoppingListByUserId(userId);
+    }
+
+    public void addFavoriteRecipe(int userId, int recipeId) {
+        // Call the method in your DBRepository to add the favorite recipe to the database
+        dBRepository.addFavoriteRecipe(userId, recipeId);
     }
 }

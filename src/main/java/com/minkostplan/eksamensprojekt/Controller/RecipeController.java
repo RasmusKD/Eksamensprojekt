@@ -92,4 +92,15 @@ public class RecipeController {
 
         return "Ingredienser tilføjet til indkøbslisten!";
     }
+
+
+    @PostMapping("/favorite-recipe/{recipeId}")
+    @ResponseBody
+    public String favoriteRecipe(@PathVariable int recipeId, Principal principal) {
+        User user = useCase.getUserByEmail(principal.getName());
+        useCase.addFavoriteRecipe(user.getUserId(), recipeId);
+        return "Recipe favorited successfully.";
+    }
 }
+
+
