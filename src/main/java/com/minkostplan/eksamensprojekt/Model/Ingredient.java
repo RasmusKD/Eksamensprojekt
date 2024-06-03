@@ -12,6 +12,9 @@ public class Ingredient {
     private double carbohydrate;
     private int calories;
     private double quantity;
+    private boolean bought;
+
+
 
     /**
      * Standardkonstruktør.
@@ -35,6 +38,7 @@ public class Ingredient {
         this.carbohydrate = carbohydrate;
         this.calories = calories;
     }
+
 
     // Getters og setters for alle felter
 
@@ -93,7 +97,13 @@ public class Ingredient {
     public void setQuantity(double quantity) {
         this.quantity = quantity;
     }
+    public boolean isBought() {
+        return bought;
+    }
 
+    public void setBought(boolean bought) {
+        this.bought = bought;
+    }
     @Override
     public String toString() {
         return "Ingredient{" +

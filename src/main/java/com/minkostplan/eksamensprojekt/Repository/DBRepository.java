@@ -938,7 +938,7 @@ public class DBRepository {
 
     public List<Ingredient> getShoppingListByUserId(int userId) {
         List<Ingredient> shoppingList = new ArrayList<>();
-        String sql = "SELECT i.ingredientId, i.name, sl.quantity FROM ShoppingList sl " +
+        String sql = "SELECT i.ingredientId, i.name, sl.quantity, sl.bought FROM ShoppingList sl " +
                 "JOIN Ingredient i ON sl.ingredient_id = i.ingredientId WHERE sl.user_id = ?";
         try (Connection conn = getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -949,6 +949,7 @@ public class DBRepository {
                     ingredient.setIngredientId(rs.getInt("ingredientId"));
                     ingredient.setName(rs.getString("name"));
                     ingredient.setQuantity(rs.getDouble("quantity"));
+                    ingredient.setBought(rs.getBoolean("bought")); // Add this line
                     shoppingList.add(ingredient);
                 }
             }
@@ -957,6 +958,26 @@ public class DBRepository {
         }
         return shoppingList;
     }
+
+    public void updateBoughtStatus(int userId, int ingredientId, boolean bought) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE ShoppingList SET bought = ? WHERE user_id = ? AND ingredient_id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setBoolean(1, bought);
+            pstmt.setInt(2, userId);
+            pstmt.setInt(3, ingredientId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
+    }
+
     public void addFavoriteRecipe(int userId, int recipeId) {
         Connection conn = null;
         PreparedStatement pstmt = null;

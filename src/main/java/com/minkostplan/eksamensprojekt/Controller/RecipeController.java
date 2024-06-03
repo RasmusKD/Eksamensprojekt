@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -94,6 +95,15 @@ public class RecipeController {
         return "Ingredienser tilføjet til indkøbslisten!";
     }
 
+    @PostMapping("/update-bought-status")
+    @ResponseBody
+    public String updateBoughtStatus(@RequestBody Map<String, Object> payload, Principal principal) {
+        User user = useCase.getUserByEmail(principal.getName());
+        int ingredientId = (int) payload.get("ingredientId");
+        boolean bought = (boolean) payload.get("bought");
+        useCase.updateBoughtStatus(user.getUserId(), ingredientId, bought);
+        return "Status opdateret!";
+    }
 
 
     @PostMapping("/favorite-recipe/{recipeId}")

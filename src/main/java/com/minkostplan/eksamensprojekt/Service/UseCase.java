@@ -386,11 +386,13 @@ public class UseCase {
         }
     }
 
-
-
     public List<Ingredient> getShoppingList(int userId) {
         return dBRepository.getShoppingListByUserId(userId);
     }
+    public void updateBoughtStatus(int userId, int ingredientId, boolean bought) {
+        dBRepository.updateBoughtStatus(userId, ingredientId, bought);
+    }
+
 
     public void addFavoriteRecipe(int userId, int recipeId) {
         // Call the method in your DBRepository to add the favorite recipe to the database
