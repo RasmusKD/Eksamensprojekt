@@ -10,13 +10,13 @@
 <div th:replace="~{fragments/header :: header}"></div>
 <div class="tabs-container center">
     <div class="tabs">
-        <button class="tablink" onclick="openTab(event, 'Breakfast')">Morgenmad</button>
+        <button class="tablink active" onclick="openTab(event, 'Breakfast')">Morgenmad</button>
         <button class="tablink" onclick="openTab(event, 'Lunch')">Middagsmad</button>
         <button class="tablink" onclick="openTab(event, 'Dinner')">Aftensmad</button>
     </div>
 </div>
 <div class="content center">
-    <div id="Breakfast" class="tabcontent">
+    <div id="Breakfast" class="tabcontent active">
         <div th:each="recipe : ${breakfastRecipes}">
             <div class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId})}'|">
                 <img draggable="false" th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
@@ -59,19 +59,19 @@
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
+            tabcontent[i].className = tabcontent[i].className.replace(" active", "");
         }
         tablinks = document.getElementsByClassName("tablink");
         for (i = 0; i < tablinks.length; i++) {
             tablinks[i].className = tablinks[i].className.replace(" active", "");
         }
-        document.getElementById(mealTime).style.display = "block";
+        document.getElementById(mealTime).className += " active";
         evt.currentTarget.className += " active";
     }
 
     // Default open tab
     document.addEventListener("DOMContentLoaded", function() {
-        document.querySelector(".tablink").click();
+        document.querySelector(".tablink.active").click();
     });
 </script>
 </body>

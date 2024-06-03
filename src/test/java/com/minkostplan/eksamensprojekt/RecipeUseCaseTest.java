@@ -52,7 +52,7 @@ public class RecipeUseCaseTest {
         recipe1.setTotalProtein(20);
         recipe1.setTotalFat(10);
         recipe1.setTotalCarbohydrates(40);
-        recipe1.setDay("Monday");
+        recipe1.setWeek("2024-W23");
 
         Recipe recipe2 = new Recipe();
         recipe2.setRecipeId(2);
@@ -66,7 +66,7 @@ public class RecipeUseCaseTest {
         recipe2.setTotalProtein(30);
         recipe2.setTotalFat(20);
         recipe2.setTotalCarbohydrates(60);
-        recipe2.setDay("Tuesday");
+        recipe2.setWeek("2024-W23");
 
         List<Recipe> expectedRecipes = Arrays.asList(recipe1, recipe2);
 

@@ -1019,3 +1019,50 @@ form#deleteForm {
 .alert-success {
     background-color: #5cb85c;
 }
+
+.tabs-container {
+    margin-top: 20px;
+}
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 5em;
+}
+.tablink {
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    font-size: 28px;
+    text-decoration: none;
+    border: none;
+    place-items: center;
+    transition: background-color 0.3s ease-in-out;
+    color: #383838!important;
+    font-weight: 700;
+    letter-spacing: .035em!important;
+    text-transform: uppercase;
+    background-color: transparent;
+    position: relative;
+}
+
+.tablink::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 4px; /* Thickness of the underline */
+    background-color: green; /* Color of the underline */
+    bottom: 0;
+    left: 0;
+    transition: width 0.3s ease-in-out;
+}
+
+.tablink:hover::after {
+    width: 100%;
+}
+.tabcontent {
+    display: none;
+    padding: 20px;
+}
+.tabcontent.active {
+    display: block;
+}
