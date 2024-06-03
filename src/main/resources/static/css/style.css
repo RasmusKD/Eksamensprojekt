@@ -1028,6 +1028,7 @@ form#deleteForm {
     justify-content: center;
     gap: 5em;
 }
+
 .tablink {
     outline: none;
     cursor: pointer;
@@ -1049,16 +1050,22 @@ form#deleteForm {
     content: '';
     position: absolute;
     width: 0;
-    height: 4px; /* Thickness of the underline */
-    background-color: green; /* Color of the underline */
+    height: 6px;
+    background-color: forestgreen;
     bottom: 0;
     left: 0;
     transition: width 0.3s ease-in-out;
 }
 
-.tablink:hover::after {
+.tablink:hover::after,
+.tablink.active::after {
     width: 100%;
 }
+
+.tablink.active {
+    /* Additional styles for active state if needed */
+}
+
 .tabcontent {
     display: none;
     padding: 20px;
