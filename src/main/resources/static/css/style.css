@@ -1125,3 +1125,27 @@ form#deleteForm {
     visibility: visible;
     opacity: 1;
 }
+.list-group-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 70px;
+}
+
+.custom-control {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.custom-control-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.badge {
+    flex-shrink: 0;
+}
