@@ -294,7 +294,7 @@ textarea.large, .input-field.large {
     gap: 3em;
 }
 
-.content img {
+.hero img {
     height: 420px;
     filter: drop-shadow(2px 2px 6px #363636);
 }
@@ -616,45 +616,29 @@ textarea.large, .input-field.large {
     padding: 0 2em 2em;
 }
 
-.weekly-recipes-page .meal-box {
+.meal-box {
     background-color: white;
     border-radius: .25rem;
     box-shadow: 0 .125rem .25rem rgba(0,0,0,.09) !important;
-    width: 100%;
-    max-width: 500px;
-    margin-bottom: 1em;
     display: flex;
     flex-direction: column;
     align-items: center;
     overflow: hidden;
-    height: 300px;
-    gap: 0.75em;
     cursor: pointer;
     transition: transform 0.3s ease, z-index 0.3s ease;
+    height: 300px; /* fixed height for all boxes */
+    width: 100%; /* ensures all boxes take up equal width in the grid */
 }
 
-.weekly-recipes-page .meal-box:hover {
+.meal-box:hover {
     transform: scale(1.05);
-    z-index: 10;
-}
-
-.weekly-recipes-page .day-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 33%;
-    transition: opacity 0.3s ease, z-index 0.3s ease;
-}
-
-.weekly-recipes-page .day-container:hover {
     z-index: 10;
 }
 
 .meal-box img {
     width: 100%;
-    height: 75%;
-    object-fit: cover;
-    filter: none;
+    height: 200px; /* fixed height for images */
+    object-fit: cover; /* ensures images are properly scaled */
 }
 
 .meal-box h3 {
@@ -785,7 +769,8 @@ textarea.large, .input-field.large {
     flex-direction: column;
     text-align: center;
     gap: 0.5em;
-    padding: 0 10px 10px 10px;
+    padding: 10px;
+    flex-grow: 1;
 }
 
 /* Confirmation box styling */
@@ -1051,7 +1036,7 @@ form#deleteForm {
     position: absolute;
     width: 0;
     height: 6px;
-    background-color: forestgreen;
+    background-color: green;
     bottom: 0;
     left: 0;
     transition: width 0.3s ease-in-out;
@@ -1062,14 +1047,30 @@ form#deleteForm {
     width: 100%;
 }
 
-.tablink.active {
-    /* Additional styles for active state if needed */
-}
-
 .tabcontent {
     display: none;
     padding: 20px;
 }
+
 .tabcontent.active {
-    display: block;
+    display: grid;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1em;
+    height: fit-content;
+}
+
+@media (max-width: 1200px) {
+    .grid-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
 }

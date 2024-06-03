@@ -16,7 +16,7 @@
     </div>
 </div>
 <div class="content center">
-    <div id="Breakfast" class="tabcontent active">
+    <div id="Breakfast" class="tabcontent grid-container active">
         <div th:each="recipe : ${breakfastRecipes}">
             <div class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId})}'|">
                 <img draggable="false" th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
@@ -28,7 +28,7 @@
         </div>
     </div>
 
-    <div id="Lunch" class="tabcontent">
+    <div id="Lunch" class="tabcontent grid-container">
         <div th:each="recipe : ${lunchRecipes}">
             <div class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId})}'|">
                 <img draggable="false" th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
@@ -40,7 +40,7 @@
         </div>
     </div>
 
-    <div id="Dinner" class="tabcontent">
+    <div id="Dinner" class="tabcontent grid-container">
         <div th:each="recipe : ${dinnerRecipes}">
             <div class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId})}'|">
                 <img draggable="false" th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
@@ -59,14 +59,14 @@
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            tabcontent[i].style.display = "none"; // hide all tab contents
         }
         tablinks = document.getElementsByClassName("tablink");
         for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
+            tablinks[i].classList.remove("active"); // remove active class from all tabs
         }
-        document.getElementById(mealTime).className += " active";
-        evt.currentTarget.className += " active";
+        document.getElementById(mealTime).style.display = "grid"; // show the current tab content
+        evt.currentTarget.classList.add("active"); // add active class to the current tab
     }
 
     // Default open tab
