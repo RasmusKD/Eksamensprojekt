@@ -13,23 +13,31 @@
 <div class="scrollable-content">
     <div class="content-wrapper">
         <div class="content center">
-            <div class="content-box">
+            <div class="content-box shopping-width">
                 <div class="text-box">
-                    <h1 class="headline">Indkøbsliste</h1>
-                    <ul class="list-group" id="shopping-list">
+                    <div class="headline">Indkøbsliste</div>
+                    <div class="list-group" id="shopping-list">
                         <!-- Shopping list items will be injected here by Thymeleaf -->
                         <th:block th:each="ingredient : ${shoppingList}">
-                            <li class="list-group-item d-flex justify-content-between align-items-center" th:id="'ingredient-' + ${ingredient.ingredientId}">
+                            <div class="list-group-item" th:id="'ingredient-' + ${ingredient.ingredientId}">
                                 <div class="custom-control custom-checkbox">
-                                    <input type="checkbox" class="custom-control-input" th:id="'checkbox-' + ${ingredient.ingredientId}" th:checked="${ingredient.bought}" th:onclick="'updateBoughtStatus(' + ${ingredient.ingredientId} + ', this.checked)'">
+                                    <input type="checkbox" class="custom-control-input" th:id="'checkbox-' + ${ingredient.ingredientId}" th:checked="${ingredient.bought}" th:onclick="'updateBoughtStatus(' + ${ingredient.ingredientId} + ', this.checked); checkIfMarked()'">
                                     <label class="custom-control-label" th:for="'checkbox-' + ${ingredient.ingredientId}" th:text="${ingredient.name}" th:classappend="${ingredient.bought ? ' bought' : ''}"></label>
                                 </div>
-                                <span class="badge badge-primary badge-pill" th:text="${#numbers.formatDecimal(ingredient.quantity, 0, 0)} + ' g'"></span>
-                            </li>
+                                <div class="input-flex">
+                                    <span th:id="'quantity-span-' + ${ingredient.ingredientId}" th:text="${#numbers.formatDecimal(ingredient.quantity, 0, 0)} + ' g'"></span>
+                                    <div class="input-group" style="display:none;" th:id="'input-group-' + ${ingredient.ingredientId}">
+                                        <input type="number" class="quantity-input" th:id="'quantity-input-' + ${ingredient.ingredientId}" th:value="${#numbers.formatDecimal(ingredient.quantity, 0, 0)}" min="0" step="1">
+                                        <span class="input-group-addon">g</span>
+                                    </div>
+                                    <i class="material-icons edit-icon" th:id="'edit-icon-' + ${ingredient.ingredientId}" th:onclick="'editQuantity(' + ${ingredient.ingredientId} + ')'">edit</i>
+                                    <i class="material-icons save-icon" th:id="'save-icon-' + ${ingredient.ingredientId}" style="display:none;" th:onclick="'saveQuantity(' + ${ingredient.ingredientId} + ')'">check</i>
+                                </div>
+                            </div>
                         </th:block>
-                    </ul>
-                    <button class="btn-primary w-100 button-spacing" onclick="clearMarked()">Clear Marked</button>
-                    <button class="btn-primary w-100 button-spacing color-red" onclick="clearAll()">Clear All</button>
+                    </div>
+                    <button id="clear-marked-btn" class="btn-primary w-100 color-red" onclick="clearMarked()">Fjern markerede</button>
+                    <button class="btn-primary w-100 color-red" onclick="clearAll()">Fjern alle</button>
                 </div>
             </div>
         </div>
@@ -61,6 +69,7 @@
                 } else {
                     label.classList.remove('bought');
                 }
+                checkIfMarked();
             })
             .catch(error => console.error('Error:', error));
     }
@@ -102,6 +111,70 @@
             })
             .catch(error => console.error('Error:', error));
     }
+
+    function editQuantity(ingredientId) {
+        const quantitySpan = document.getElementById('quantity-span-' + ingredientId);
+        const inputGroup = document.getElementById('input-group-' + ingredientId);
+        const quantityInput = document.getElementById('quantity-input-' + ingredientId);
+        const editIcon = document.getElementById('edit-icon-' + ingredientId);
+        const saveIcon = document.getElementById('save-icon-' + ingredientId);
+
+        // Set the input field's value to the rounded integer value
+        quantityInput.value = Math.round(quantityInput.value);
+
+        quantitySpan.style.display = 'none';
+        inputGroup.style.display = 'inline';
+        editIcon.style.display = 'none';
+        saveIcon.style.display = 'inline';
+    }
+
+    function saveQuantity(ingredientId) {
+        const quantitySpan = document.getElementById('quantity-span-' + ingredientId);
+        const inputGroup = document.getElementById('input-group-' + ingredientId);
+        const quantityInput = document.getElementById('quantity-input-' + ingredientId);
+        const editIcon = document.getElementById('edit-icon-' + ingredientId);
+        const saveIcon = document.getElementById('save-icon-' + ingredientId);
+        const newQuantity = parseInt(quantityInput.value, 10); // Convert to integer
+
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        fetch('/shopping-list/update-quantity', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify({
+                ingredientId: ingredientId,
+                quantity: newQuantity
+            })
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+                inputGroup.style.display = 'none';
+                quantitySpan.textContent = newQuantity + ' g';
+                quantitySpan.style.display = 'inline';
+                editIcon.style.display = 'inline';
+                saveIcon.style.display = 'none';
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function checkIfMarked() {
+        const checkboxes = document.querySelectorAll('.custom-control-input');
+        const clearMarkedBtn = document.getElementById('clear-marked-btn');
+        const anyMarked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+
+        if (anyMarked) {
+            clearMarkedBtn.classList.remove('disabled');
+        } else {
+            clearMarkedBtn.classList.add('disabled');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', checkIfMarked);
 </script>
 </body>
 </html>

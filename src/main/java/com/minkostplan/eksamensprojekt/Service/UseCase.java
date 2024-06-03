@@ -404,4 +404,8 @@ public class UseCase {
         // Call the method in your DBRepository to add the favorite recipe to the database
         dBRepository.addFavoriteRecipe(userId, recipeId);
     }
+    public void updateQuantity(int userId, int ingredientId, int quantity) {
+        dBRepository.updateQuantity(userId, ingredientId, quantity);
+    }
+
 }

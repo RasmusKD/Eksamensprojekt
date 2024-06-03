@@ -72,4 +72,14 @@ public class ShoppingListController {
         useCase.clearMarked(user.getUserId());
         return "Marked ingredients cleared";
     }
+
+    @PostMapping("/update-quantity")
+    @ResponseBody
+    public String updateQuantity(@RequestBody Map<String, Object> payload, Principal principal) {
+        User user = useCase.getUserByEmail(principal.getName());
+        int ingredientId = (int) payload.get("ingredientId");
+        int quantity = Integer.parseInt(payload.get("quantity").toString());
+        useCase.updateQuantity(user.getUserId(), ingredientId, quantity);
+        return "Quantity updated!";
+    }
 }

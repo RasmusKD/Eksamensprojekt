@@ -1028,4 +1028,23 @@ public class DBRepository {
             closeResources(conn, pstmt);
         }
     }
+
+    public void updateQuantity(int userId, int ingredientId, int quantity) {        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "UPDATE ShoppingList SET quantity = ? WHERE user_id = ? AND ingredient_id = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, quantity);
+            pstmt.setInt(2, userId);
+            pstmt.setInt(3, ingredientId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
+    }
+
 }

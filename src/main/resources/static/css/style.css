@@ -154,6 +154,11 @@ textarea.large, .input-field.large {
     background-color: #4eb74e;
 }
 
+.disabled {
+    opacity: 0.5;
+    cursor: default;
+    pointer-events: none;
+}
 /* Styling af hero-sektionen */
 .hero {
     position: relative;
@@ -1142,19 +1147,29 @@ form#deleteForm {
     visibility: visible;
     opacity: 1;
 }
+
+.list-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    gap: 1em;
+}
+
 .list-group-item {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding-left: 20px;
-    padding-right: 70px;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 }
 
 .custom-control {
     display: flex;
     align-items: center;
-    flex-grow: 1;
     overflow: hidden;
+    gap: 0.2em;
 }
 
 .custom-control-label {
@@ -1163,9 +1178,6 @@ form#deleteForm {
     text-overflow: ellipsis;
 }
 
-.badge {
-    flex-shrink: 0;
-}
 /* En boks der vises hvis man ikke er subscribet, kan ikke lukkes.*/
 .payment-modal {
     display: flex;
@@ -1272,4 +1284,40 @@ form#deleteForm {
 
 ::-webkit-scrollbar-corner {
     background: none;
+}
+
+/* Shopping list */
+
+.shopping-width {
+    min-width: 350px;
+}
+
+.quantity-input {
+    width: 65px;
+}
+
+.input-flex {
+    display: flex;
+    gap: 0.5em;
+    align-items: center;
+}
+
+/* Icons */
+.edit-icon {
+    font-size: 20px!important;
+    cursor: pointer;
+    transition: color 0.3s ease-in-out;
+}
+.edit-icon:hover {
+    color: #89cdf0 !important;
+}
+
+.save-icon {
+    font-size: 20px!important;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.save-icon:hover {
+    color: #78d578!important;
 }
