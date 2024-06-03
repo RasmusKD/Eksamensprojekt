@@ -81,7 +81,7 @@ public class RecipeCreationController {
      * @param instructions Opskriftens instruktioner.
      * @param cookingTime  Opskriftens tilberedningstid.
      * @param mealTime     Opskriftens måltidstid.
-     * @param day          Dagen opskriften er tilknyttet.
+     * @param week          Dagen opskriften er tilknyttet.
      * @param imageFile    Billedfil af opskriften.
      * @return JSON-respons med succesmeddelelse.
      */
@@ -94,7 +94,7 @@ public class RecipeCreationController {
                                           @RequestParam("instructions") String instructions,
                                           @RequestParam("cookingTime") String cookingTime,
                                           @RequestParam("mealTime") String mealTime,
-                                          @RequestParam("day") String day,
+                                          @RequestParam("week") String week,
                                           @RequestParam("imageFile") MultipartFile imageFile) {
 
         // Gemmer den uploadede fil
@@ -118,7 +118,7 @@ public class RecipeCreationController {
         recipe.setCookingTime(cookingTime);
         recipe.setImageUrl(imageUrl);
         recipe.setMealTime(mealTime);
-        recipe.setDay(day);
+        recipe.setWeek(week);
 
         // Beregn samlede næringsværdier
         int totalCalories = 0;
@@ -156,7 +156,7 @@ public class RecipeCreationController {
      * @param instructions Opskriftens instruktioner.
      * @param cookingTime  Opskriftens tilberedningstid.
      * @param mealTime     Opskriftens måltidstid.
-     * @param day          Dagen opskriften er tilknyttet.
+     * @param week          Dagen opskriften er tilknyttet.
      * @param imageFile    Valgfri billedfil af opskriften.
      * @return JSON-respons med succesmeddelelse.
      */
@@ -170,7 +170,7 @@ public class RecipeCreationController {
                                                           @RequestParam("instructions") String instructions,
                                                           @RequestParam("cookingTime") String cookingTime,
                                                           @RequestParam("mealTime") String mealTime,
-                                                          @RequestParam("day") String day,
+                                                          @RequestParam("week") String week,
                                                           @RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
 
         Recipe recipe = useCase.getRecipeById(id);
@@ -194,7 +194,7 @@ public class RecipeCreationController {
         recipe.setMethod(instructions);
         recipe.setCookingTime(cookingTime);
         recipe.setMealTime(mealTime);
-        recipe.setDay(day);
+        recipe.setWeek(week);
 
         int totalCalories = 0;
         int totalProtein = 0;
