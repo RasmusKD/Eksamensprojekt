@@ -34,7 +34,7 @@ public class RecipeController {
     @GetMapping("/recipes/{day}")
     public String getRecipesByDay(@PathVariable String day, Model model, Principal principal) {
         User user = useCase.getUserByEmail(principal.getName());
-        List<Recipe> recipes = useCase.getRecipesByDayWithAdjustedCalories(day, user);
+        List<Recipe> recipes = useCase.getRecipesByWeekWithAdjustedCalories(day, user);
         model.addAttribute("recipes", recipes);
         return "recipesByDay";
     }
