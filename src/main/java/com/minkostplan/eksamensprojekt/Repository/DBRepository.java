@@ -921,4 +921,21 @@ public class DBRepository {
         }
         return shoppingList;
     }
+    public void addFavoriteRecipe(int userId, int recipeId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "INSERT INTO UserFavoriteRecipe (UserID, RecipeID) VALUES (?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, recipeId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
+    }
 }
