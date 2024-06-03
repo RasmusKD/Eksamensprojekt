@@ -16,7 +16,7 @@ public class ResponseTimeTest {
     @Test
     public void testResponseTime() {
         // URL til dit endpoint, juster dette til din faktiske URL
-        String url = "http://localhost:8080/your-endpoint";
+        String url = "http://localhost:8080/dashboard";
 
         // Sender GET request til endpoint
         Response response = RestAssured.get(url);

@@ -66,12 +66,12 @@ public class DBRepositoryCreateUserTest {
 
         dbRepository.createUser(user);
 
-        verify(mockConnection).prepareStatement("INSERT INTO User (firstName, lastName, email, password, age, gender, weight, height, activityLevel, goal, employed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        verify(mockConnection).prepareStatement("INSERT INTO User (firstName, lastName, email, password, birthday, gender, weight, height, activityLevel, goal, employed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         verify(mockPreparedStatement).setString(1, user.getFirstName());
         verify(mockPreparedStatement).setString(2, user.getLastName());
         verify(mockPreparedStatement).setString(3, user.getEmail());
         verify(mockPreparedStatement).setString(4, user.getPassword());
-        verify(mockPreparedStatement).setInt(5, user.getAge());
+        verify(mockPreparedStatement).setDate(5, java.sql.Date.valueOf(user.getBirthday()));
         verify(mockPreparedStatement).setString(6, String.valueOf(user.getGender()));
         verify(mockPreparedStatement).setDouble(7, user.getWeight());
         verify(mockPreparedStatement).setDouble(8, user.getHeight());
@@ -109,7 +109,7 @@ public class DBRepositoryCreateUserTest {
 
         dbRepository.createUser(user);
 
-        verify(mockConnection).prepareStatement("INSERT INTO User (firstName, lastName, email, password, age, gender, weight, height, activityLevel, goal, employed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        verify(mockConnection).prepareStatement("INSERT INTO User (firstName, lastName, email, password, birthday, gender, weight, height, activityLevel, goal, employed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         verify(dbRepository).closeResources(mockConnection, null);
     }
 }
