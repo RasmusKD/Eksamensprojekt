@@ -76,12 +76,12 @@ public class DBRepository {
     }
 
     /**
-     * Henter en liste af opskrifter baseret på dag.
+     * Henter en liste af opskrifter baseret på uge.
      *
-     * @param day dagen opskrifterne skal hentes for.
+     * @param week ugen opskrifterne skal hentes for.
      * @return en liste af {@link Recipe} objekter.
      */
-    public List<Recipe> getRecipesByDay(String day) {
+    public List<Recipe> getRecipesByWeek(String week) {
         List<Recipe> recipes = new ArrayList<>();
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -89,9 +89,9 @@ public class DBRepository {
 
         try {
             conn = getConnection();
-            String sql = "SELECT * FROM Recipe WHERE day = ?";
+            String sql = "SELECT * FROM Recipe WHERE week = ?";
             pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, day);
+            pstmt.setString(1, week);
             rs = pstmt.executeQuery();
             while (rs.next()) {
                 Recipe recipe = new Recipe();
@@ -106,7 +106,7 @@ public class DBRepository {
                 recipe.setTotalProtein(rs.getInt("total_protein"));
                 recipe.setTotalFat(rs.getInt("total_fat"));
                 recipe.setTotalCarbohydrates(rs.getInt("total_carbohydrates"));
-                recipe.setDay(rs.getString("day"));
+                recipe.setWeek(rs.getString("week"));
                 recipes.add(recipe);
             }
         } catch (SQLException e) {
@@ -392,7 +392,7 @@ public class DBRepository {
             conn = getConnection();
             conn.setAutoCommit(false);
 
-            String recipeSql = "INSERT INTO Recipe (title, description, method, cookingTime, imageUrl, meal_time, total_calories, total_protein, total_fat, total_carbohydrates, day) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            String recipeSql = "INSERT INTO Recipe (title, description, method, cookingTime, imageUrl, meal_time, total_calories, total_protein, total_fat, total_carbohydrates, week) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(recipeSql, Statement.RETURN_GENERATED_KEYS);
             pstmt.setString(1, recipe.getTitle());
             pstmt.setString(2, recipe.getDescription());
@@ -404,7 +404,7 @@ public class DBRepository {
             pstmt.setInt(8, recipe.getTotalProtein());
             pstmt.setInt(9, recipe.getTotalFat());
             pstmt.setInt(10, recipe.getTotalCarbohydrates());
-            pstmt.setString(11, recipe.getDay());
+            pstmt.setString(11, recipe.getWeek());
             pstmt.executeUpdate();
 
             rs = pstmt.getGeneratedKeys();
@@ -577,7 +577,7 @@ public class DBRepository {
                 recipe.setTotalProtein(rs.getInt("total_protein"));
                 recipe.setTotalFat(rs.getInt("total_fat"));
                 recipe.setTotalCarbohydrates(rs.getInt("total_carbohydrates"));
-                recipe.setDay(rs.getString("day"));
+                recipe.setWeek(rs.getString("week"));
                 recipes.add(recipe);
             }
         } catch (SQLException e) {
@@ -619,7 +619,7 @@ public class DBRepository {
                 recipe.setTotalProtein(rs.getInt("total_protein"));
                 recipe.setTotalFat(rs.getInt("total_fat"));
                 recipe.setTotalCarbohydrates(rs.getInt("total_carbohydrates"));
-                recipe.setDay(rs.getString("day"));
+                recipe.setWeek(rs.getString("week"));
 
                 // Initialiser ingredienslisten
                 recipe.setIngredients(new ArrayList<>());
@@ -728,7 +728,7 @@ public class DBRepository {
             conn = getConnection();
             conn.setAutoCommit(false);
 
-            String recipeSql = "UPDATE Recipe SET title=?, description=?, method=?, cookingTime=?, imageUrl=?, meal_time=?, total_calories=?, total_protein=?, total_fat=?, total_carbohydrates=?, day=? WHERE recipeId=?";
+            String recipeSql = "UPDATE Recipe SET title=?, description=?, method=?, cookingTime=?, imageUrl=?, meal_time=?, total_calories=?, total_protein=?, total_fat=?, total_carbohydrates=?, week=? WHERE recipeId=?";
             pstmt = conn.prepareStatement(recipeSql);
             pstmt.setString(1, recipe.getTitle());
             pstmt.setString(2, recipe.getDescription());
@@ -740,7 +740,7 @@ public class DBRepository {
             pstmt.setInt(8, recipe.getTotalProtein());
             pstmt.setInt(9, recipe.getTotalFat());
             pstmt.setInt(10, recipe.getTotalCarbohydrates());
-            pstmt.setString(11, recipe.getDay());
+            pstmt.setString(11, recipe.getWeek());
             pstmt.setInt(12, recipe.getRecipeId());
             pstmt.executeUpdate();
 
@@ -920,5 +920,22 @@ public class DBRepository {
             e.printStackTrace();
         }
         return shoppingList;
+    }
+    public void addFavoriteRecipe(int userId, int recipeId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "INSERT INTO UserFavoriteRecipe (UserID, RecipeID) VALUES (?, ?)";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, recipeId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
     }
 }

@@ -34,7 +34,7 @@ public class RecipeController {
     @GetMapping("/recipes/{day}")
     public String getRecipesByDay(@PathVariable String day, Model model, Principal principal) {
         User user = useCase.getUserByEmail(principal.getName());
-        List<Recipe> recipes = useCase.getRecipesByDayWithAdjustedCalories(day, user);
+        List<Recipe> recipes = useCase.getRecipesByWeekWithAdjustedCalories(day, user);
         model.addAttribute("recipes", recipes);
         return "recipesByDay";
     }
@@ -43,13 +43,12 @@ public class RecipeController {
      * Henter en opskrift ved dens ID.
      *
      * @param id        Opskriftens ID.
-     * @param dayOffset Valgfri dagsoffset.
      * @param model     Model-objekt til at tilføje attributter.
      * @param principal Principal-objekt, der indeholder oplysninger om den loggede bruger.
      * @return Navnet på viewet "recipe".
      */
     @GetMapping("/recipe/{id}")
-    public String getRecipeById(@PathVariable int id, @RequestParam(value = "dayOffset", required = false) Integer dayOffset, Model model, Principal principal) {
+    public String getRecipeById(@PathVariable int id, Model model, Principal principal) {
         Recipe recipe = useCase.getRecipeById(id);
         User user = useCase.getUserByEmail(principal.getName());
         double userCaloricNeeds = useCase.calculateCalories(user);
@@ -59,7 +58,6 @@ public class RecipeController {
         recipe.setIngredients(adjustedIngredients);
 
         model.addAttribute("recipe", recipe);
-        model.addAttribute("dayOffset", dayOffset);
 
         List<String> methodSentences = Arrays.stream(recipe.getMethod().split("\\. "))
                 .map(sentence -> sentence.trim() + ".")
@@ -92,4 +90,15 @@ public class RecipeController {
 
         return "Ingredienser tilføjet til indkøbslisten!";
     }
+
+
+    @PostMapping("/favorite-recipe/{recipeId}")
+    @ResponseBody
+    public String favoriteRecipe(@PathVariable int recipeId, Principal principal) {
+        User user = useCase.getUserByEmail(principal.getName());
+        useCase.addFavoriteRecipe(user.getUserId(), recipeId);
+        return "Recipe favorited successfully.";
+    }
 }
+
+

@@ -19,7 +19,7 @@ public class Recipe {
     private int totalProtein;
     private int totalFat;
     private int totalCarbohydrates;
-    private String day;
+    private String week;
     private int adjustedCalories;
     private List<Ingredient> ingredients = new ArrayList<>();
 
@@ -44,9 +44,9 @@ public class Recipe {
      * @param totalProtein      totale proteiner i opskriften
      * @param totalFat          totale fedt i opskriften
      * @param totalCarbohydrates totale kulhydrater i opskriften
-     * @param day               dag hvor opskriften anbefales
+     * @param week               uge hvor opskriften anbefales
      */
-    public Recipe(int recipeId, String title, String description, List<Ingredient> ingredients, String method, String cookingTime, String imageUrl, String mealTime, int totalCalories, int totalProtein, int totalFat, int totalCarbohydrates, String day) {
+    public Recipe(int recipeId, String title, String description, List<Ingredient> ingredients, String method, String cookingTime, String imageUrl, String mealTime, int totalCalories, int totalProtein, int totalFat, int totalCarbohydrates, String week) {
         this.recipeId = recipeId;
         this.title = title;
         this.description = description;
@@ -59,7 +59,7 @@ public class Recipe {
         this.totalProtein = totalProtein;
         this.totalFat = totalFat;
         this.totalCarbohydrates = totalCarbohydrates;
-        this.day = day;
+        this.week = week;
     }
 
     // Getters og setters for alle felter
@@ -160,14 +160,13 @@ public class Recipe {
         this.totalCarbohydrates = totalCarbohydrates;
     }
 
-    public String getDay() {
-        return day;
+    public String getWeek() {
+        return week;
     }
 
-    public void setDay(String day) {
-        this.day = day;
+    public void setWeek(String week) {
+        this.week = week;
     }
-
     public int getAdjustedCalories() {
         return adjustedCalories;
     }
@@ -195,8 +194,7 @@ public class Recipe {
                 ", totalProtein=" + totalProtein +
                 ", totalFat=" + totalFat +
                 ", totalCarbohydrates=" + totalCarbohydrates +
-                ", day='" + day + '\'' +
-                ", adjustedCalories=" + adjustedCalories +
+                ", week='" + week + '\'' +
                 '}';
     }
 }

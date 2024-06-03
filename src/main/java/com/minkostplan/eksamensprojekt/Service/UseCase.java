@@ -47,13 +47,14 @@ public class UseCase {
     }
 
     /**
-     * Henter opskrifter baseret på dag.
+     * Henter opskrifter baseret på uge.
      *
-     * @param day dagen, hvor opskrifterne skal hentes til.
+     * @param week ugen, hvor opskrifterne skal hentes til.
      * @return en liste over opskrifter for den angivne dag.
      */
-    public List<Recipe> getRecipesByDay(String day) {
-        return dBRepository.getRecipesByDay(day);
+
+    public List<Recipe> getRecipesByWeek(String week) {
+        return dBRepository.getRecipesByWeek(week);
     }
 
     /**
@@ -61,6 +62,7 @@ public class UseCase {
      *
      * @param user den bruger, der skal sættes som den aktuelle bruger.
      */
+
     public void setCurrentUser(User user) {
         this.currentUser = user;
     }
@@ -96,7 +98,7 @@ public class UseCase {
     /**
      * Opdaterer ansættelsesstatus for en bruger baseret på deres email.
      *
-     * @param email brugerens email.
+     * @param email            brugerens email.
      * @param employmentStatus den nye ansættelsesstatus.
      */
     public void updateEmploymentStatus(String email, int employmentStatus) {
@@ -151,9 +153,9 @@ public class UseCase {
     /**
      * Opretter en ny opskrift med tilhørende ingredienser og mængder.
      *
-     * @param recipe         opskriften, der skal oprettes.
-     * @param ingredientIds  liste over ingrediens IDs.
-     * @param quantities     liste over mængde af hver ingrediens.
+     * @param recipe        opskriften, der skal oprettes.
+     * @param ingredientIds liste over ingrediens IDs.
+     * @param quantities    liste over mængde af hver ingrediens.
      */
     public void createRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
         dBRepository.createRecipeWithIngredients(recipe, ingredientIds, quantities);
@@ -171,7 +173,7 @@ public class UseCase {
     /**
      * Opdaterer abonnementsstatus for en bruger baseret på deres ID.
      *
-     * @param userId          brugerens ID.
+     * @param userId           brugerens ID.
      * @param subscriberStatus den nye abonnementsstatus.
      */
     public void updateUserSubscriptionStatus(int userId, boolean subscriberStatus) {
@@ -288,12 +290,12 @@ public class UseCase {
     /**
      * Henter opskrifter baseret på dag med justerede kalorier baseret på brugerens behov.
      *
-     * @param day  dagen, hvor opskrifterne skal hentes for.
+     * @param week dagen, hvor opskrifterne skal hentes for.
      * @param user den bruger, hvis behov skal tages i betragtning.
      * @return en liste over justerede opskrifter.
      */
-    public List<Recipe> getRecipesByDayWithAdjustedCalories(String day, User user) {
-        List<Recipe> recipes = getRecipesByDay(day);
+    public List<Recipe> getRecipesByWeekWithAdjustedCalories(String week, User user) {
+        List<Recipe> recipes = getRecipesByWeek(week);
         double totalCalories = calculateCalories(user);
 
         for (Recipe recipe : recipes) {
@@ -338,9 +340,9 @@ public class UseCase {
     /**
      * Opdaterer en opskrift med tilhørende ingredienser og mængder.
      *
-     * @param recipe         opskriften, der skal opdateres.
-     * @param ingredientIds  liste over ingrediens IDs.
-     * @param quantities     liste over mængder for hver ingrediens.
+     * @param recipe        opskriften, der skal opdateres.
+     * @param ingredientIds liste over ingrediens IDs.
+     * @param quantities    liste over mængder for hver ingrediens.
      */
     public void updateRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
         dBRepository.updateRecipeWithIngredients(recipe, ingredientIds, quantities);
@@ -384,5 +386,10 @@ public class UseCase {
 
     public List<Ingredient> getShoppingList(int userId) {
         return dBRepository.getShoppingListByUserId(userId);
+    }
+
+    public void addFavoriteRecipe(int userId, int recipeId) {
+        // Call the method in your DBRepository to add the favorite recipe to the database
+        dBRepository.addFavoriteRecipe(userId, recipeId);
     }
 }
