@@ -73,6 +73,7 @@ public class RecipeController {
         User user = useCase.getUserByEmail(principal.getName());
         List<Ingredient> shoppingList = useCase.getShoppingList(user.getUserId());
         model.addAttribute("shoppingList", shoppingList);
+        model.addAttribute("page", "shopping-list");
         return "shoppingList";
     }
 
