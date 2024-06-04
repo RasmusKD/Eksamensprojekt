@@ -122,8 +122,8 @@
 </div>
 <script>
     document.getElementById('edit-button').addEventListener('click', function () {
-        var form = document.getElementById('user-form');
-        var view = document.getElementById('user-info-view');
+        const form = document.getElementById('user-form');
+        const view = document.getElementById('user-info-view');
         if (form.style.display === 'none') {
             form.style.display = 'block';
             view.style.display = 'none';
@@ -141,12 +141,12 @@
     const stripe = Stripe(stripePublicKey);
 
     document.addEventListener('DOMContentLoaded', function () {
-        var checkoutButton = document.getElementById('checkout-button');
-        var unsubscribeButton = document.getElementById('unsubscribe-button');
-        var modal = document.getElementById('confirmation-modal');
-        var closeButton = document.querySelector('.close-button');
-        var confirmButton = document.getElementById('confirm-unsubscribe');
-        var cancelButton = document.getElementById('cancel-unsubscribe');
+        const checkoutButton = document.getElementById('checkout-button');
+        const unsubscribeButton = document.getElementById('unsubscribe-button');
+        const modal = document.getElementById('confirmation-modal');
+        const closeButton = document.querySelector('.close-button');
+        const confirmButton = document.getElementById('confirm-unsubscribe');
+        const cancelButton = document.getElementById('cancel-unsubscribe');
 
         if (checkoutButton) {
             checkoutButton.addEventListener('click', function () {
@@ -225,8 +225,8 @@
 
     // Close modal if clicked outside of it
     window.onclick = function(event) {
-        var modal = document.getElementById('confirmation-modal');
-        if (event.target == modal) {
+        const modal = document.getElementById('confirmation-modal');
+        if (event.target === modal) {
             modal.style.display = 'none';
         }
     };

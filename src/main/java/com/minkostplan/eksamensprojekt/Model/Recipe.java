@@ -22,6 +22,7 @@ public class Recipe {
     private String week;
     private int adjustedCalories;
     private List<Ingredient> ingredients = new ArrayList<>();
+    private boolean favorite;
 
     /**
      * Standardkonstruktør.
@@ -179,6 +180,14 @@ public class Recipe {
         return this.totalCalories;
     }
 
+    public boolean isFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        this.favorite = favorite;
+    }
+
     @Override
     public String toString() {
         return "Recipe{" +
@@ -195,6 +204,7 @@ public class Recipe {
                 ", totalFat=" + totalFat +
                 ", totalCarbohydrates=" + totalCarbohydrates +
                 ", week='" + week + '\'' +
+                ", favorite=" + favorite +
                 '}';
     }
 }

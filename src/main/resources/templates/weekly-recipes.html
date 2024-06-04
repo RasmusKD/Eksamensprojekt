@@ -25,6 +25,9 @@
                 <div th:each="recipe : ${breakfastRecipes}">
                     <div class="meal-box" th:classappend="${!isSubscriber} ? 'meal-box-disabled' : ''" th:onclick="${isSubscriber} ? |location.href='@{/recipe/{id}(id=${recipe.recipeId})}'| : ''">
                         <img draggable="false" th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
+                        <button class="favorite-btn" th:classappend="${recipe.favorite} ? 'favorite' : ''" th:onclick="toggleFavorite(event, [[${recipe.recipeId}]])">
+                            <span class="material-icons" th:text="${recipe.favorite} ? 'favorite' : 'favorite_border'">favorite_border</span>
+                        </button>
                         <div class="padding-container">
                             <div class="bold" th:text="${recipe.title}"></div>
                             <div th:text="${recipe.description}"></div>
@@ -37,6 +40,9 @@
                 <div th:each="recipe : ${lunchRecipes}">
                     <div class="meal-box" th:classappend="${!isSubscriber} ? 'meal-box-disabled' : ''" th:onclick="${isSubscriber} ? |location.href='@{/recipe/{id}(id=${recipe.recipeId})}'| : ''">
                         <img draggable="false" th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
+                        <button class="favorite-btn" th:classappend="${recipe.favorite} ? 'favorite' : ''" th:onclick="toggleFavorite(event, [[${recipe.recipeId}]])">
+                            <span class="material-icons" th:text="${recipe.favorite} ? 'favorite' : 'favorite_border'">favorite_border</span>
+                        </button>
                         <div class="padding-container">
                             <div class="bold" th:text="${recipe.title}"></div>
                             <div th:text="${recipe.description}"></div>
@@ -49,6 +55,9 @@
                 <div th:each="recipe : ${dinnerRecipes}">
                     <div class="meal-box" th:classappend="${!isSubscriber} ? 'meal-box-disabled' : ''" th:onclick="${isSubscriber} ? |location.href='@{/recipe/{id}(id=${recipe.recipeId})}'| : ''">
                         <img draggable="false" th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
+                        <button class="favorite-btn" th:classappend="${recipe.favorite} ? 'favorite' : ''" th:onclick="toggleFavorite(event, [[${recipe.recipeId}]])">
+                            <span class="material-icons" th:text="${recipe.favorite} ? 'favorite' : 'favorite_border'">favorite_border</span>
+                        </button>
                         <div class="padding-container">
                             <div class="bold" th:text="${recipe.title}"></div>
                             <div th:text="${recipe.description}"></div>
@@ -100,7 +109,7 @@
 
         if (checkoutButton) {
             checkoutButton.addEventListener('click', function () {
-                const userId = document.getElementById('user-id').value;
+                const userId = parseInt(document.getElementById('user-id').value); // Ensure userId is an integer
                 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
                 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
@@ -134,6 +143,52 @@
             });
         }
     });
+
+    function toggleFavorite(event, recipeId) {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the meal-box
+
+        const button = event.currentTarget;
+        const userId = parseInt(document.getElementById('user-id').value); // Ensure userId is an integer
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        // Create sparks
+        for (let i = 0; i < 5; i++) {
+            const spark = document.createElement('div');
+            spark.className = 'spark';
+            spark.style.setProperty('--spark-x', `${Math.random() * 60 - 30}px`);
+            spark.style.setProperty('--spark-y', `${Math.random() * 60 - 30}px`);
+            button.appendChild(spark);
+            setTimeout(() => spark.remove(), 600); // Remove spark after animation
+        }
+
+        fetch('/toggle-favorite', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify({
+                userId: userId,
+                recipeId: recipeId
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Server response:', data); // Log the server response
+
+                if (data.success) {
+                    const icon = button.querySelector('.material-icons');
+                    icon.textContent = icon.textContent === 'favorite' ? 'favorite_border' : 'favorite';
+                } else {
+                    alert('Error updating favorite status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
 </script>
 </body>
 </html>

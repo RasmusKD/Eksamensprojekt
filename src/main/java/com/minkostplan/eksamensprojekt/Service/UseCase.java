@@ -404,6 +404,23 @@ public class UseCase {
         // Call the method in your DBRepository to add the favorite recipe to the database
         dBRepository.addFavoriteRecipe(userId, recipeId);
     }
+
+    public List<Integer> getFavoriteRecipeIdsByUserId(int userId) {
+        return dBRepository.getFavoriteRecipeIdsByUserId(userId);
+    }
+    public boolean toggleFavoriteStatus(int userId, int recipeId) {
+        List<Integer> favoriteRecipeIds = getFavoriteRecipeIdsByUserId(userId);
+        if (favoriteRecipeIds.contains(recipeId)) {
+            dBRepository.removeFavoriteRecipe(userId, recipeId);
+            System.out.println("Removed favorite for userId: " + userId + " recipeId: " + recipeId);
+            return false;
+        } else {
+            dBRepository.addFavoriteRecipe(userId, recipeId);
+            System.out.println("Added favorite for userId: " + userId + " recipeId: " + recipeId);
+            return true;
+        }
+    }
+
     public void updateQuantity(int userId, int ingredientId, int quantity) {
         dBRepository.updateQuantity(userId, ingredientId, quantity);
     }

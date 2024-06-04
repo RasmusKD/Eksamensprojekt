@@ -112,7 +112,7 @@
 </div>
 
 <script th:inline="javascript">
-    var ingredientsList = /*[[${ingredientsList}]]*/ [];
+    const ingredientsList = /*[[${ingredientsList}]]*/ [];
     ingredientsList.sort((a, b) => a.name.localeCompare(b.name));
 
     // Søgefunktion for ingredienser

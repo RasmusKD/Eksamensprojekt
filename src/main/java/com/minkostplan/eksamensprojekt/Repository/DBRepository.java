@@ -1027,6 +1027,47 @@ public class DBRepository {
         } finally {
             closeResources(conn, pstmt);
         }
+
+    }
+    public List<Integer> getFavoriteRecipeIdsByUserId(int userId) {
+        List<Integer> favoriteRecipeIds = new ArrayList<>();
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            conn = getConnection();
+            String sql = "SELECT recipeId FROM UserFavoriteRecipe WHERE userId = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            rs = pstmt.executeQuery();
+            while (rs.next()) {
+                favoriteRecipeIds.add(rs.getInt("recipeId"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt, rs);
+        }
+        return favoriteRecipeIds;
+    }
+
+    public void removeFavoriteRecipe(int userId, int recipeId) {
+        Connection conn = null;
+        PreparedStatement pstmt = null;
+
+        try {
+            conn = getConnection();
+            String sql = "DELETE FROM UserFavoriteRecipe WHERE UserID = ? AND RecipeID = ?";
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1, userId);
+            pstmt.setInt(2, recipeId);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeResources(conn, pstmt);
+        }
     }
 
     public void updateQuantity(int userId, int ingredientId, int quantity) {        Connection conn = null;

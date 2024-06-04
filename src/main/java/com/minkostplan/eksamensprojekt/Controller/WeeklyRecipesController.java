@@ -8,14 +8,14 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Controller-klasse til håndtering af forespørgsler relateret til ugentlige opskrifter.
@@ -45,6 +45,12 @@ public class WeeklyRecipesController {
         // Hent bruger objektet
         User user = useCase.getUserByEmail(userDetails.getUsername());
 
+        // Check if recipes are favorites
+        List<Integer> favoriteRecipeIds = useCase.getFavoriteRecipeIdsByUserId(user.getUserId());
+        for (Recipe recipe : recipes) {
+            recipe.setFavorite(favoriteRecipeIds.contains(recipe.getRecipeId()));
+        }
+
         model.addAttribute("week", week);
         model.addAttribute("breakfastRecipes", organizedRecipes.get(0));
         model.addAttribute("lunchRecipes", organizedRecipes.get(1));
@@ -60,17 +66,25 @@ public class WeeklyRecipesController {
         List<List<Recipe>> organizedRecipes = new ArrayList<>(Arrays.asList(new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         for (Recipe recipe : recipes) {
             switch (recipe.getMealTime()) {
-                case "Breakfast":
-                    organizedRecipes.get(0).add(recipe);
-                    break;
-                case "Lunch":
-                    organizedRecipes.get(1).add(recipe);
-                    break;
-                case "Dinner":
-                    organizedRecipes.get(2).add(recipe);
-                    break;
+                case "Breakfast" -> organizedRecipes.get(0).add(recipe);
+                case "Lunch" -> organizedRecipes.get(1).add(recipe);
+                case "Dinner" -> organizedRecipes.get(2).add(recipe);
             }
         }
         return organizedRecipes;
+    }
+
+    @PostMapping("/toggle-favorite")
+    @ResponseBody
+    public Map<String, Object> toggleFavorite(@RequestBody Map<String, Object> payload) {
+        try {
+            int userId = (Integer) payload.get("userId");
+            int recipeId = (Integer) payload.get("recipeId");
+            boolean isFavorite = useCase.toggleFavoriteStatus(userId, recipeId);
+            return Map.of("success", true, "isFavorite", isFavorite);
+        } catch (ClassCastException | NumberFormatException e) {
+            e.printStackTrace();
+            return Map.of("success", false, "error", e.getMessage());
+        }
     }
 }
