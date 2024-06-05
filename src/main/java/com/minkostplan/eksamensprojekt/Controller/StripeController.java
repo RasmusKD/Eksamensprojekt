@@ -38,9 +38,19 @@ public class StripeController {
         Map<String, String> response = new HashMap<>();
         try {
             String priceId = (String) payload.get("priceId");
-            String userIdStr = (String) payload.get("userId");
-            int userId = Integer.parseInt(userIdStr);
+            Object userIdObj = payload.get("userId");
 
+            // Check if the userIdObj is an instance of Integer and convert it to String
+            String userIdStr;
+            if (userIdObj instanceof Integer) {
+                userIdStr = String.valueOf(userIdObj);
+            } else if (userIdObj instanceof String) {
+                userIdStr = (String) userIdObj;
+            } else {
+                throw new IllegalArgumentException("Invalid user ID format.");
+            }
+
+            int userId = Integer.parseInt(userIdStr);
             String email = useCase.getUserById(userId).getEmail();
 
             SessionCreateParams params = SessionCreateParams.builder()
@@ -67,6 +77,7 @@ public class StripeController {
         }
         return response;
     }
+
 
     /**
      * Håndterer betalingens succes.
