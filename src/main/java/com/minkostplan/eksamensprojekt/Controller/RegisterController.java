@@ -3,14 +3,16 @@ package com.minkostplan.eksamensprojekt.Controller;
 import com.minkostplan.eksamensprojekt.Model.User;
 import com.minkostplan.eksamensprojekt.Service.UseCase;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Controller-klasse til håndtering af brugerregistrering.
@@ -48,9 +50,23 @@ public class RegisterController {
      * @return Redirect til login-siden.
      */
     @PostMapping("/register")
-    public String handleRegistration(@ModelAttribute User user) {
+    public String handleRegistration(@ModelAttribute User user, Model model) {
+        User existingUser = useCase.getUserByEmail(user.getEmail());
+        if (existingUser != null) {
+            model.addAttribute("message", "E-mailen er allerede registreret.");
+            return "register";
+        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         useCase.createUser(user);
         return "redirect:/login";
+    }
+
+    @GetMapping("/check-email")
+    @ResponseBody
+    public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {
+        User existingUser = useCase.getUserByEmail(email);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", existingUser != null);
+        return ResponseEntity.ok(response);
     }
 }

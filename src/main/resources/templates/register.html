@@ -14,6 +14,9 @@
             <div class="content-box">
                 <div class="text-box">
                     <div class="login-headline">Registrer</div>
+                    <div id="message-container" class="alert" style="display: none;">
+                        <span id="message-text"></span>
+                    </div>
                     <form th:action="@{/register}" method="post" th:object="${user}" id="register-form">
                         <div class="form-grid">
                             <div class="left-column">
@@ -27,7 +30,7 @@
                                 </div>
                                 <div class="input-icon" data-placeholder="E-mail:">
                                     <i class="material-icons">email</i>
-                                    <input class="input-field" type="email" th:field="*{email}" placeholder="E-mail" required/>
+                                    <input class="input-field" type="email" th:field="*{email}" placeholder="E-mail" required id="email"/>
                                 </div>
                                 <div class="input-icon" data-placeholder="Adgangskode:">
                                     <i class="material-icons">lock</i>
@@ -83,15 +86,82 @@
                 </div>
             </div>
         </div>
-        <img draggable="false"class="image1" src="/images/image.png" alt="Beskrivende billede tekst">
+        <img draggable="false" class="image1" src="/images/image.png" alt="Beskrivende billede tekst">
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
 <script>
     document.getElementById("register-form").addEventListener("submit", function(event) {
         event.preventDefault();
-        if (confirm("Bruger oprettet")) {
-            this.submit();
+        const passwordField = document.querySelector('input[type="password"]');
+        const birthDateField = document.querySelector('input[type="date"]');
+        const weightField = document.querySelector('input[name="weight"]');
+        const heightField = document.querySelector('input[name="height"]');
+        const emailField = document.getElementById('email');
+        const messageContainer = document.getElementById('message-container');
+        const messageText = document.getElementById('message-text');
+
+        const today = new Date();
+        const birthDate = new Date(birthDateField.value);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+
+        let errorMessage = '';
+
+        if (passwordField.value.length < 8) {
+            errorMessage = "Adgangskoden skal være mindst 8 tegn lang.";
+        }
+        if (!errorMessage && (age < 14 || age > 130)) {
+            errorMessage = "Du skal være mindst 14 år og højst 130 år gammel.";
+        }
+        if (!errorMessage && (heightField.value < 50 || heightField.value > 250)) {
+            errorMessage = "Din højde skal være mindst 50 cm og højst 250 cm.";
+        }
+        if (!errorMessage && (weightField.value < 20 || weightField.value > 600)) {
+            errorMessage = "Din vægt skal være mindst 20 kg og højst 600 kg.";
+        }
+
+        if (errorMessage) {
+            messageText.textContent = errorMessage;
+            messageContainer.classList.add('alert-danger');
+            messageContainer.style.display = 'block';
+            setTimeout(() => {
+                messageContainer.style.display = 'none';
+            }, 3000);
+        } else {
+            console.log('Checking email:', emailField.value);
+            fetch(`/check-email?email=${encodeURIComponent(emailField.value)}`)
+                .then(response => {
+                    console.log('Response received:', response);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Data received:', data);
+                    if (data.exists) {
+                        messageText.textContent = "E-mailen er allerede registreret.";
+                        messageContainer.classList.add('alert-danger');
+                        messageContainer.style.display = 'block';
+                        setTimeout(() => {
+                            messageContainer.style.display = 'none';
+                        }, 3000);
+                    } else {
+                        if (confirm("Bruger oprettet")) {
+                            document.getElementById("register-form").submit();
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    messageText.textContent = 'Der opstod en fejl ved kontrol af e-mailen.';
+                    messageContainer.classList.add('alert-danger');
+                    messageContainer.style.display = 'block';
+                    setTimeout(() => {
+                        messageContainer.style.display = 'none';
+                    }, 3000);
+                });
         }
     });
 </script>
