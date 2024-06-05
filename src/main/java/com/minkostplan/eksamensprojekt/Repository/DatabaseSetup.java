@@ -190,7 +190,7 @@ public class DatabaseSetup {
 
     public static void createUserFavoriteRecipeTable(Connection connection) throws SQLException {
         String createTableSql = """
-                CREATE TABLE IF NOT EXISTS `UserFavoriteRecipe` (
+                CREATE TABLE IF NOT EXISTS`UserFavoriteRecipe` (
                   `UserFavoriteRecipeID` int NOT NULL AUTO_INCREMENT,
                   `userId` int DEFAULT NULL,
                   `recipeId` int DEFAULT NULL,
