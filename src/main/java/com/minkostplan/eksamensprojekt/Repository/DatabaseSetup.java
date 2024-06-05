@@ -114,9 +114,7 @@ public class DatabaseSetup {
                   `ingredient_id` int NOT NULL,
                   `quantity` double DEFAULT NULL,
                   PRIMARY KEY (`recipe_id`,`ingredient_id`),
-                  KEY `ingredient_id` (`ingredient_id`),
-                  CONSTRAINT `Recipe_Ingredients_ibfk_1` FOREIGN KEY (`recipe_id`) REFERENCES `Recipe` (`recipeId`),
-                  CONSTRAINT `Recipe_Ingredients_ibfk_2` FOREIGN KEY (`ingredient_id`) REFERENCES `Ingredient` (`ingredientId`)
+                  KEY `ingredient_id` (`ingredient_id`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
                 """;
         try (Statement statement = connection.createStatement()) {
@@ -134,8 +132,7 @@ public class DatabaseSetup {
                   `price` double DEFAULT NULL,
                   `status` varchar(255) DEFAULT NULL,
                   PRIMARY KEY (`subscriptionId`),
-                  KEY `userId` (`userId`),
-                  CONSTRAINT `Subscription_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `User` (`userId`)
+                  KEY `userId` (`userId`)
                 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
                 """;
         try (Statement statement = connection.createStatement()) {
@@ -174,12 +171,7 @@ public class DatabaseSetup {
                   `user_id` int NOT NULL,
                   `ingredient_id` int NOT NULL,
                   `quantity` double DEFAULT NULL,
-                  `bought` tinyint(1) DEFAULT '0',
-                  PRIMARY KEY (`user_id`,`ingredient_id`),
-                  KEY `fk_ingredient_id` (`ingredient_id`),
-                  CONSTRAINT `fk_ingredient_id` FOREIGN KEY (`ingredient_id`) REFERENCES `Ingredient` (`ingredientId`),
-                  CONSTRAINT `ShoppingList_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `User` (`userId`),
-                  CONSTRAINT `ShoppingList_ibfk_2` FOREIGN KEY (`ingredient_id`) REFERENCES `Ingredient` (`ingredientId`)
+                  `bought` tinyint(1) DEFAULT '0'
                 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
                 """;
         try (Statement statement = connection.createStatement()) {
@@ -190,19 +182,17 @@ public class DatabaseSetup {
 
     public static void createUserFavoriteRecipeTable(Connection connection) throws SQLException {
         String createTableSql = """
-                CREATE TABLE IF NOT EXISTS`UserFavoriteRecipe` (
-                  `UserFavoriteRecipeID` int NOT NULL AUTO_INCREMENT,
-                  `userId` int DEFAULT NULL,
-                  `recipeId` int DEFAULT NULL,
-                  PRIMARY KEY (`UserFavoriteRecipeID`),
-                  KEY `userId` (`userId`),
-                  KEY `recipeId` (`recipeId`),
-                  CONSTRAINT `UserFavoriteRecipe_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `User` (`userId`),
-                  CONSTRAINT `UserFavoriteRecipe_ibfk_2` FOREIGN KEY (`recipeId`) REFERENCES `Recipe` (`recipeId`)
+        CREATE TABLE `UserFavoriteRecipe` (
+                `UserFavoriteRecipeID` int NOT NULL,
+                `userId` int DEFAULT NULL,
+                `recipeId` int DEFAULT NULL
                 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-                """;
+                               """;
         try (Statement statement = connection.createStatement()) {
             statement.execute(createTableSql);
         }
     }
+
+
+
 }
