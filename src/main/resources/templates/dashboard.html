@@ -20,7 +20,7 @@
                     <div class="sub-headline" th:text="${user.firstName} + ' ' + ${user.lastName}"></div>
                     <div class="user-info">
                         <div id="user-info-view">
-                            <!-- User Info Display -->
+                            <!-- Visning af brugerinformation -->
                             <p><i class="material-icons">email</i> <text class="highlighted-text">Email:</text> <span th:text="${user.email}"></span></p>
                             <p><i class="material-icons">cake</i> <text class="highlighted-text">Fødselsdag:</text> <span th:text="${user.birthday}"></span></p>
                             <p><i class="material-icons">wc</i> <text class="highlighted-text">Køn:</text> <span th:text="${user.gender} == 'M' ? 'Mand' : 'Kvinde'"></span></p>
@@ -31,10 +31,9 @@
                             <p><i class="material-icons">check_circle</i> <text class="highlighted-text">Abonnent:</text> <span th:text="${user.subscriber ? 'Ja' : 'Nej'}"></span></p>
                             <p th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}"><i class="material-icons">local_dining</i> <text class="highlighted-text">Kaloriebehov:</text> <span th:text="${#numbers.formatDecimal(calorieNeeds, 0, 0)} + ' kcal'"></span></p>
                         </div>
-                        <!-- Edit Form -->
+                        <!-- Formular til redigering af brugerinformation -->
                         <form id="user-form" th:action="@{/update-user}" method="post" style="display:none;">
                             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                            <!-- Form Inputs for User Information -->
                             <p><i class="material-icons">email</i> <text class="highlighted-text">Email:</text> <span th:text="${user.email}"></span></p>
                             <p><i class="material-icons">cake</i> <text class="highlighted-text">Fødselsdag:</text> <input type="date" name="birthday" th:value="${user.birthday}" required/></p>
                             <p><i class="material-icons">wc</i> <text class="highlighted-text">Køn:</text>
@@ -75,27 +74,27 @@
                 </div>
             </div>
             <div class="content-column">
-                <!-- Conditional Display of Checkout Button -->
-                <div class="text-box" th:if="${subscription == null || subscription.status == 'inactive'}">
+                <!-- Betinget visning af abonnementsknap -->
+                <div class="text-box" th:if="${subscription == null || subscription.status == 'inactive' && #authorization.expression('!hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}">
                     <button id="checkout-button" class="btn-primary w-100">Abonnér med Stripe</button>
                 </div>
                 <input type="hidden" id="user-id" th:value="${user.userId}">
                 <input type="hidden" id="subscription-id" th:value="${subscription != null ? subscription.subscriptionId : ''}">
 
-                <!-- Conditional Display of Unsubscribe Button -->
+                <!-- Betinget visning af afmeldingsknap -->
                 <div class="text-box" th:if="${subscription != null && subscription.status != 'inactive'}">
                     <button id="unsubscribe-button" class="btn-primary color-red w-100">Opsig Abonnement</button>
                 </div>
-                <div class="text-box" th:if="${subscription != null && subscription.status == 'inactive'}">
+                <div class="text-box" th:if="${subscription != null && subscription.status == 'inactive' && #authorization.expression('!hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}">
                     <div>Abonnement er inaktivt</div>
                     <div>Dage tilbage: <span th:text="${daysLeft}"></span></div>
                 </div>
-                <!-- Subscriber Buttons -->
+                <!-- Knapper for abonnenter -->
                 <div class="text-box" th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}">
                     <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}" th:onclick="|window.location.href='@{/weekly-recipes}'|" class="btn-primary color-blue w-100">Ugens Opskrifter</button>
                     <button th:onclick="|window.location.href='@{/shopping-list}'|" class="btn-primary color-blue w-100">Indkøbsliste</button>
                 </div>
-                <!-- Admin and Employee Buttons -->
+                <!-- Knapper for administratorer og medarbejdere -->
                 <div class="text-box" th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}">
                     <button th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}" th:onclick="|window.location.href='@{/opret-medarbejder}'|" class="btn-primary color-blue w-100">Opret medarbejder</button>
                     <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}" th:onclick="|window.location.href='@{/add-ingredients}'|" class="btn-primary color-blue w-100">Tilføj ingredienser</button>
@@ -108,7 +107,7 @@
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-<!-- Confirmation Modal -->
+<!-- Bekræftelsesmodal -->
 <div id="confirmation-modal" class="modal">
     <div class="modal-content">
         <span class="close-button">&times;</span>
@@ -121,6 +120,9 @@
     </div>
 </div>
 <script>
+    /**
+     * Håndterer visning og skjulning af redigeringsformularen for brugeroplysninger.
+     */
     document.getElementById('edit-button').addEventListener('click', function () {
         const form = document.getElementById('user-form');
         const view = document.getElementById('user-info-view');
@@ -140,6 +142,9 @@
     const stripePublicKey = 'pk_test_51PGz21BcOCSFJlaS9GnQrmz3wFcSw82xsDryxcqWPVb0orDtOWKFiB0clb18lk2CC67VdTnJ7cfjWFCBbudi1Gms00x9Tgqpzd';
     const stripe = Stripe(stripePublicKey);
 
+    /**
+     * Tilføjer begivenhedslyttere ved DOM-indlæsning.
+     */
     document.addEventListener('DOMContentLoaded', function () {
         const checkoutButton = document.getElementById('checkout-button');
         const unsubscribeButton = document.getElementById('unsubscribe-button');
@@ -148,6 +153,9 @@
         const confirmButton = document.getElementById('confirm-unsubscribe');
         const cancelButton = document.getElementById('cancel-unsubscribe');
 
+        /**
+         * Håndterer klik på abonnér-knappen og starter Stripe checkout-session.
+         */
         if (checkoutButton) {
             checkoutButton.addEventListener('click', function () {
                 const userId = document.getElementById('user-id').value;
@@ -179,6 +187,9 @@
             });
         }
 
+        /**
+         * Håndterer klik på afmeld-knappen og viser bekræftelsesmodal.
+         */
         if (unsubscribeButton) {
             unsubscribeButton.addEventListener('click', function () {
                 modal.style.display = 'block';
@@ -212,7 +223,7 @@
                         if (data.error) {
                             alert(data.error);
                         } else {
-                            location.reload(); // Reload the page to reflect the changes
+                            location.reload(); // Genindlæser siden for at afspejle ændringerne
                         }
                     })
                     .catch(error => {
@@ -223,7 +234,9 @@
         }
     });
 
-    // Close modal if clicked outside of it
+    /**
+     * Lukker modal, hvis der klikkes udenfor den.
+     */
     window.onclick = function(event) {
         const modal = document.getElementById('confirmation-modal');
         if (event.target === modal) {

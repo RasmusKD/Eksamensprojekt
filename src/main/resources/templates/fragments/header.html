@@ -9,6 +9,10 @@
                     th:onclick="|window.location.href='@{/weekly-recipes}'|">Ugens Opskrifter</button>
             <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}"
                     class="highlighted-text pointer"
+                    th:classappend="${page == 'favorite-recipes' ? 'active' : ''}"
+                    th:onclick="|window.location.href='@{/favorite-recipes}'|">Favorit Opskrifter</button>
+            <button th:if="${#authorization.expression('hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'', ''ROLE_SUBSCRIBER'')')}"
+                    class="highlighted-text pointer"
                     th:classappend="${page == 'shopping-list' ? 'active' : ''}"
                     onclick="window.location.href='/shopping-list'">Indkøbsliste</button>
             <button th:if="${#authorization.expression('isAuthenticated()')}" class="highlighted-text pointer"

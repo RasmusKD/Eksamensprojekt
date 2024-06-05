@@ -890,6 +890,13 @@ public class DBRepository {
             closeResources(conn, pstmt);
         }
     }
+
+    /**
+     * Tilføjer en ingrediens til indkøbslisten for en bruger.
+     *
+     * @param userId     brugerens ID.
+     * @param ingredient ingrediensen der skal tilføjes.
+     */
     public void addIngredientToShoppingList(int userId, Ingredient ingredient) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -932,9 +939,12 @@ public class DBRepository {
         }
     }
 
-
-
-
+    /**
+     * Henter indkøbslisten for en bruger baseret på deres ID.
+     *
+     * @param userId brugerens ID.
+     * @return en liste af ingredienser på brugerens indkøbsliste.
+     */
     public List<Ingredient> getShoppingListByUserId(int userId) {
         List<Ingredient> shoppingList = new ArrayList<>();
         String sql = "SELECT i.ingredientId, i.name, sl.quantity, sl.bought FROM ShoppingList sl " +
@@ -958,6 +968,13 @@ public class DBRepository {
         return shoppingList;
     }
 
+    /**
+     * Opdaterer købstatus for en ingrediens i en brugers indkøbsliste.
+     *
+     * @param userId       brugerens ID.
+     * @param ingredientId ingrediensens ID.
+     * @param bought       den nye købstatus.
+     */
     public void updateBoughtStatus(int userId, int ingredientId, boolean bought) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -977,6 +994,11 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Sletter alle ingredienser i en brugers indkøbsliste.
+     *
+     * @param userId brugerens ID.
+     */
     public void clearAll(int userId) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -994,6 +1016,11 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Sletter alle markerede (købte) ingredienser i en brugers indkøbsliste.
+     *
+     * @param userId brugerens ID.
+     */
     public void clearMarked(int userId) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -1011,6 +1038,12 @@ public class DBRepository {
         }
     }
 
+    /**
+     * Tilføjer en opskrift til en brugers favoritliste.
+     *
+     * @param userId   brugerens ID.
+     * @param recipeId opskriftens ID.
+     */
     public void addFavoriteRecipe(int userId, int recipeId) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -1027,8 +1060,14 @@ public class DBRepository {
         } finally {
             closeResources(conn, pstmt);
         }
-
     }
+
+    /**
+     * Henter alle favoritopskrifter for en bruger baseret på deres ID.
+     *
+     * @param userId brugerens ID.
+     * @return en liste af favoritopskrifter IDs.
+     */
     public List<Integer> getFavoriteRecipeIdsByUserId(int userId) {
         List<Integer> favoriteRecipeIds = new ArrayList<>();
         Connection conn = null;
@@ -1052,6 +1091,12 @@ public class DBRepository {
         return favoriteRecipeIds;
     }
 
+    /**
+     * Fjerner en opskrift fra en brugers favoritliste.
+     *
+     * @param userId   brugerens ID.
+     * @param recipeId opskriftens ID.
+     */
     public void removeFavoriteRecipe(int userId, int recipeId) {
         Connection conn = null;
         PreparedStatement pstmt = null;
@@ -1070,7 +1115,15 @@ public class DBRepository {
         }
     }
 
-    public void updateQuantity(int userId, int ingredientId, int quantity) {        Connection conn = null;
+    /**
+     * Opdaterer mængden af en ingrediens i en brugers indkøbsliste.
+     *
+     * @param userId       brugerens ID.
+     * @param ingredientId ingrediensens ID.
+     * @param quantity     den nye mængde.
+     */
+    public void updateQuantity(int userId, int ingredientId, int quantity) {
+        Connection conn = null;
         PreparedStatement pstmt = null;
 
         try {

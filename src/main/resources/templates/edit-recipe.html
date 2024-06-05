@@ -47,9 +47,9 @@
                                 <option value="Dinner">Aftensmad</option>
                             </select>
                         </div>
-                        <div class="input-icon" data-placeholder="Dato: (skiftes til uge)">
+                        <div class="input-icon" data-placeholder="Uge:">
                             <i class="material-icons">calendar_today</i>
-                            <input class="input-field" type="date" id="day" name="day" required/>
+                            <input class="input-field" type="week" id="week" name="week" required/>
                         </div>
                         <div class="input-icon" data-placeholder="Tilberedningstid:">
                             <i class="material-icons">timer</i>
@@ -184,7 +184,7 @@
                     document.getElementById('title').value = recipe.title;
                     document.getElementById('description').value = recipe.description;
                     document.getElementById('mealTime').value = recipe.mealTime;
-                    document.getElementById('day').value = recipe.day;
+                    document.getElementById('week').value = recipe.week;
                     document.getElementById('cookingTime').value = recipe.cookingTime;
                     document.getElementById('instructions').value = recipe.method;
                     document.getElementById('currentImage').textContent = recipe.imageUrl;

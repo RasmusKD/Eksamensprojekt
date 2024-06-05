@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Favorit Opskrifter</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
+</head>
+<body class="weekly-recipes-page">
+<div th:replace="~{fragments/header :: header}"></div>
+<div class="scrollable-content">
+    <div class="content-wrapper">
+        <div class="tabs-container center">
+            <div class="tabs">
+                <button class="tablink active" onclick="openTab(event, 'Breakfast')">Morgenmad</button>
+                <button class="tablink" onclick="openTab(event, 'Lunch')">Frokost</button>
+                <button class="tablink" onclick="openTab(event, 'Dinner')">Aftensmad</button>
+            </div>
+        </div>
+        <div class="content center">
+            <div id="Breakfast" class="tabcontent grid-container active">
+                <div th:each="recipe : ${breakfastRecipes}" class="recipe-card">
+                    <div class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId})}'|">
+                        <img draggable="false" th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
+                        <button class="favorite-btn favorite" th:onclick="toggleFavorite(event, [[${recipe.recipeId}]])">
+                            <span class="material-icons">favorite</span>
+                        </button>
+                        <div class="padding-container">
+                            <div class="bold" th:text="${recipe.title}"></div>
+                            <div th:text="${recipe.description}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="Lunch" class="tabcontent grid-container">
+                <div th:each="recipe : ${lunchRecipes}" class="recipe-card">
+                    <div class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId})}'|">
+                        <img draggable="false" th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
+                        <button class="favorite-btn favorite" th:onclick="toggleFavorite(event, [[${recipe.recipeId}]])">
+                            <span class="material-icons">favorite</span>
+                        </button>
+                        <div class="padding-container">
+                            <div class="bold" th:text="${recipe.title}"></div>
+                            <div th:text="${recipe.description}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="Dinner" class="tabcontent grid-container">
+                <div th:each="recipe : ${dinnerRecipes}" class="recipe-card">
+                    <div class="meal-box" th:onclick="|location.href='@{/recipe/{id}(id=${recipe.recipeId})}'|">
+                        <img draggable="false" th:src="@{${recipe.imageUrl}}" alt="Billede af [[${recipe.mealTime}]]">
+                        <button class="favorite-btn favorite" th:onclick="toggleFavorite(event, [[${recipe.recipeId}]])">
+                            <span class="material-icons">favorite</span>
+                        </button>
+                        <div class="padding-container">
+                            <div class="bold" th:text="${recipe.title}"></div>
+                            <div th:text="${recipe.description}"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div th:replace="~{fragments/footer :: footer}"></div>
+    </div>
+</div>
+
+<input type="hidden" id="user-id" th:value="${user.userId}">
+
+<script>
+    function openTab(evt, mealTime) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none"; // skjul alt faneindhold
+        }
+        tablinks = document.getElementsByClassName("tablink");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].classList.remove("active"); // fjern aktiv klasse fra alle faner
+        }
+        document.getElementById(mealTime).style.display = "grid"; // vis det aktuelle faneindhold
+        evt.currentTarget.classList.add("active"); // tilføj aktiv klasse til den aktuelle fane
+    }
+
+    // Default open tab
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelector(".tablink.active").click();
+    });
+
+    function toggleFavorite(event, recipeId) {
+        event.stopPropagation(); // Prevent the click event from bubbling up to the meal-box
+
+        const button = event.currentTarget;
+        const userId = parseInt(document.getElementById('user-id').value); // Ensure userId is an integer
+        const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
+        const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
+
+        fetch('/toggle-favorite', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                [csrfHeader]: csrfToken
+            },
+            body: JSON.stringify({
+                userId: userId,
+                recipeId: recipeId
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Server response:', data); // Log the server response
+
+                if (data.success) {
+                    // Remove the recipe card from the DOM
+                    const recipeCard = button.closest('.recipe-card');
+                    if (recipeCard) {
+                        recipeCard.remove();
+                    }
+                } else {
+                    alert('Error updating favorite status');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+</script>
+</body>
+</html>

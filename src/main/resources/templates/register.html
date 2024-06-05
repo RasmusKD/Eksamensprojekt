@@ -91,6 +91,9 @@
     </div>
 </div>
 <script>
+    /**
+     * Validerer registreringsformularen.
+     */
     document.getElementById("register-form").addEventListener("submit", function(event) {
         event.preventDefault();
         const passwordField = document.querySelector('input[type="password"]');
@@ -98,6 +101,8 @@
         const weightField = document.querySelector('input[name="weight"]');
         const heightField = document.querySelector('input[name="height"]');
         const emailField = document.getElementById('email');
+        const firstNameField = document.querySelector('input[name="firstName"]');
+        const lastNameField = document.querySelector('input[name="lastName"]');
         const messageContainer = document.getElementById('message-container');
         const messageText = document.getElementById('message-text');
 
@@ -111,17 +116,39 @@
 
         let errorMessage = '';
 
+        // Valider adgangskodens længde
         if (passwordField.value.length < 8) {
             errorMessage = "Adgangskoden skal være mindst 8 tegn lang.";
         }
-        if (!errorMessage && (age < 14 || age > 130)) {
-            errorMessage = "Du skal være mindst 14 år og højst 130 år gammel.";
+
+        // Valider brugerens alder
+        if (!errorMessage && age < 14) {
+            errorMessage = "Du skal være mindst 14 år gammel.";
         }
-        if (!errorMessage && (heightField.value < 50 || heightField.value > 250)) {
-            errorMessage = "Din højde skal være mindst 50 cm og højst 250 cm.";
+        if (!errorMessage && age > 130) {
+            errorMessage = "Du kan ikke være ældre end 130 år.";
         }
-        if (!errorMessage && (weightField.value < 20 || weightField.value > 600)) {
-            errorMessage = "Din vægt skal være mindst 20 kg og højst 600 kg.";
+
+        // Valider brugerens højde
+        if (!errorMessage && heightField.value < 50) {
+            errorMessage = "Din højde skal være mindst 50 cm.";
+        }
+        if (!errorMessage && heightField.value > 250) {
+            errorMessage = "Din højde kan ikke være mere end 250 cm.";
+        }
+
+        // Valider brugerens vægt
+        if (!errorMessage && weightField.value < 20) {
+            errorMessage = "Din vægt skal være mindst 20 kg.";
+        }
+        if (!errorMessage && weightField.value > 600) {
+            errorMessage = "Din vægt kan ikke være mere end 600 kg.";
+        }
+
+        // Valider at navne kun indeholder bogstaver
+        const namePattern = /^[A-Za-zÆØÅæøå\s]+$/;
+        if (!errorMessage && (!namePattern.test(firstNameField.value) || !namePattern.test(lastNameField.value))) {
+            errorMessage = "Navne må kun indeholde bogstaver.";
         }
 
         if (errorMessage) {

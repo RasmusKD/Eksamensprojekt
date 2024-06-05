@@ -19,6 +19,7 @@
                     <div id="message-container" class="alert" style="display: none;">
                         <span id="message-text"></span>
                     </div>
+                    <!-- Dropdown til valg af ingrediens -->
                     <div class="input-icon" data-placeholder="Vælg en ingrediens:">
                         <i class="material-icons">search</i>
                         <select class="input-field" id="ingredientSelect" name="ingredientSelect" required>
@@ -26,6 +27,7 @@
                             <option th:each="ingredient : ${ingredients}" th:value="${ingredient.ingredientId}" th:text="${ingredient.name}"></option>
                         </select>
                     </div>
+                    <!-- Formular til redigering af ingrediens -->
                     <form id="ingredientForm" th:action="@{/edit-ingredients}" method="post" style="display: none;">
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
                         <input type="hidden" id="ingredientId" name="ingredientId"/>
@@ -58,7 +60,7 @@
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
-<!-- Bekræftelsesmodal -->
+<!-- Bekræftelsesmodal til sletning -->
 <div id="confirmation-modal" class="modal">
     <div class="modal-content">
         <span class="close-button">&times;</span>
@@ -96,6 +98,7 @@
             }, 3000);
         }
 
+        // Håndter valg af ingrediens fra dropdown
         if (ingredientSelect) {
             ingredientSelect.addEventListener('change', function() {
                 const ingredientId = this.value;
@@ -130,6 +133,7 @@
             });
         }
 
+        // Håndter opdatering af ingrediens
         if (ingredientForm) {
             ingredientForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -169,6 +173,7 @@
             });
         }
 
+        // Håndter visning af sletningsbekræftelsesmodal
         if (deleteButton) {
             deleteButton.addEventListener('click', function() {
                 const modal = document.getElementById('confirmation-modal');
@@ -208,6 +213,7 @@
             });
         }
 
+        // Håndter lukning af sletningsbekræftelsesmodal
         const closeButton = document.querySelector('.close-button');
         if (closeButton) {
             closeButton.addEventListener('click', function() {

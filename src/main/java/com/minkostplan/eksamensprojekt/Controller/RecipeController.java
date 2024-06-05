@@ -68,6 +68,13 @@ public class RecipeController {
         return "recipe";
     }
 
+    /**
+     * Tilføjer en opskrift til brugerens favoritter.
+     *
+     * @param recipeId  Opskriftens ID.
+     * @param principal Principal-objekt, der indeholder oplysninger om den loggede bruger.
+     * @return En besked om, at opskriften blev tilføjet til favoritter.
+     */
     @PostMapping("/favorite-recipe/{recipeId}")
     @ResponseBody
     public String favoriteRecipe(@PathVariable int recipeId, Principal principal) {

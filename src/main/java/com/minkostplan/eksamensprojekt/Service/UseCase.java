@@ -22,6 +22,11 @@ public class UseCase {
     private final DBRepository dBRepository;
     private User currentUser;
 
+    /**
+     * Constructor til at injicere DBRepository.
+     *
+     * @param dBRepository Repository til databaseoperationer.
+     */
     @Autowired
     public UseCase(DBRepository dBRepository) {
         this.dBRepository = dBRepository;
@@ -50,9 +55,8 @@ public class UseCase {
      * Henter opskrifter baseret på uge.
      *
      * @param week ugen, hvor opskrifterne skal hentes til.
-     * @return en liste over opskrifter for den angivne dag.
+     * @return en liste over opskrifter for den angivne uge.
      */
-
     public List<Recipe> getRecipesByWeek(String week) {
         return dBRepository.getRecipesByWeek(week);
     }
@@ -62,7 +66,6 @@ public class UseCase {
      *
      * @param user den bruger, der skal sættes som den aktuelle bruger.
      */
-
     public void setCurrentUser(User user) {
         this.currentUser = user;
     }
@@ -155,7 +158,7 @@ public class UseCase {
      *
      * @param recipe        opskriften, der skal oprettes.
      * @param ingredientIds liste over ingrediens IDs.
-     * @param quantities    liste over mængde af hver ingrediens.
+     * @param quantities    liste over mængder af hver ingrediens.
      */
     public void createRecipeWithIngredients(Recipe recipe, List<Integer> ingredientIds, List<Double> quantities) {
         dBRepository.createRecipeWithIngredients(recipe, ingredientIds, quantities);
@@ -288,12 +291,10 @@ public class UseCase {
         return adjustedIngredients;
     }
 
-
-
     /**
-     * Henter opskrifter baseret på dag med justerede kalorier baseret på brugerens behov.
+     * Henter opskrifter baseret på uge med justerede kalorier baseret på brugerens behov.
      *
-     * @param week dagen, hvor opskrifterne skal hentes for.
+     * @param week ugen, hvor opskrifterne skal hentes for.
      * @param user den bruger, hvis behov skal tages i betragtning.
      * @return en liste over justerede opskrifter.
      */
@@ -380,34 +381,84 @@ public class UseCase {
         return dBRepository.deleteIngredientById(id);
     }
 
+    /**
+     * Tilføjer en liste af ingredienser til brugerens indkøbsliste.
+     *
+     * @param user       den bruger, som ingredienserne skal tilføjes til.
+     * @param ingredients listen af ingredienser, der skal tilføjes.
+     */
     public void addIngredientsToShoppingList(User user, List<Ingredient> ingredients) {
         for (Ingredient ingredient : ingredients) {
             dBRepository.addIngredientToShoppingList(user.getUserId(), ingredient);
         }
     }
 
+    /**
+     * Henter indkøbslisten for en bruger.
+     *
+     * @param userId brugerens ID.
+     * @return en liste over ingredienser i indkøbslisten.
+     */
     public List<Ingredient> getShoppingList(int userId) {
         return dBRepository.getShoppingListByUserId(userId);
     }
+
+    /**
+     * Opdaterer "købt" status for en ingrediens på indkøbslisten.
+     *
+     * @param userId       brugerens ID.
+     * @param ingredientId ingrediensens ID.
+     * @param bought       den nye "købt" status.
+     */
     public void updateBoughtStatus(int userId, int ingredientId, boolean bought) {
         dBRepository.updateBoughtStatus(userId, ingredientId, bought);
     }
+
+    /**
+     * Rydder alle ingredienser fra brugerens indkøbsliste.
+     *
+     * @param userId brugerens ID.
+     */
     public void clearAll(int userId) {
         dBRepository.clearAll(userId);
     }
 
+    /**
+     * Rydder alle markerede (købte) ingredienser fra brugerens indkøbsliste.
+     *
+     * @param userId brugerens ID.
+     */
     public void clearMarked(int userId) {
         dBRepository.clearMarked(userId);
     }
 
+    /**
+     * Tilføjer en opskrift til brugerens favoritter.
+     *
+     * @param userId    brugerens ID.
+     * @param recipeId  opskriftens ID.
+     */
     public void addFavoriteRecipe(int userId, int recipeId) {
-        // Call the method in your DBRepository to add the favorite recipe to the database
         dBRepository.addFavoriteRecipe(userId, recipeId);
     }
 
+    /**
+     * Henter en liste over favoritopskrifts IDs for en bruger.
+     *
+     * @param userId brugerens ID.
+     * @return en liste over favoritopskrifts IDs.
+     */
     public List<Integer> getFavoriteRecipeIdsByUserId(int userId) {
         return dBRepository.getFavoriteRecipeIdsByUserId(userId);
     }
+
+    /**
+     * Toggler favoritstatus for en opskrift for en bruger.
+     *
+     * @param userId    brugerens ID.
+     * @param recipeId  opskriftens ID.
+     * @return true hvis opskriften blev tilføjet som favorit, ellers false.
+     */
     public boolean toggleFavoriteStatus(int userId, int recipeId) {
         List<Integer> favoriteRecipeIds = getFavoriteRecipeIdsByUserId(userId);
         if (favoriteRecipeIds.contains(recipeId)) {
@@ -421,8 +472,14 @@ public class UseCase {
         }
     }
 
+    /**
+     * Opdaterer mængden af en ingrediens på indkøbslisten.
+     *
+     * @param userId       brugerens ID.
+     * @param ingredientId ingrediensens ID.
+     * @param quantity     den nye mængde.
+     */
     public void updateQuantity(int userId, int ingredientId, int quantity) {
         dBRepository.updateQuantity(userId, ingredientId, quantity);
     }
-
 }

@@ -17,6 +17,7 @@
                     <div id="message-container" class="alert" style="display: none;">
                         <span id="message-text"></span>
                     </div>
+                    <!-- Formular til tilføjelse af ingredienser -->
                     <form th:action="@{/add-ingredients}" method="post" id="add-ingredients-form">
                         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
                         <div class="input-icon" data-placeholder="Navn:">
@@ -44,6 +45,7 @@
                 </div>
             </div>
         </div>
+        <!-- Inkludér footer-fragmentet -->
         <div th:replace="~{fragments/footer :: footer}"></div>
     </div>
 </div>
@@ -68,6 +70,7 @@
             }, 3000);
         }
 
+        // Håndter formularindsendelse
         if (form) {
             form.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -80,6 +83,7 @@
                 })
                     .then(response => response.json())
                     .then(data => {
+                        // Håndter succesbesked
                         if (data.message) {
                             messageContainer.classList.add('alert-success');
                             messageContainer.classList.remove('alert-danger');
@@ -89,6 +93,7 @@
                             setTimeout(() => {
                                 messageContainer.style.display = 'none';
                             }, 3000);
+                            // Håndter fejlbesked
                         } else if (data.error) {
                             messageContainer.classList.add('alert-danger');
                             messageContainer.classList.remove('alert-success');

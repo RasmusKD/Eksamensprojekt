@@ -30,7 +30,7 @@ public class RegisterController {
      * Viser registreringsformularen.
      *
      * @param model Model-objekt til at tilføje attributter.
-     * @return Navnet på viewet "register".
+     * @return Navnet på viewet "register" eller en redirect til "weekly-recipes" hvis brugeren allerede er autentificeret.
      */
     @GetMapping("/register")
     public String showRegistrationForm(Model model) {
@@ -46,8 +46,9 @@ public class RegisterController {
     /**
      * Håndterer brugerregistrering.
      *
-     * @param user Brugerobjektet, der skal registreres.
-     * @return Redirect til login-siden.
+     * @param user  Brugerobjektet, der skal registreres.
+     * @param model Model-objekt til at tilføje attributter.
+     * @return Navnet på viewet "register" med en besked, hvis e-mailen allerede er registreret, ellers en redirect til login-siden.
      */
     @PostMapping("/register")
     public String handleRegistration(@ModelAttribute User user, Model model) {
@@ -61,6 +62,12 @@ public class RegisterController {
         return "redirect:/login";
     }
 
+    /**
+     * Kontrollerer om en e-mail allerede er registreret.
+     *
+     * @param email E-mailen der skal kontrolleres.
+     * @return En ResponseEntity med et map, der indikerer om e-mailen allerede er registreret.
+     */
     @GetMapping("/check-email")
     @ResponseBody
     public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {

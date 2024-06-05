@@ -82,39 +82,47 @@
 <input type="hidden" id="user-id" th:value="${user.userId}">
 
 <script>
+    /**
+     * Åbner en specifik fane og skjuler de andre.
+     *
+     * @param {Event} evt - Klik eventet.
+     * @param {string} mealTime - Navnet på måltidstypen.
+     */
     function openTab(evt, mealTime) {
         var i, tabcontent, tablinks;
         tabcontent = document.getElementsByClassName("tabcontent");
         for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none"; // skjul alt faneindhold
+            tabcontent[i].style.display = "none"; // Skjul alt faneindhold
         }
         tablinks = document.getElementsByClassName("tablink");
         for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].classList.remove("active"); // fjern aktiv klasse fra alle faner
+            tablinks[i].classList.remove("active"); // Fjern aktiv klasse fra alle faner
         }
-        document.getElementById(mealTime).style.display = "grid"; // vis det aktuelle faneindhold
-        evt.currentTarget.classList.add("active"); // tilføj aktiv klasse til den aktuelle fane
+        document.getElementById(mealTime).style.display = "grid"; // Vis det aktuelle faneindhold
+        evt.currentTarget.classList.add("active"); // Tilføj aktiv klasse til den aktuelle fane
     }
 
-    // Default open tab
+    // Standardåben fane
     document.addEventListener("DOMContentLoaded", function() {
         document.querySelector(".tablink.active").click();
     });
 
+    // Stripe public key
     const stripePublicKey = 'pk_test_51PGz21BcOCSFJlaS9GnQrmz3wFcSw82xsDryxcqWPVb0orDtOWKFiB0clb18lk2CC67VdTnJ7cfjWFCBbudi1Gms00x9Tgqpzd';
     const stripe = Stripe(stripePublicKey);
 
+    // Håndter Stripe betalingsknap klik
     document.addEventListener('DOMContentLoaded', function () {
         var checkoutButton = document.getElementById('checkout-button');
 
         if (checkoutButton) {
             checkoutButton.addEventListener('click', function () {
-                const userId = parseInt(document.getElementById('user-id').value); // Ensure userId is an integer
+                const userId = parseInt(document.getElementById('user-id').value); // Sørg for at userId er et heltal
                 const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
                 const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
                 if (!csrfToken || !csrfHeader) {
-                    console.error('CSRF token or header not found');
+                    console.error('CSRF token eller header ikke fundet');
                     return;
                 }
 
@@ -138,28 +146,34 @@
                         }
                     })
                     .catch(error => {
-                        console.error('Error:', error);
+                        console.error('Fejl:', error);
                     });
             });
         }
     });
 
+    /**
+     * Skifter favoritstatus for en opskrift.
+     *
+     * @param {Event} event - Klik eventet.
+     * @param {number} recipeId - ID'et på opskriften.
+     */
     function toggleFavorite(event, recipeId) {
-        event.stopPropagation(); // Prevent the click event from bubbling up to the meal-box
+        event.stopPropagation(); // Forhindr klik eventet fra at nå op til meal-box
 
         const button = event.currentTarget;
-        const userId = parseInt(document.getElementById('user-id').value); // Ensure userId is an integer
+        const userId = parseInt(document.getElementById('user-id').value); // Sørg for at userId er et heltal
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
 
-        // Create sparks
+        // Opret gnister (animation med css)
         for (let i = 0; i < 5; i++) {
             const spark = document.createElement('div');
             spark.className = 'spark';
             spark.style.setProperty('--spark-x', `${Math.random() * 60 - 30}px`);
             spark.style.setProperty('--spark-y', `${Math.random() * 60 - 30}px`);
             button.appendChild(spark);
-            setTimeout(() => spark.remove(), 600); // Remove spark after animation
+            setTimeout(() => spark.remove(), 600); // Fjern gnisten efter animation
         }
 
         fetch('/toggle-favorite', {
@@ -175,17 +189,17 @@
         })
             .then(response => response.json())
             .then(data => {
-                console.log('Server response:', data); // Log the server response
+                console.log('Server respons:', data); // Log serverens respons
 
                 if (data.success) {
                     const icon = button.querySelector('.material-icons');
                     icon.textContent = icon.textContent === 'favorite' ? 'favorite_border' : 'favorite';
                 } else {
-                    alert('Error updating favorite status');
+                    alert('Fejl ved opdatering af favoritstatus');
                 }
             })
             .catch(error => {
-                console.error('Error:', error);
+                console.error('Fejl:', error);
             });
     }
 

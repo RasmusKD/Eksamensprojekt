@@ -17,7 +17,7 @@
                 <div class="text-box">
                     <div class="headline">Indkøbsliste</div>
                     <div class="list-group" id="shopping-list">
-                        <!-- Shopping list items will be injected here by Thymeleaf -->
+                        <!-- Indkøbsliste-elementer vil blive indsat her af Thymeleaf -->
                         <th:block th:each="ingredient : ${shoppingList}">
                             <div class="list-group-item" th:id="'ingredient-' + ${ingredient.ingredientId}">
                                 <div class="custom-control custom-checkbox">
@@ -45,6 +45,12 @@
     </div>
 </div>
 <script>
+    /**
+     * Opdaterer status for en ingrediens i indkøbslisten.
+     *
+     * @param {number} ingredientId - ID for ingrediensen.
+     * @param {boolean} bought - Om ingrediensen er købt eller ej.
+     */
     function updateBoughtStatus(ingredientId, bought) {
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -74,6 +80,9 @@
             .catch(error => console.error('Error:', error));
     }
 
+    /**
+     * Fjerner alle markerede (købte) ingredienser fra indkøbslisten.
+     */
     function clearMarked() {
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -93,6 +102,9 @@
             .catch(error => console.error('Error:', error));
     }
 
+    /**
+     * Fjerner alle ingredienser fra indkøbslisten.
+     */
     function clearAll() {
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -112,6 +124,11 @@
             .catch(error => console.error('Error:', error));
     }
 
+    /**
+     * Aktiverer redigering af en ingrediens' mængde.
+     *
+     * @param {number} ingredientId - ID for ingrediensen.
+     */
     function editQuantity(ingredientId) {
         const quantitySpan = document.getElementById('quantity-span-' + ingredientId);
         const inputGroup = document.getElementById('input-group-' + ingredientId);
@@ -119,7 +136,7 @@
         const editIcon = document.getElementById('edit-icon-' + ingredientId);
         const saveIcon = document.getElementById('save-icon-' + ingredientId);
 
-        // Set the input field's value to the rounded integer value
+        // Sæt inputfeltets værdi til den afrundede heltalsværdi
         quantityInput.value = Math.round(quantityInput.value);
 
         quantitySpan.style.display = 'none';
@@ -128,13 +145,18 @@
         saveIcon.style.display = 'inline';
     }
 
+    /**
+     * Gemmer den redigerede mængde af en ingrediens.
+     *
+     * @param {number} ingredientId - ID for ingrediensen.
+     */
     function saveQuantity(ingredientId) {
         const quantitySpan = document.getElementById('quantity-span-' + ingredientId);
         const inputGroup = document.getElementById('input-group-' + ingredientId);
         const quantityInput = document.getElementById('quantity-input-' + ingredientId);
         const editIcon = document.getElementById('edit-icon-' + ingredientId);
         const saveIcon = document.getElementById('save-icon-' + ingredientId);
-        const newQuantity = parseInt(quantityInput.value, 10); // Convert to integer
+        const newQuantity = parseInt(quantityInput.value, 10); // Konverter til heltal
 
         const csrfToken = document.querySelector('meta[name="_csrf"]').getAttribute('content');
         const csrfHeader = document.querySelector('meta[name="_csrf_header"]').getAttribute('content');
@@ -162,6 +184,9 @@
             .catch(error => console.error('Error:', error));
     }
 
+    /**
+     * Kontrollerer om nogen ingredienser er markeret som købt.
+     */
     function checkIfMarked() {
         const checkboxes = document.querySelectorAll('.custom-control-input');
         const clearMarkedBtn = document.getElementById('clear-marked-btn');
