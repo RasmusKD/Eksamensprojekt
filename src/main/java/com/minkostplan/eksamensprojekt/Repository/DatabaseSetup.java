@@ -38,6 +38,8 @@ public class DatabaseSetup {
             createRecipeIngredientsTable(connection);
             createSubscriptionTable(connection);
             createUserTable(connection);
+            createShoppingListTable(connection);
+            createUserFavoriteRecipeTable(connection);
 
             System.out.println("Database setup completed successfully. Everything is in order.");
         } catch (SQLException e) {
@@ -162,4 +164,35 @@ public class DatabaseSetup {
             statement.execute(createTableSQL);
         }
     }
+
+    public static void createShoppingListTable(Connection connection) throws SQLException {
+        String createTableSQL = """
+                CREATE TABLE IF NOT EXISTS `ShoppingList` (
+                  `user_id` int NOT NULL,
+                  `ingredient_id` int NOT NULL,
+                  `quantity` double DEFAULT NULL,
+                  `bought` tinyint(1) DEFAULT '0'
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+                """;
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(createTableSQL);
+
+        }
+    }
+
+    public static void createUserFavoriteRecipeTable(Connection connection) throws SQLException {
+        String createTableSql = """
+        CREATE TABLE IF NOT EXISTS `UserFavoriteRecipe` (
+                `UserFavoriteRecipeID` int NOT NULL,
+                `userId` int DEFAULT NULL,
+                `recipeId` int DEFAULT NULL
+                ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+                               """;
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(createTableSql);
+        }
+    }
+
+
+
 }
