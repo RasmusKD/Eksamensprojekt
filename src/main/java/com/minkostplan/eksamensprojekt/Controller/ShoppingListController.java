@@ -17,6 +17,7 @@ import java.util.Map;
  * Controller klasse, der håndterer indkøbsliste-relaterede anmodninger.
  */
 @Controller
+@RequestMapping("/shopping-list")
 public class ShoppingListController {
 
     @Autowired
@@ -29,7 +30,7 @@ public class ShoppingListController {
      * @param principal  Brugerens sikkerhedsdetaljer.
      * @return Navn på visningssiden for indkøbslisten.
      */
-    @GetMapping("/shopping-list")
+    @GetMapping
     public String getShoppingList(Model model, Principal principal) {
         User user = useCase.getUserByEmail(principal.getName());
         List<Ingredient> shoppingList = useCase.getShoppingList(user.getUserId());
