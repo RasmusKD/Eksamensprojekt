@@ -133,6 +133,13 @@ textarea.large, .input-field.large {
     background-color: #4f99d5 !important;
 }
 
+.color-forest {
+    background-color: forestgreen !important;
+}
+
+.color-forest:hover {
+    background-color: #156915 !important;
+}
 /* Primære knapper med hover-effekter */
 .btn-primary {
     text-decoration: none;
@@ -951,8 +958,13 @@ form#deleteForm {
     flex: 1;
 }
 
+.recipe-details-column {
+    gap: 1em;
+    display: flex;
+    flex-direction: column;
+}
 .recipe-text-box {
-    padding: 35px;
+    padding: 20px;
     box-sizing: border-box;
     background-color: #84c176;
     border-radius: .25rem;
@@ -1368,4 +1380,59 @@ form#deleteForm {
 
 .save-icon:hover {
     color: #78d578!important;
+}
+
+.macro-box {
+    width: 100%;
+    background: white;
+    padding: 20px;
+    color: black;
+    border-radius: 0.5em;
+    gap: 1em;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 .125rem .25rem rgba(0,0,0,.09) !important;
+}
+
+.macro-headline {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.5em;
+}
+
+.macro-subline {
+    display: flex;
+    justify-content: space-between;
+}
+
+.macro-content {
+    display: flex;
+    gap: 1em;
+}
+
+.macros-svg {
+    min-width: 5rem;
+    width: 5rem;
+    height: 5rem;
+    min-height: 5rem;
+}
+
+.macro-svg-small {
+    font-size: .75em;
+    line-height: .08333em;
+    vertical-align: .125em;
+    height: 1em;
+}
+
+.macro-line {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+}
+
+.macro-alignment {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
