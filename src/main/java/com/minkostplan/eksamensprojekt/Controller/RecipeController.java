@@ -57,16 +57,45 @@ public class RecipeController {
         List<Ingredient> adjustedIngredients = useCase.getAdjustedIngredients(recipe, adjustedCalories);
         recipe.setIngredients(adjustedIngredients);
 
+        // Calculate macronutrient percentages
+        double fatCalories = recipe.getTotalFat() * 9;
+        double proteinCalories = recipe.getTotalProtein() * 4;
+        double carbCalories = recipe.getTotalCarbohydrates() * 4;
+
+        double totalMacroCalories = fatCalories + proteinCalories + carbCalories;
+        double fatPercentage = (fatCalories / totalMacroCalories) * 100;
+        double proteinPercentage = (proteinCalories / totalMacroCalories) * 100;
+        double carbPercentage = (carbCalories / totalMacroCalories) * 100;
+
+        // Calculate stroke-dasharray and stroke-dashoffset values
+        String fatDashArray = fatPercentage + ", " + (100 - fatPercentage);
+        String proteinDashArray = proteinPercentage + ", " + (100 - proteinPercentage);
+        String carbDashArray = carbPercentage + ", " + (100 - carbPercentage);
+
+        double proteinDashOffset = 25 - fatPercentage;
+        double carbDashOffset = 25 - fatPercentage - proteinPercentage;
+
         model.addAttribute("recipe", recipe);
+        model.addAttribute("fatPercentage", fatPercentage);
+        model.addAttribute("proteinPercentage", proteinPercentage);
+        model.addAttribute("carbPercentage", carbPercentage);
+
+        model.addAttribute("fatDashArray", fatDashArray);
+        model.addAttribute("proteinDashArray", proteinDashArray);
+        model.addAttribute("carbDashArray", carbDashArray);
+
+        model.addAttribute("proteinDashOffset", proteinDashOffset);
+        model.addAttribute("carbDashOffset", carbDashOffset);
 
         List<String> methodSentences = Arrays.stream(recipe.getMethod().split("\\. "))
                 .map(sentence -> sentence.trim() + ".")
                 .collect(Collectors.toList());
 
-        model.addAttribute("recipe", recipe);
         model.addAttribute("methodSentences", methodSentences);
         return "recipe";
     }
+
+
 
     /**
      * Tilføjer en opskrift til brugerens favoritter.
