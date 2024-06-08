@@ -75,7 +75,7 @@
             </div>
             <div class="content-column">
                 <!-- Betinget visning af abonnementsknap -->
-                <div class="text-box" th:if="${subscription == null || subscription.status == 'inactive' && #authorization.expression('!hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')')}">
+                <div class="text-box" th:if="${(subscription == null || subscription.status == 'inactive') && (#authorization.expression('!hasAnyRole(''ROLE_ADMIN'', ''ROLE_EMPLOYEE'')'))}">
                     <button id="checkout-button" class="btn-primary w-100">Abonnér med Stripe</button>
                 </div>
                 <input type="hidden" id="user-id" th:value="${user.userId}">
