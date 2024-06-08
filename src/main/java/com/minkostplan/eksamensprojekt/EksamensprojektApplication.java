@@ -21,8 +21,7 @@ public class EksamensprojektApplication {
 
 		public static void main(String[] args) {
 			ApplicationContext context = SpringApplication.run(EksamensprojektApplication.class, args);
-			DatabaseSetup databaseSetup = context.getBean(DatabaseSetup.class);
-			databaseSetup.setupDatabase();
+
 		}
 	}
 
