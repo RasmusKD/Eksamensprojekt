@@ -167,7 +167,7 @@
                 })
                 .then(data => {
                     console.log('Data received:', data);
-                    if (data.exists) {
+                    if (data) {
                         messageText.textContent = "E-mailen er allerede registreret.";
                         messageContainer.classList.add('alert-danger');
                         messageContainer.style.display = 'block';

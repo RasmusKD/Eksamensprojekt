@@ -70,10 +70,8 @@ public class RegisterController {
      */
     @GetMapping("/check-email")
     @ResponseBody
-    public ResponseEntity<Map<String, Boolean>> checkEmail(@RequestParam String email) {
-        User existingUser = useCase.getUserByEmail(email);
-        Map<String, Boolean> response = new HashMap<>();
-        response.put("exists", existingUser != null);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<Boolean> checkEmail(@RequestParam String email) {
+        boolean exists = useCase.getUserByEmail(email) != null;
+        return ResponseEntity.ok(exists);
     }
 }
