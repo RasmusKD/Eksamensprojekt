@@ -43,28 +43,31 @@ public class AddIngredientsController {
      * @param carbohydrate  Mængden af kulhydrater i ingrediensen.
      * @param protein       Mængden af protein i ingrediensen.
      * @param calories      Antallet af kalorier i ingrediensen.
-     * @param model         Model-objekt til at tilføje attributter.
      * @return Navnet på viewet "add-ingredients".
      */
     @PostMapping("/add-ingredients")
-    public String addIngredient(@RequestParam("name") String name,
-                                @RequestParam("fat") double fat,
-                                @RequestParam("carbohydrate") double carbohydrate,
-                                @RequestParam("protein") double protein,
-                                @RequestParam("calories") int calories, //de parametre der er required
-                                Model model) {
+    @ResponseBody
+    public ResponseEntity<Map<String, String>> addIngredient(@RequestParam("name") String name,
+                                                             @RequestParam("fat") double fat,
+                                                             @RequestParam("carbohydrate") double carbohydrate,
+                                                             @RequestParam("protein") double protein,
+                                                             @RequestParam("calories") int calories) {
+        // Opretter en ny ingrediens og sætter dens værdier
         Ingredient ingredient = new Ingredient();
         ingredient.setName(name);
         ingredient.setFat(fat);
         ingredient.setCarbohydrate(carbohydrate);
         ingredient.setProtein(protein);
         ingredient.setCalories(calories);
-        useCase.createIngredients(ingredient); // nu har vi lavet et objekt, vi sætter objektet som parameter
+        // Tilføjer ingrediensen via useCase
+        useCase.createIngredients(ingredient);
 
-        model.addAttribute("message", "Ingrediens tilføjet!");
-
-        return "add-ingredients";
+        // Forbereder JSON-svar med succesmeddelelse
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Ingrediens tilføjet!");
+        return ResponseEntity.ok(response);
     }
+
 
     /**
      * Viser formularen til redigering af ingredienser.
