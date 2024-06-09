@@ -182,16 +182,16 @@ public class DBRepository {
      * @return den fundne bruger eller null hvis ingen bruger blev fundet.
      */
     public User findByEmail(String email) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        User user = null;
+        Connection conn = null;     //initialiserer variabel til at holde databaseforbindelsen
+        PreparedStatement pstmt = null;  // Initialiserer variabel til at holde resultatet af SQL-forespørgslen
+        ResultSet rs = null; // vi opretter de her variabler inden vi går ind til vores try her får de så værdier.
+        User user = null; // Initialiserer variabel til at holde det fundne User-objekt
 
         try {
             conn = getConnection();
-            String sql = "SELECT * FROM User WHERE email = ?";
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, email);
+            String sql = "SELECT * FROM User WHERE email = ?"; // SQL-forespørgsel
+            pstmt = conn.prepareStatement(sql);  // Forbereder SQL-forespørgslen
+            pstmt.setString(1, email);// Indsætter e-mailparameteren i SQL-forespørgslen
             rs = pstmt.executeQuery();
 
             if (rs.next()) {
@@ -445,17 +445,17 @@ public class DBRepository {
      * @return en liste over alle ingredienser.
      */
     public List<Ingredient> getAllIngredients() {
-        List<Ingredient> ingredientList = new ArrayList<>();
+        List<Ingredient> ingredientList = new ArrayList<>(); //laver en ny arraylist
         Connection conn = null;
         PreparedStatement pstmt = null;
-        ResultSet rs = null;
+        ResultSet rs = null; //vi initialesere vores resultatsæt med null så der ikke er noget til at starte med
 
         try {
             conn = getConnection();
-            String sql = "SELECT * FROM Ingredient";
+            String sql = "SELECT * FROM Ingredient"; //henter alt fra databasen
             pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-            while (rs.next()) {
+            rs = pstmt.executeQuery(); // Det var der vi kører vores query. alt vi får fra db tilføjer vi
+            while (rs.next()) { //while der stadig er ingredienter i vores database kører den laver nye ingredient objekter fra vores eksisterende,
                 Ingredient ingredient = new Ingredient();
                 ingredient.setIngredientId(rs.getInt("ingredientId"));
                 ingredient.setName(rs.getString("name"));
@@ -470,7 +470,7 @@ public class DBRepository {
         } finally {
             closeResources(conn, pstmt, rs);
         }
-        return ingredientList;
+        return ingredientList; //bliver tilføjet til vores liste og den bliver returnet til vores controller, nu kender html til vores ingredienser
     }
 
 

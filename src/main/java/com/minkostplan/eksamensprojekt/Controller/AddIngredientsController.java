@@ -21,7 +21,7 @@ public class AddIngredientsController {
 
     // Instruerer Spring til at injicere en instans af UseCase
     // hvilket gør det muligt at bruge UseCase-metoder i denne controller
-    @Autowired
+    @Autowired  //instersere en instans af usecase
     private UseCase useCase;
 
     /**
@@ -51,7 +51,7 @@ public class AddIngredientsController {
                                 @RequestParam("fat") double fat,
                                 @RequestParam("carbohydrate") double carbohydrate,
                                 @RequestParam("protein") double protein,
-                                @RequestParam("calories") int calories,
+                                @RequestParam("calories") int calories, //de parametre der er required
                                 Model model) {
         Ingredient ingredient = new Ingredient();
         ingredient.setName(name);
@@ -59,7 +59,7 @@ public class AddIngredientsController {
         ingredient.setCarbohydrate(carbohydrate);
         ingredient.setProtein(protein);
         ingredient.setCalories(calories);
-        useCase.createIngredients(ingredient);
+        useCase.createIngredients(ingredient); // nu har vi lavet et objekt, vi sætter objektet som parameter
 
         model.addAttribute("message", "Ingrediens tilføjet!");
 

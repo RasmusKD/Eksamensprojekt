@@ -213,9 +213,11 @@ public class UseCase {
      * @param email brugerens email.
      * @return den fundne bruger.
      */
-    public User getUserByEmail(String email) {
-        return dBRepository.findByEmail(email);
-    }
+    public User getUserByEmail(String email) { // returnere et user objekt, argument er String email fra model
+        return dBRepository.findByEmail(email); // argument email der gør at den ved hvad den skal søge efter
+
+        //Paramter er emailen som blev bundet til User-objekter ved hjælp af modelattribute
+    } //Returnere resultatet af metodede kaldet til dBRepository.findByEmail(email);
 
     /**
      * Beregner det daglige kaloriebehov for en bruger.

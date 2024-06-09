@@ -23,10 +23,10 @@ public class SecurityConfig {
      * @return Et konfigureret SecurityFilterChain-objekt.
      * @throws Exception Hvis der opstår en fejl under konfigurationen.
      */
-    @Bean
+    @Bean //vi tager security filterchain fra spring
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeHttpRequests(auth -> auth
+                .authorizeHttpRequests(auth -> auth //Den første auth er parameter, den anden sætter parameteret med vores kode og returnere det til første auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico").permitAll()
                         .requestMatchers("/", "/login", "/register", "/about-us", "/check-email").permitAll()
                         .requestMatchers("/weekly-recipes", "/dashboard", "/success", "/cancel").authenticated()
@@ -35,21 +35,21 @@ public class SecurityConfig {
                         .requestMatchers("/opret-medarbejder").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .csrf(csrf -> csrf
+                .csrf(csrf -> csrf //bliver sat som en cookie i ens browser, stopper ondsindet request. brugeren for en token når de logger indt, skjules som cookie
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .ignoringRequestMatchers("/stripe/create-checkout-session", "/stripe/webhook")
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")
-                        .loginProcessingUrl("/login")
-                        .defaultSuccessUrl("/weekly-recipes", true)
-                        .failureUrl("/login?error=true")
-                        .permitAll()
+                        .loginPage("/login")//vores login page
+                        .loginProcessingUrl("/login")//vores login
+                        .defaultSuccessUrl("/weekly-recipes", true) //hvis det det er succes går man til weekly
+                        .failureUrl("/login?error=true") //hvis fejl får man fejlmeddelse
+                        .permitAll() //alle er permittet
                 )
                 .logout(logout -> logout
                         .logoutUrl("/perform_logout")
                         .logoutSuccessUrl("/")
-                        .deleteCookies("JSESSIONID")
+                        .deleteCookies("JSESSIONID") //sted hvor cookies bliver gemt
                         .invalidateHttpSession(true)
                         .permitAll()
                 );
@@ -65,5 +65,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
+    } //vi over skriver springs passwordenvocer og bruger bcryptpassword encoder
 }
