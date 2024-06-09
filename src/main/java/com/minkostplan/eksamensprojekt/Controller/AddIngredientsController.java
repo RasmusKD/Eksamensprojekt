@@ -72,11 +72,13 @@ public class AddIngredientsController {
      * @param model Model-objekt til at tilføje attributter.
      * @return Navnet på viewet "edit-ingredients".
      */
+
+    //Håndtere http Getanmodninger til URL'en edit-ingredients.
     @GetMapping("/edit-ingredients")
     public String showEditIngredientsForm(Model model) {
-        model.addAttribute("ingredients", useCase.getAllIngredients());
-        return "edit-ingredients";
-    }
+        model.addAttribute("ingredients", useCase.getAllIngredients()); //Tilføjer en attribut til modellen med navnet
+        return "edit-ingredients";                                  //"ingredients", som indeholder en liste af ingredienser hentet fra useCase.getAllIngredients().
+    } //Returneres til siden edit-ingredients
 
     /**
      * Henter detaljer om en specifik ingrediens.

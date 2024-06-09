@@ -63,6 +63,7 @@ public class DBRepository {
             System.out.println("Error closing the connection or statement.");
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -145,14 +146,29 @@ public class DBRepository {
      * Opretter en ny bruger i databasen.
      *
      * @param user brugeren der skal oprettes.
+     *
+     *
      */
-    public void createUser(User user) {
-        Connection conn = null;
-        PreparedStatement pstmt = null;
 
+    //Denne metode tager et User-objekt som input og indsætter brugerens oplysninger i databasen
+    //ved hjælp af en forberedt SQL-indsættelsesforespørgsel.
+
+
+    public void createUser(User user) { //tager et userobjekt som parameter
+        Connection conn = null; //Variabel til at holde en forbindelse til databasen.
+        PreparedStatement pstmt = null; //Variabel til at holde en forberedt SQL-udsagn.
+
+
+        //Denne SQL-forespørgsel har 12 pladsholdere (?), hvilket betyder, at vi skal angive 12 værdier, når vi forbereder erklæringen.
+        //Ved hjælp af PreparedStatement kan vi sætte værdier i disse pladsholdere:
         try {
-            conn = getConnection();
+            conn = getConnection(); //Henter en forbindelse til databasen.
+
+
             String sql = "INSERT INTO User (firstName, lastName, email, password, birthday, gender, weight, height, activityLevel, goal, employed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+           //conn.prepareStatement(sql) forbereder SQL-forespørgslen til eksekvering.
+            //pstmt er objektet, der bruges til at udfylde pladsholderne og udføre forespørgslen.
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, user.getFirstName());
             pstmt.setString(2, user.getLastName());
@@ -176,26 +192,26 @@ public class DBRepository {
     }
 
     /**
-     * Finder en bruger baseret på deres email.
-     *
-     * @param email brugerens email.
-     * @return den fundne bruger eller null hvis ingen bruger blev fundet.
+     @param email E-mailadressen på brugeren, der skal findes. Denne e-mailadresse kommer fra brugerens indtastede data i formularen.
+      * @return User-objektet, der matcher den angivne e-mailadresse, eller null hvis ingen bruger blev fundet.
+     * @throws SQLException hvis der opstår en SQL-fejl under eksekveringen af forespørgslen.
      */
     public User findByEmail(String email) {
         Connection conn = null;     //initialiserer variabel til at holde databaseforbindelsen
         PreparedStatement pstmt = null;  // Initialiserer variabel til at holde resultatet af SQL-forespørgslen
-        ResultSet rs = null; // vi opretter de her variabler inden vi går ind til vores try her får de så værdier.
-        User user = null; // Initialiserer variabel til at holde det fundne User-objekt
+        ResultSet rs = null; // Initialiserer variabel til at holde resultatet af SQL-forespørgslen.
+        User user = null; // Initialiserer variabel til at holde det fundne User-objekt returnere null hvis der ikke er et user objekt
 
         try {
             conn = getConnection();
-            String sql = "SELECT * FROM User WHERE email = ?"; // SQL-forespørgsel
+            String sql = "SELECT * FROM User WHERE email = ?"; // SQL-forespørgsel   email parameter fra toppen
             pstmt = conn.prepareStatement(sql);  // Forbereder SQL-forespørgslen
-            pstmt.setString(1, email);// Indsætter e-mailparameteren i SQL-forespørgslen
-            rs = pstmt.executeQuery();
+            pstmt.setString(1, email);// Indsætter e-mailparameteren i SQL-forespørgslen emailen fra parametern i toppen indsættes her
+            rs = pstmt.executeQuery(); //191 vi finder ud fra vores query og det vi finder sætter vi ind i vores resultset.
 
-            if (rs.next()) {
-                user = new User();
+            //køres kun hvis emailen findes
+            if (rs.next()) {  //vi kører nedenstående så længe der noget i resultset
+                user = new User(); //opretter et nyt User-objekt
                 user.setUserId(rs.getInt("userId"));
                 user.setFirstName(rs.getString("firstName"));
                 user.setLastName(rs.getString("lastName"));
@@ -211,12 +227,12 @@ public class DBRepository {
                 user.setSubscriber(rs.getBoolean("subscriber"));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Håndterer eventuelle SQL-undtagelser ved at udskrive stakken
         } finally {
-            closeResources(conn, pstmt, rs);
+            closeResources(conn, pstmt, rs); // Lukker databaseforbindelsen og andre ressourcer
         }
 
-        return user;
+        return user; // Returnerer det fundne User-objekt, eller null hvis ingen bruger blev fundet
     }
 
     /**
@@ -444,9 +460,12 @@ public class DBRepository {
      *
      * @return en liste over alle ingredienser.
      */
+
+
+    //Metoden returnere en liste af ingredient objekter
     public List<Ingredient> getAllIngredients() {
-        List<Ingredient> ingredientList = new ArrayList<>(); //laver en ny arraylist
-        Connection conn = null;
+        List<Ingredient> ingredientList = new ArrayList<>(); //laver en tom liste til at gemme hentede ingredienser
+        Connection conn = null; //initialisere
         PreparedStatement pstmt = null;
         ResultSet rs = null; //vi initialesere vores resultatsæt med null så der ikke er noget til at starte med
 

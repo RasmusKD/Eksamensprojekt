@@ -75,9 +75,23 @@ public class UseCase {
      *
      * @param user den bruger, der skal oprettes.
      */
-    public void createUser(User user) {
-        dBRepository.createUser(user);
+
+    //Parameter:
+    //
+    //En parameter er en variabel i funktions- eller metode-signaturen, der bruges til at modtage input.
+
+
+
+
+    public void createUser(User user) {    //User er navnet på typen
+                                           //user er variabelnavnet, der holder et specifikt User-objekt. (det brugeren sendte ind)
+        dBRepository.createUser(user);// objektet brugeren sendte ind
     }
+
+
+
+
+
 
     /**
      * Opdaterer en eksisterende bruger i databasen.
@@ -139,8 +153,10 @@ public class UseCase {
      *
      * @return en liste over alle ingredienser.
      */
+
+    //Returtypen er List<Ingredient>   //kalder så metoden i db
     public List<Ingredient> getAllIngredients() {
-        return dBRepository.getAllIngredients();
+        return dBRepository.getAllIngredients(); //returnere resultatet af kaldet til db
     }
 
     /**
@@ -207,14 +223,19 @@ public class UseCase {
         dBRepository.updateSubscriptionStatus(subscriptionId, status);
     }
 
-    /**
+    /**                                             //      Parameter:
+     En parameter er en variabel i metode-signaturen, der modtager input, når metoden bliver kaldt.
+     I dette tilfælde er String email en parameter, der repræsenterer den e-mailadresse, som metoden skal bruge til at finde en bruger.
+
+
+
      * Henter en bruger med deres email.
      *
-     * @param email brugerens email.
-     * @return den fundne bruger.
+     * @param email E-mailadressen på brugeren, der skal findes. Denne e-mailadresse kommer fra brugerens indtastede data i formularen.
+     * @return User-objektet, der matcher den angivne e-mailadresse, eller null hvis ingen bruger blev fundet.
      */
-    public User getUserByEmail(String email) { // returnere et user objekt, argument er String email fra model
-        return dBRepository.findByEmail(email); // argument email der gør at den ved hvad den skal søge efter
+    public User getUserByEmail(String email) { // parameter er String email, forventer string værdi, navnet på værdien er email
+        return dBRepository.findByEmail(email); // argument email der gør at den ved hvad den skal søge efter returnere et user objekt, argument er String email fra model
 
         //Paramter er emailen som blev bundet til User-objekter ved hjælp af modelattribute
     } //Returnere resultatet af metodede kaldet til dBRepository.findByEmail(email);

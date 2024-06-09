@@ -20,6 +20,9 @@ import java.util.Map;
 @Controller
 public class RegisterController {
 
+
+    //Spring finder useCase-objektet, som er en instans af UseCase-klassen.
+    //useCase-objektet er annoteret med @Autowired, hvilket betyder, at Spring automatisk injicerer en instans af UseCase-klassen i controlleren.
     @Autowired
     private UseCase useCase;
 
@@ -50,16 +53,21 @@ public class RegisterController {
      * @param model Model-objekt til at tilføje attributter.
      * @return Navnet på viewet "register" med en besked, hvis e-mailen allerede er registreret, ellers en redirect til login-siden.
      */
-    @PostMapping("/register") //håndtere post anmodning til register        //@Modeattibute User user binder brugerens formular til user objekt
-    public String handleRegistration(@ModelAttribute User user, Model model) { //Model model bruges til at sende data fra controlleren til html siden
 
-     //opretter variabel med navnet existingUser typen er User... Får værdien fra metode kaldet enten et userobjekt eller null
-        User existingUser = useCase.getUserByEmail(user.getEmail()); //parameteren er user.getEmail, som sendes/bliver brugt i metoden.
+
+    @PostMapping("/register") //håndtere post anmodning til endpointet register @Modelattribute User user fortæller spring at den skal binde brugerens formular til user objekt
+    public String handleRegistration(@ModelAttribute User user, Model model) { //Model model er en grænseflade i spring der bruges til at sende data fra controller til visning
+
+     //Opretter en variabel existingUser af typen User, og tildeler den værdien fra useCase.getUserByEmail(user.getEmail())
+        User existingUser = useCase.getUserByEmail(user.getEmail()); //parameteren er user.getEmail, henter email fra det User objekt vi oprettede
         if (existingUser != null) { //if statement der tjekker om det resultat man får tilbage er null
             model.addAttribute("message", "E-mailen er allerede registreret.");//
-            return "register";
+            return "register"; //brugeren bliver sendt tilbage til registersiden
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+        String newPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(newPassword);
+
         useCase.createUser(user);
         return "redirect:/login";
     }
