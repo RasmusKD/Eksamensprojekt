@@ -16,13 +16,22 @@ import static org.mockito.Mockito.*;
 /**
  * Testklasse for oprettelse af brugere i DBRepository.
  */
+//vores testklasse
 public class DBRepositoryCreateUserTest {
+
+
 
     private DBRepository dbRepository;
 
+
+
+    //Mock objekt er en falsk version af et rigtigt objekt, som man kan bruge til at simulere med
+
+    //Dette er en mock-version af Connection-objektet,
     @Mock
     private Connection mockConnection;
 
+    //Dette er en mock version af PreparedStatement
     @Mock
     private PreparedStatement mockPreparedStatement;
 
@@ -33,7 +42,11 @@ public class DBRepositoryCreateUserTest {
      */
     @BeforeEach
     public void setUp() throws SQLException {
+
+
         MockitoAnnotations.initMocks(this);
+
+
         dbRepository = spy(DBRepository.class);
 
         // Mock getConnection til at returnere mockConnection
