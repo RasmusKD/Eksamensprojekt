@@ -55,63 +55,44 @@
         const messageContainer = document.getElementById('message-container');
         const messageText = document.getElementById('message-text');
 
-        // Håndter visning af beskeder ved siden indlæsning
-        const message = sessionStorage.getItem('message');
-        const messageType = sessionStorage.getItem('messageType');
-        if (message) {
-            messageText.textContent = message;
-            messageContainer.classList.add(messageType === 'success' ? 'alert-success' : 'alert-danger');
-            messageContainer.style.display = 'block';
-            sessionStorage.removeItem('message');
-            sessionStorage.removeItem('messageType');
-            // Fjern beskeden efter 3 sekunder
-            setTimeout(() => {
-                messageContainer.style.display = 'none';
-            }, 3000);
-        }
-
         // Håndter formularindsendelse
         if (form) {
             form.addEventListener('submit', function(e) {
-                e.preventDefault();
+                e.preventDefault(); // Forhindrer standard formularindsendelse
 
-                const formData = new FormData(this);
+                const formData = new FormData(this); // Indsamler formular data
 
                 fetch(this.action, {
                     method: 'POST',
                     body: formData,
                 })
-                    .then(response => response.json())
+                    .then(response => response.json()) // Behandler JSON-svar
                     .then(data => {
-                        // Håndter succesbesked
                         if (data.message) {
+                            // Viser succesmeddelelse
                             messageContainer.classList.add('alert-success');
                             messageContainer.classList.remove('alert-danger');
                             messageText.textContent = data.message;
                             messageContainer.style.display = 'block';
-                            // Fjern beskeden efter 3 sekunder
-                            setTimeout(() => {
-                                messageContainer.style.display = 'none';
-                            }, 3000);
-                            // Håndter fejlbesked
                         } else if (data.error) {
+                            // Viser fejlmeddelelse
                             messageContainer.classList.add('alert-danger');
                             messageContainer.classList.remove('alert-success');
                             messageText.textContent = data.error;
                             messageContainer.style.display = 'block';
-                            // Fjern beskeden efter 3 sekunder
-                            setTimeout(() => {
-                                messageContainer.style.display = 'none';
-                            }, 3000);
                         }
+                        // Fjerner beskeden efter 3 sekunder
+                        setTimeout(() => {
+                            messageContainer.style.display = 'none';
+                        }, 3000);
                     })
                     .catch(error => {
+                        // Håndterer fejl ved netværksanmodning
                         console.error('Error:', error);
                         messageContainer.classList.add('alert-danger');
                         messageContainer.classList.remove('alert-success');
                         messageText.textContent = 'Kunne ikke tilføje ingrediensen.';
                         messageContainer.style.display = 'block';
-                        // Fjern beskeden efter 3 sekunder
                         setTimeout(() => {
                             messageContainer.style.display = 'none';
                         }, 3000);
