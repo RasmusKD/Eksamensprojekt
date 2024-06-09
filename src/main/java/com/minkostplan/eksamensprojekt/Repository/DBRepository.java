@@ -405,7 +405,7 @@ public class DBRepository {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-
+        //SQL Connection, autocommit fra så flere SQL
         try {
             conn = getConnection();
             conn.setAutoCommit(false);

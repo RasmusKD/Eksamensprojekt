@@ -23,7 +23,7 @@ public class SecurityConfig {
      * @return Et konfigureret SecurityFilterChain-objekt.
      * @throws Exception Hvis der opstår en fejl under konfigurationen.
      */
-    @Bean //vi tager security filterchain fra spring
+    @Bean //Indikerer at metoden returnere en securityfilterchain bean, som bliver administreret af Spring containeren. kaldt under opstart.
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth //Den første auth er parameter, den anden sætter parameteret med vores kode og returnere det til første auth
