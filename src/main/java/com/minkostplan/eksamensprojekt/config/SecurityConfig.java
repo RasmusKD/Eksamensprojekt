@@ -65,5 +65,5 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    } //vi over skriver springs passwordenvocer og bruger bcryptpassword encoder
+    } //vi over skriver springs password encoder og bruger bcryptpassword encoder
 }
