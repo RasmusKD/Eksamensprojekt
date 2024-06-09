@@ -17,6 +17,9 @@ import org.mockito.MockitoAnnotations;
 import com.minkostplan.eksamensprojekt.Model.Ingredient;
 import com.minkostplan.eksamensprojekt.Repository.DBRepository;
 
+/**
+ * Unit test for DBRepository class.
+ */
 public class CreateIngredientsTest {
 
     @Mock
@@ -31,6 +34,11 @@ public class CreateIngredientsTest {
     @InjectMocks
     private DBRepository dBRepository;
 
+    /**
+     * Sets up the test environment before each test method.
+     *
+     * @throws Exception if an error occurs during setup.
+     */
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
@@ -38,8 +46,14 @@ public class CreateIngredientsTest {
         when(connection.prepareStatement(anyString())).thenReturn(preparedStatement);
     }
 
+    /**
+     * Tests the createIngredients method of DBRepository.
+     *
+     * @throws SQLException if a database access error occurs.
+     */
     @Test
     public void testCreateIngredients() throws SQLException {
+        // Create a new Ingredient object
         Ingredient ingredient = new Ingredient();
         ingredient.setName("Tomato");
         ingredient.setFat(0.2);
@@ -47,8 +61,10 @@ public class CreateIngredientsTest {
         ingredient.setProtein(0.9);
         ingredient.setCalories(18);
 
+        // Call the method to test
         dBRepository.createIngredients(ingredient);
 
+        // Verify that the PreparedStatement was called with the correct parameters
         verify(preparedStatement).setString(1, "Tomato");
         verify(preparedStatement).setDouble(2, 0.2);
         verify(preparedStatement).setDouble(3, 3.9);
@@ -57,13 +73,3 @@ public class CreateIngredientsTest {
         verify(preparedStatement).executeUpdate();
     }
 }
-
-
-
-/* 1: MockitoAnnotations.initMocks(this) initialiserer mocks
-   2: Opretter en Ingredient-instans med testdata.
-   3:Mock repository createIngredients metode til at gøre ingenting, da vi ikke har brug for den faktiske databaseinteraktion.
-   4:Kald createIngredients-metoden i UseCase-klassen.
-   5:Verificerer, at createIngredients-metoden i DBRepository blev kaldt præcis én gang med den oprettede ingrediens.
-   6:Ekstra verificering for at sikre, at createIngredients-metoden blev kaldt med de korrekte parametre.
- */

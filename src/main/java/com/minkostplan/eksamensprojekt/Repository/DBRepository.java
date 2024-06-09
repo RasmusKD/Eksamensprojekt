@@ -405,7 +405,7 @@ public class DBRepository {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
-
+        //SQL Connection, autocommit fra så flere SQL
         try {
             conn = getConnection();
             conn.setAutoCommit(false);
@@ -809,14 +809,21 @@ public class DBRepository {
             conn = getConnection();
             conn.setAutoCommit(false);
 
-            // Først, slet fra Recipe_Ingredients
+            // Først, slet fra UserFavoriteRecipe
+            String deleteUserFavoriteRecipeSql = "DELETE FROM UserFavoriteRecipe WHERE recipeId = ?";
+            pstmt = conn.prepareStatement(deleteUserFavoriteRecipeSql);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            pstmt.close();
+
+            // Derefter, slet fra Recipe_Ingredients
             String deleteRecipeIngredientsSql = "DELETE FROM Recipe_Ingredients WHERE recipe_id = ?";
             pstmt = conn.prepareStatement(deleteRecipeIngredientsSql);
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
             pstmt.close();
 
-            // Derefter, slet fra Recipe
+            // Endelig, slet fra Recipe
             String deleteRecipeSql = "DELETE FROM Recipe WHERE recipeId = ?";
             pstmt = conn.prepareStatement(deleteRecipeSql);
             pstmt.setInt(1, id);
@@ -838,6 +845,7 @@ public class DBRepository {
             closeResources(conn, pstmt);
         }
     }
+
 
     /**
      * Opdaterer en ingrediens i databasen.
