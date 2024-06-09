@@ -50,8 +50,6 @@ public class CustomUserDetailsServiceTest {
         // Arrange: Forberedelse af nødvendige objekter og mock
         // Mock databasekaldet for at returnere den oprettede bruger, når der søges efter emailen
         when(dbRepository.findByEmail("test@example.com")).thenReturn(user);
-
-        // Udskriver status til konsollen før metodekaldet
         System.out.println("Henter brugerens detaljer fra databasen...");
 
         // Act: Udfør handlingen der skal testes
@@ -66,9 +64,16 @@ public class CustomUserDetailsServiceTest {
         System.out.println("Verificerer brugerens detaljer...");
         assertNotNull(userDetails, "Brugerens detaljer bør ikke være null.");
         assertEquals("test@example.com", userDetails.getUsername(), "Brugerens email bør være test@example.com.");
+
+        // Verificer at dbRepository.findByEmail blev kaldt én gang
+        verify(dbRepository, times(1)).findByEmail("test@example.com");
+        System.out.println("dbRepository.findByEmail blev kaldt én gang.");
+
+        // Verificer at useCase.setCurrentUser blev kaldt én gang
         verify(useCase, times(1)).setCurrentUser(user);
-        System.out.println("Brugerens detaljer er korrekte og setCurrentUser blev kaldt én gang.");
+        System.out.println("setCurrentUser blev kaldt én gang.");
     }
+
 
     /**
      * Tester scenariet hvor brugeren ikke findes i databasen.
@@ -82,16 +87,14 @@ public class CustomUserDetailsServiceTest {
 
 
         System.out.println("Forsøger at hente ikke-eksisterende bruger fra databasen...");
-
         // Act & Assert: Udfør handlingen der skal testes og verificer resultatet
         // Kald metoden loadUserByUsername og kontroller at UsernameNotFoundException kastes
-        try {
+        assertThrows(UsernameNotFoundException.class, () -> {
             customUserDetailsService.loadUserByUsername("test@example.com");
-            System.out.println("Fejl: Forventet UsernameNotFoundException blev ikke kastet.");
-        } catch (UsernameNotFoundException e) {
-            System.out.println("UsernameNotFoundException blev kastet som forventet.");
-        }
+        });
+        System.out.println("UsernameNotFoundException blev kastet som forventet.");
     }
+
 
     /**
      * Test der bevidst fejler for at sikre testinfrastrukturen fungerer korrekt.
