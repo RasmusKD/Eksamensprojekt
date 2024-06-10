@@ -20,12 +20,15 @@ import java.util.List;
 @Repository
 public class DBRepository {
 
+    //Automatisk finde en datasource bean til at indsætte i dette felt
     @Autowired
     private DataSource dataSource;
 
+    //Automatisk finde en passwordEncoder bean til at indsætte i dette felt
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    //Automatisk finde en passwordEncoder bean som argument til at indsætte i dette felt
     @Autowired
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
