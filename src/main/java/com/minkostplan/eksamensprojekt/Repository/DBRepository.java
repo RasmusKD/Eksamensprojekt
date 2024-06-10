@@ -480,7 +480,7 @@ public class DBRepository {
         try {
             conn = getConnection();
             String sql = "SELECT * FROM Ingredient"; //henter alt fra databasen fra ingredient
-            pstmt = conn.prepareStatement(sql); //forbereder vores prepared stament
+            pstmt = conn.prepareStatement(sql); //forbereder vores prepared stament sender argument til
             rs = pstmt.executeQuery(); // udfører sql string returnere resulset objekt der indeholder resultat af sql forespørgslen
             while (rs.next()) { //while der stadig er ingredienter i vores database kører den laver  ingredient objekter
                 Ingredient ingredient = new Ingredient();//oprettelse af ingredient objekt

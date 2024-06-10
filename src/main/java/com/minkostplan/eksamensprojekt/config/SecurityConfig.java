@@ -24,8 +24,13 @@ public class SecurityConfig {
      * @throws Exception Hvis der opstår en fejl under konfigurationen.
      */
     @Bean //Indikerer at metoden returnere en securityfilterchain bean, som bliver administreret af Spring containeren. kaldt under opstart.
+
+    //filterChain med parameteren HttpSecurity http er en del af Spring Security konfigurationen
+    //HttpSecurity er en klasse fra spring
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+        //første auth er en parameter til lambda-funktionen. Den modtager en instans af HttpSecurity.AuthorizeHttpRequestsConfigurer, bruges bla til autorisationsregler
+        //en anden auth refererer til samme objekt og bruges til at konfigurere sikkerhedspolitikkerne.
                 .authorizeHttpRequests(auth -> auth //Den første auth er parameter, den anden sætter parameteret med vores kode og returnere det til første auth
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**", "/favicon.ico").permitAll()
                         .requestMatchers("/", "/login", "/register", "/about-us", "/check-email").permitAll()
@@ -34,6 +39,8 @@ public class SecurityConfig {
                         .requestMatchers("/recipe-creation", "/edit-recipe", "/add-ingredients", "/edit-ingredients").hasAnyRole("EMPLOYEE", "ADMIN")
                         .requestMatchers("/opret-medarbejder").hasRole("ADMIN")
                         .anyRequest().authenticated()
+                        //anyrequest fanger de resterende http forespørgsler der ikke blev matchet af tidligere regler.
+                        //authenticadet angiver at hver forespørgsel der mathcer skal være autenficiferet aka logget ind
                 )
                 .csrf(csrf -> csrf //bliver sat som en cookie i ens browser, stopper ondsindet request. brugeren for en token når de logger indt, skjules som cookie
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
@@ -62,7 +69,7 @@ public class SecurityConfig {
      *
      * @return Et konfigureret PasswordEncoder-objekt.
      */
-    @Bean
+    @Bean//vi opretter en Bean@ spring holder styr på vores beans, giver spring lov til
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     } //vi over skriver springs password encoder og bruger bcryptpassword encoder
