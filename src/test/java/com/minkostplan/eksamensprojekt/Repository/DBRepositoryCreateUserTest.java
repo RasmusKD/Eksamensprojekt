@@ -20,18 +20,18 @@ import static org.mockito.Mockito.*;
 public class DBRepositoryCreateUserTest {
 
 
-
+    //Deklarerer en instansvariabel dbRepository af typen DBRepository.
     private DBRepository dbRepository;
 
 
 
     //Mock objekt er en falsk version af et rigtigt objekt, som man kan bruge til at simulere med
 
-    //Dette er en mock-version af Connection-objektet,
+    //Deklarerer en mock af Connection-objektet ved hjælp af Mockito's @Mock-annotering.
     @Mock
     private Connection mockConnection;
 
-    //Dette er en mock version af PreparedStatement
+    //Deklarerer en mock af PreparedStatement-objektet ved hjælp af Mockito's @Mock-annotering.
     @Mock
     private PreparedStatement mockPreparedStatement;
 
@@ -40,13 +40,14 @@ public class DBRepositoryCreateUserTest {
      *
      * @throws SQLException hvis der opstår en fejl under opsætning af forbindelse.
      */
+    //Annoterer setUp-metoden med @BeforeEach, hvilket betyder, at denne metode køres før hver testmetode i denne klasse.
     @BeforeEach
     public void setUp() throws SQLException {
 
-
+        //Initialiserer mock-objekterne i denne testklasse. Dette fortæller Mockito at behandle de felter, der er annoteret med @Mock.
         MockitoAnnotations.initMocks(this);
 
-
+        //Opretter en spy-instans af DBRepository. En spy giver mulighed for at overvåge og mocke DBRepository.
         dbRepository = spy(DBRepository.class);
 
         // Mock getConnection til at returnere mockConnection
@@ -58,14 +59,15 @@ public class DBRepositoryCreateUserTest {
      *
      * @throws SQLException hvis der opstår en fejl under SQL-udførelse.
      */
+    //denne annotation viser at det er en test
     @Test
     public void testCreateUserSuccess() throws SQLException {
-        User user = new User();
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setEmail("john.doe@example.com");
+        User user = new User(); //Opretter en ny instans af User.
+        user.setFirstName("Erik");//Sætter brugerens fornavn osv...
+        user.setLastName("Knudsen");
+        user.setEmail("erik@testmail.dk");
         user.setPassword("password");
-        user.setBirthday(LocalDate.of(1994, 1, 1));
+        user.setBirthday(LocalDate.of(2000, 1, 2));
         user.setGender('M');
         user.setWeight(70.0);
         user.setHeight(175.0);
@@ -74,14 +76,16 @@ public class DBRepositoryCreateUserTest {
         user.setEmployed(1);
         user.setSubscriber(true);
 
-        // Mock prepareStatement til at returnere mockPreparedStatement
+       // Mocker prepareStatement-metoden i mockConnection til at returnere mockPreparedStatement, uanset hvilken SQL-streng der gives som argument.
         when(mockConnection.prepareStatement(any(String.class))).thenReturn(mockPreparedStatement);
 
+        //Kalder createUser-metoden på dbRepository med user som argument.
         dbRepository.createUser(user);
 
+        //Verificerer, at prepareStatement blev kaldt med den korrekte SQL-indsættelsesforespørgsel.
         verify(mockConnection).prepareStatement("INSERT INTO User (firstName, lastName, email, password, birthday, gender, weight, height, activityLevel, goal, employed, subscriber) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        verify(mockPreparedStatement).setString(1, user.getFirstName());
-        verify(mockPreparedStatement).setString(2, user.getLastName());
+        verify(mockPreparedStatement).setString(1, user.getFirstName());//Verificerer, at setString på mockPreparedStatement blev kaldt med den første parameter (1) sat til brugerens fornavn.
+        verify(mockPreparedStatement).setString(2, user.getLastName()); //Verificerer, at setString på mockPreparedStatement blev kaldt med den anden parameter (2) sat til brugerens efternavn.
         verify(mockPreparedStatement).setString(3, user.getEmail());
         verify(mockPreparedStatement).setString(4, user.getPassword());
         verify(mockPreparedStatement).setDate(5, java.sql.Date.valueOf(user.getBirthday()));
@@ -92,8 +96,9 @@ public class DBRepositoryCreateUserTest {
         verify(mockPreparedStatement).setInt(10, user.getGoal());
         verify(mockPreparedStatement).setInt(11, user.getEmployed());
         verify(mockPreparedStatement).setBoolean(12, user.isSubscriber());
-        verify(mockPreparedStatement).executeUpdate();
+        verify(mockPreparedStatement).executeUpdate();//Verificerer, at executeUpdate på mockPreparedStatement blev kaldt for at udføre SQL-forespørgslen.
         verify(dbRepository).closeResources(mockConnection, mockPreparedStatement);
+        //Verificerer, at closeResources-metoden på dbRepository blev kaldt med mockConnection og mockPreparedStatement som argumenter for at lukke ressourcerne.
     }
 
     /**

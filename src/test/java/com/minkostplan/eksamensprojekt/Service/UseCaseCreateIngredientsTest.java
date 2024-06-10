@@ -14,16 +14,23 @@ import static org.mockito.Mockito.*;
  */
 public class UseCaseCreateIngredientsTest {
 
+
+    //@InjectMocks: Opretter en instans af UseCase og injicerer alle markerede mocks (@Mock-annoterede objekter) i den.
     @InjectMocks
     private UseCase useCase;
 
+    //@Mock: Opretter en mock instans af DBRepository.
     @Mock
     private DBRepository dbRepository;
 
     /**
      * Opsætning af tests. Initialiserer mocks og inject mocks i UseCase.
      */
+
+    //Before each annoteringen indikere at metoden setup skal køres før hver test
     @BeforeEach
+
+    // Initialiserer Mockito-annoteringer (@Mock og @InjectMocks) i denne testklasse.
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
@@ -31,8 +38,11 @@ public class UseCaseCreateIngredientsTest {
     /**
      * Test for at sikre, at en ingrediens kan oprettes korrekt i databasen.
      */
+
+    //Test annoteringen angiver at det er en testmetode
     @Test
     public void testCreateIngredients() {
+        //Opretter en instans af Ingredient og sætter dens egenskaber.
         Ingredient ingredient = new Ingredient();
         ingredient.setName("Test Ingredient");
         ingredient.setFat(10.0);
@@ -40,6 +50,7 @@ public class UseCaseCreateIngredientsTest {
         ingredient.setProtein(30.0);
         ingredient.setCalories(100);
 
+        //
         doNothing().when(dbRepository).createIngredients(ingredient);
 
         useCase.createIngredients(ingredient);
