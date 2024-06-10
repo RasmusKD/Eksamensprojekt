@@ -126,6 +126,7 @@ public class RecipeCreationController {
         int totalFat = 0;
         int totalCarbohydrates = 0;
 
+        // Gennemgå hver ingrediens for at beregne samlede næringsværdier
         for (int i = 0; i < ingredientIds.size(); i++) {
             Ingredient ingredient = useCase.getIngredientById(ingredientIds.get(i));
             double quantity = quantities.get(i);
@@ -135,6 +136,7 @@ public class RecipeCreationController {
             totalCarbohydrates += (int) (ingredient.getCarbohydrate() * quantity / 100);
         }
 
+        // Sæt de beregnede næringsværdier på opskriften
         recipe.setTotalCalories(totalCalories);
         recipe.setTotalProtein(totalProtein);
         recipe.setTotalFat(totalFat);

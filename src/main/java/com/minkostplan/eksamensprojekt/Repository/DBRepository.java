@@ -341,6 +341,7 @@ public class DBRepository {
 
         try {
             conn = getConnection();
+
             String sql = "INSERT INTO Ingredient (name, fat, carbohydrate, protein, calories) VALUES (?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sql);
             pstmt.setString(1, ingredient.getName());
@@ -348,7 +349,9 @@ public class DBRepository {
             pstmt.setDouble(3, ingredient.getCarbohydrate());
             pstmt.setDouble(4, ingredient.getProtein());
             pstmt.setInt(5, ingredient.getCalories());
+
             pstmt.executeUpdate();
+
         } catch (SQLException e) {
             System.out.println("Error connecting to the database or executing the query.");
             e.printStackTrace();
@@ -405,6 +408,7 @@ public class DBRepository {
         Connection conn = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
+
         //SQL Connection, autocommit fra så flere SQL
         try {
             conn = getConnection();
@@ -425,6 +429,7 @@ public class DBRepository {
             pstmt.setString(11, recipe.getWeek());
             pstmt.executeUpdate();
 
+            // Hent det genererede nøgle-id for den nye opskrift
             rs = pstmt.getGeneratedKeys();
             int recipeId = 0;
             if (rs.next()) {
