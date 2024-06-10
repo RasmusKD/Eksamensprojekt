@@ -198,7 +198,7 @@ public class DBRepository {
      */
     public User findByEmail(String email) {
         Connection conn = null;     //initialiserer variabel til at holde databaseforbindelsen
-        PreparedStatement pstmt = null;  // Initialiserer variabel til at holde resultatet af SQL-forespørgslen
+        PreparedStatement pstmt = null;  //
         ResultSet rs = null; // Initialiserer variabel til at holde resultatet af SQL-forespørgslen.
         User user = null; // Initialiserer variabel til at holde det fundne User-objekt returnere null hvis der ikke er et user objekt
 
@@ -206,7 +206,7 @@ public class DBRepository {
             conn = getConnection();
             String sql = "SELECT * FROM User WHERE email = ?"; // SQL-forespørgsel   email parameter fra toppen
             pstmt = conn.prepareStatement(sql);  // Forbereder SQL-forespørgslen
-            pstmt.setString(1, email);// Indsætter e-mailparameteren i SQL-forespørgslen emailen fra parametern i toppen indsættes her
+            pstmt.setString(1, email);// Indsætter e-mailparameteren i SQL-forespørgslen på den første placeholder
             rs = pstmt.executeQuery(); //191 vi finder ud fra vores query og det vi finder sætter vi ind i vores resultset.
 
             //køres kun hvis emailen findes
@@ -470,24 +470,24 @@ public class DBRepository {
     //Metoden returnere en liste af ingredient objekter
     public List<Ingredient> getAllIngredients() {
         List<Ingredient> ingredientList = new ArrayList<>(); //laver en tom liste til at gemme hentede ingredienser
-        Connection conn = null; //initialisere
-        PreparedStatement pstmt = null;
+        Connection conn = null; //erklærer variablen conn af typen connection initialiseres til null
+        PreparedStatement pstmt = null; //erklære variabel pstmt af typen PreparedStatemtn initialiseres til null
         ResultSet rs = null; //vi initialesere vores resultatsæt med null så der ikke er noget til at starte med
 
         try {
             conn = getConnection();
-            String sql = "SELECT * FROM Ingredient"; //henter alt fra databasen
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery(); // Det var der vi kører vores query. alt vi får fra db tilføjer vi
-            while (rs.next()) { //while der stadig er ingredienter i vores database kører den laver nye ingredient objekter fra vores eksisterende,
-                Ingredient ingredient = new Ingredient();
+            String sql = "SELECT * FROM Ingredient"; //henter alt fra databasen fra ingredient
+            pstmt = conn.prepareStatement(sql); //forbereder vores prepared stament
+            rs = pstmt.executeQuery(); // udfører sql string returnere resulset objekt der indeholder resultat af sql forespørgslen
+            while (rs.next()) { //while der stadig er ingredienter i vores database kører den laver  ingredient objekter
+                Ingredient ingredient = new Ingredient();//oprettelse af ingredient objekt
                 ingredient.setIngredientId(rs.getInt("ingredientId"));
                 ingredient.setName(rs.getString("name"));
                 ingredient.setFat(rs.getDouble("fat"));
                 ingredient.setCarbohydrate(rs.getDouble("carbohydrate"));
                 ingredient.setProtein(rs.getDouble("protein"));
                 ingredient.setCalories(rs.getInt("calories"));
-                ingredientList.add(ingredient);
+                ingredientList.add(ingredient); //tilføjelse af ingredient objektet til vores listen
             }
         } catch (SQLException e) {
             e.printStackTrace();

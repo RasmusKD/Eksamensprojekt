@@ -19,7 +19,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UseCase useCase;
-
     /**
      * Indlæser brugerdata baseret på brugernavn (email).
      *

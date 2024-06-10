@@ -68,7 +68,7 @@ public class RegisterController {
         String newPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(newPassword);
 
-        useCase.createUser(user);
+        useCase.createUser(user); //kalder useCase metoden createUser med user objekt
         return "redirect:/login";
     }
 
