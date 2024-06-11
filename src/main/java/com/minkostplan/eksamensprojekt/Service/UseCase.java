@@ -203,7 +203,7 @@ public class UseCase {
             reauthenticateCurrentUser();
         }
     }
-
+//if ure reading this, ure gay
     /**
      * Genautentificerer den aktuelle bruger efter opdatering af deres abonnementsstatus.
      */
